@@ -8,7 +8,6 @@ public class ReadFromFile : MonoBehaviour
 
     private string folderPath = @"Resourses/MapGenerator";
     public Dictionary<string, GameObject> prefabMap;
-    private int step = -1;
     public GameObject[] objects;
 
     public float itemXSpread = 10;
@@ -34,6 +33,13 @@ public class ReadFromFile : MonoBehaviour
                 Vector3 randPosition = new Vector3(xOffset + scale / 2, 0, zOffset + scale / 2) +
                     transform.position;
                 GameObject clone = Instantiate(prefabMap[prefab], randPosition, Quaternion.identity);
+               
+                int r = Random.Range(0, 2);
+                print(r);
+                if (r == 1)
+                {
+                    clone.transform.localScale = new Vector3(2, 2, 2);
+                }
                 zOffset += scale;
             }
             xOffset += scale;
@@ -67,6 +73,6 @@ public class ReadFromFile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print("Update called");
+        
     }
 }

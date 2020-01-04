@@ -238,8 +238,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objects:
-  - {fileID: 1870111078022727913, guid: c718390ddc56a0a4aaf84dacbbd9e313, type: 3}
-  - {fileID: 131180, guid: d8c4ea8fb6eab494d90c7a7e3e8327b2, type: 3}
+  - {fileID: 100000, guid: b6b4e60cef9d4504895d18b15cb55773, type: 3}
+  - {fileID: 100000, guid: 7b5f2f9ea19c74c659ab8ac969280fb2, type: 3}
+  - {fileID: 163338, guid: cd3416a6da16716418740d59e9e827f2, type: 3}
   itemXSpread: 10
   itemYSpread: 0
   itemZSpread: 10
@@ -354,7 +355,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cfe89d6f82bd84f4e8f2ddf9b1f3273c, type: 2}
+  - {fileID: 2100000, guid: d67cf08569282495b9b0b750a0366fcf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -381,7 +382,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1334715450}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: 88bd3864cf0054892a28b21f3464d8f5, type: 3}
 --- !u!4 &1334715454
 Transform:
   m_ObjectHideFlags: 0
@@ -391,7 +392,7 @@ Transform:
   m_GameObject: {fileID: 1334715450}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 1, z: 100}
+  m_LocalScale: {x: 5, y: 1, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
