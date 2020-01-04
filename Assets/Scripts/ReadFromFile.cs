@@ -18,6 +18,7 @@ public class ReadFromFile : MonoBehaviour
     int zOffset = 0;
     int scale = 10;
 
+
     public void ParseFile(string file)
     {
         string fullPath = Path.Combine(Path.Combine(Application.dataPath, folderPath), file);
@@ -29,7 +30,7 @@ public class ReadFromFile : MonoBehaviour
             string[] items = reader.ReadLine().Split(',');
             foreach (string prefab in items)
             {
-                print(prefab);
+
                 Vector3 randPosition = new Vector3(xOffset + scale / 2, 0, zOffset + scale / 2) +
                     transform.position;
                 GameObject clone = Instantiate(prefabMap[prefab], randPosition, Quaternion.identity);
