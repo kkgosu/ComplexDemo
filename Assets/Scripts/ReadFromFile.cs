@@ -30,16 +30,22 @@ public class ReadFromFile : MonoBehaviour
             string[] items = reader.ReadLine().Split(',');
             foreach (string prefab in items)
             {
-
-                Vector3 randPosition = new Vector3(xOffset + scale / 2, 0, zOffset + scale / 2) +
-                    transform.position;
-                GameObject clone = Instantiate(prefabMap[prefab], randPosition, Quaternion.identity);
-               
-                int r = Random.Range(0, 2);
-                print(r);
-                if (r == 1)
+                if (!prefab.Equals("0"))
                 {
-                    clone.transform.localScale = new Vector3(2, 2, 2);
+                    Vector3 randPosition = new Vector3(xOffset + scale / 2, 0, zOffset + scale / 2) +
+                        transform.position;
+                    GameObject clone = Instantiate(prefabMap[prefab], randPosition, Quaternion.identity);
+
+                    int r = Random.Range(0, 2);
+                    print(r);
+                    if (r == 1 && (!prefab.Equals("3") || !prefab.Equals("2")))
+                    {
+                        clone.transform.localScale = new Vector3(2, 2, 2);
+                    }
+                    if (prefab.Equals("2")) 
+                    {
+                        clone.transform.localScale = new Vector3(1, 1, 2);
+                    }
                 }
                 zOffset += scale;
             }
@@ -57,12 +63,6 @@ public class ReadFromFile : MonoBehaviour
         }
     }
 
-    private void ReadFile(string path)
-    {
-        
-
-    }
-         
     // Start is called before the first frame update
     void Start()
     {

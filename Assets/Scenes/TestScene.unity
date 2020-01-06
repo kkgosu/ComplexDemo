@@ -238,9 +238,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objects:
-  - {fileID: 100000, guid: b6b4e60cef9d4504895d18b15cb55773, type: 3}
+  - {fileID: 0}
   - {fileID: 100000, guid: 7b5f2f9ea19c74c659ab8ac969280fb2, type: 3}
   - {fileID: 163338, guid: cd3416a6da16716418740d59e9e827f2, type: 3}
+  - {fileID: 100000, guid: 69c3abf30cd3a1b42b7e7624fb41652f, type: 3}
+  - {fileID: 1853211041006570, guid: 64cefbcd8a06eb0438d916f5ef8269b0, type: 3}
+  - {fileID: 100000, guid: b6b4e60cef9d4504895d18b15cb55773, type: 3}
   itemXSpread: 10
   itemYSpread: 0
   itemZSpread: 10
