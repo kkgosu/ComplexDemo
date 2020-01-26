@@ -1,13 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System;
 using UnityEngine;
+using System.Globalization;
 
 public class ReadFromFile : MonoBehaviour
 {
 
     private string folderPath = @"Resourses/MapGenerator";
     public Dictionary<string, GameObject> prefabMap;
+    public float[] scales = new float[100];
+    public Quaternion[] rotationsX = new Quaternion[100];
+    public Quaternion[] rotationsY = new Quaternion[100];
+    public Quaternion[] rotationsZ = new Quaternion[100];
     public GameObject[] objects;
 
     public float itemXSpread = 10;
@@ -24,6 +30,7 @@ public class ReadFromFile : MonoBehaviour
         string fullPath = Path.Combine(Path.Combine(Application.dataPath, folderPath), file);
         print(fullPath);
         StreamReader reader = new StreamReader(fullPath);
+        int counter = 0;
         while (!reader.EndOfStream)
         {
             zOffset = 0;
@@ -36,18 +43,23 @@ public class ReadFromFile : MonoBehaviour
                         transform.position;
                     GameObject clone = Instantiate(prefabMap[prefab], randPosition, Quaternion.identity);
 
-                    int r = Random.Range(0, 2);
+                    clone.transform.localScale = new Vector3(scales[counter], scales[counter], scales[counter]);
+                    clone.transform.localRotation *= rotationsX[counter] * rotationsY[counter] * rotationsZ[counter];
+                    clone.transform.localPosition = new Vector3(clone.transform.localPosition.x, clone.transform.localPosition.y + 2, clone.transform.localPosition.z);
+
+/*                    int r = Random.Range(0, 2);
                     print(r);
-                    if (r == 1 && (!prefab.Equals("3") || !prefab.Equals("2")))
+                    if (r == 1 && !(prefab.Equals("3") || prefab.Equals("2")))
                     {
                         clone.transform.localScale = new Vector3(2, 2, 2);
                     }
                     if (prefab.Equals("2")) 
                     {
                         clone.transform.localScale = new Vector3(1, 1, 2);
-                    }
+                    }*/
                 }
                 zOffset += scale;
+                counter++;
             }
             xOffset += scale;
         }
@@ -67,6 +79,8 @@ public class ReadFromFile : MonoBehaviour
     void Start()
     {
         print("Start called");
+        setupRotations("rotations.txt");
+        setupScaling("scales.txt");
         setPrefabMap();
         ParseFile("test.txt");
     }
@@ -75,5 +89,50 @@ public class ReadFromFile : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void setupRotations(string file)
+    {
+        string fullPath = Path.Combine(Path.Combine(Application.dataPath, folderPath), file);
+        print(fullPath);
+        StreamReader reader = new StreamReader(fullPath);
+        int counter = 0;
+        while (!reader.EndOfStream)
+        {
+            string[] items = reader.ReadLine().Split(';');
+            foreach (string cell in items)
+            {
+                string[] angles = cell.Split(',');
+                int x;
+                Int32.TryParse(angles[0], out x);
+                int y;
+                Int32.TryParse(angles[1], out y);
+                int z;
+                Int32.TryParse(angles[2], out z);
+                Quaternion qx = Quaternion.AngleAxis(x, Vector3.right);
+                Quaternion qy = Quaternion.AngleAxis(y, Vector3.up);
+                Quaternion qz = Quaternion.AngleAxis(z, Vector3.forward);
+                rotationsX[counter] = qx;
+                rotationsY[counter] = qy;
+                rotationsZ[counter] = qz;
+                counter++;
+            }
+        }
+    }
+
+    private void setupScaling(string file)
+    {
+        string fullPath = Path.Combine(Path.Combine(Application.dataPath, folderPath), file);
+        StreamReader reader = new StreamReader(fullPath);
+        int counter = 0;
+        while (!reader.EndOfStream)
+        {
+            string[] items = reader.ReadLine().Split(',');
+            foreach(string scale in items)
+            {
+                scales[counter] = float.Parse(scale, CultureInfo.InvariantCulture.NumberFormat);
+                counter++;
+            }
+        }
     }
 }
