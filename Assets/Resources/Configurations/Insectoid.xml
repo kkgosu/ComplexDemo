@@ -1,0 +1,40 @@
+<robot name="RobotInsectoid" refId="10" moduleType="M3R" position="0, 0, 0" rotation="0,0,0">
+	<modules>
+		<module id="0" />
+		<module id="10" q1="0" />
+		<module id="11" q1="45" />
+		<module id="12" q1="45" />
+		<module id="13" q1="0" />
+		<module id="20" q1="0" />
+		<module id="21" q1="45" />
+		<module id="22" q1="45" />
+		<module id="23" q1="0" />
+		<module id="30" q1="0" />
+		<module id="31" q1="45" />
+		<module id="32" q1="45" />
+		<module id="33" q1="0" />
+		<module id="40" q1="0" />
+		<module id="41" q1="45" />
+		<module id="42" q1="45" />
+		<module id="43" q1="0" />
+
+	</modules>
+	<connections>
+		<connection from="10" to="11" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="11" to="12" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="12" to="13" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="13" to="0"  surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="0"  to="23" surfaceFrom="right" surfaceTo="top"/>
+		<connection from="23" to="22" surfaceFrom="bottom" surfaceTo="top"/>
+		<connection from="22" to="21" surfaceFrom="bottom" surfaceTo="top"/>
+		<connection from="21" to="20" surfaceFrom="bottom" surfaceTo="top"/>
+		<connection from="0"  to="33" surfaceFrom="top" surfaceTo="top"/>
+		<connection from="33" to="32" surfaceFrom="bottom" surfaceTo="top"/>
+		<connection from="32" to="31" surfaceFrom="bottom" surfaceTo="top"/>
+		<connection from="31" to="30" surfaceFrom="bottom" surfaceTo="top"/>
+		<connection from="0"  to="43" surfaceFrom="left" surfaceTo="top"/>
+		<connection from="43" to="42" surfaceFrom="bottom" surfaceTo="top"/>
+		<connection from="42" to="41" surfaceFrom="bottom" surfaceTo="top"/>
+		<connection from="41" to="40" surfaceFrom="bottom" surfaceTo="top"/>
+	</connections>
+</robot>

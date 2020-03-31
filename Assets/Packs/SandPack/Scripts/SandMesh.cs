@@ -58,18 +58,18 @@ public class SandMesh : MonoBehaviour
                 float fHeight = 0.0f;
 
                 // edges
-                if (x == 0 || y == 0 || x == m_iMeshW - 1 || y == m_iMeshH - 1)
-                    fHeight = Random.Range(50.0f, 200.0f);
+/*                if (x == 0 || y == 0 || x == m_iMeshW - 1 || y == m_iMeshH - 1)
+                    fHeight = Random.Range(50.0f, 200.0f);*/
 
                 // plus in the middle
-                if (x == (m_iMeshW / 2) || y == (m_iMeshH / 2))
-                    fHeight += Random.Range(30.0f, 60.0f);
+/*                if (x == (m_iMeshW / 2) || y == (m_iMeshH / 2))
+                    fHeight += Random.Range(30.0f, 60.0f);*/
 
                 // create a temporary 'object'
-                if (x == (m_iMeshW / 2) && y == (m_iMeshH / 2))
-                    fHeight = 500.0f;
+/*                if (x == (m_iMeshW / 2) && y == (m_iMeshH / 2))
+                    fHeight = 500.0f;*/
 
-                fHeight += Random.Range(0.0f, 4.0f);
+                fHeight += Random.Range(0.0f, 1.0f);
 
                 m_vVerts[(x + y * m_iMeshW)] = new Vector3(x * m_fScale, fHeight, y * m_fScale) + m_vOrigin;
 
@@ -113,7 +113,7 @@ public class SandMesh : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // go over the vertices, check differences, process for new resulting verts
+        /*// go over the vertices, check differences, process for new resulting verts
         // checks the mesh and updates the changes to local array, allowing it all to be done at once
 
         // check it in chunks to run smoother
@@ -209,6 +209,6 @@ public class SandMesh : MonoBehaviour
         m_iCurChunk += m_iChunkRate;
 
         if (m_iCurChunk >= m_iMeshW)
-            m_iCurChunk = 0;
+            m_iCurChunk = 0; */
     }
 }

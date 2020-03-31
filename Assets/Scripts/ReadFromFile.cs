@@ -8,7 +8,7 @@ using System.Globalization;
 public class ReadFromFile : MonoBehaviour
 {
 
-    private string folderPath = @"Resourses/MapGenerator";
+    private string folderPath = @"MapGenerator";
     public Dictionary<string, GameObject> prefabMap;
     public float[] scales = new float[100];
     public Quaternion[] rotationsX = new Quaternion[100];
@@ -31,6 +31,7 @@ public class ReadFromFile : MonoBehaviour
         print(fullPath);
         StreamReader reader = new StreamReader(fullPath);
         int counter = 0;
+      
         while (!reader.EndOfStream)
         {
             zOffset = 0;
@@ -43,20 +44,15 @@ public class ReadFromFile : MonoBehaviour
                         transform.position;
                     GameObject clone = Instantiate(prefabMap[prefab], randPosition, Quaternion.identity);
 
-                    clone.transform.localScale = new Vector3(scales[counter], scales[counter], scales[counter]);
-                    clone.transform.localRotation *= rotationsX[counter] * rotationsY[counter] * rotationsZ[counter];
-                    clone.transform.localPosition = new Vector3(clone.transform.localPosition.x, clone.transform.localPosition.y + 2, clone.transform.localPosition.z);
-
-/*                    int r = Random.Range(0, 2);
-                    print(r);
-                    if (r == 1 && !(prefab.Equals("3") || prefab.Equals("2")))
+                    if (prefab.Equals("6")) {
+                        clone.transform.localScale = new Vector3(scales[counter] * 2, scales[counter], scales[counter]);
+                    } else
                     {
-                        clone.transform.localScale = new Vector3(2, 2, 2);
+                        clone.transform.localScale = new Vector3(scales[counter], scales[counter], scales[counter]);
                     }
-                    if (prefab.Equals("2")) 
-                    {
-                        clone.transform.localScale = new Vector3(1, 1, 2);
-                    }*/
+                    
+                    clone.transform.localRotation *= rotationsX[counter] * rotationsY[counter] * rotationsZ[counter];
+                    clone.transform.localPosition = new Vector3(clone.transform.localPosition.x, clone.transform.localPosition.y + 2f, clone.transform.localPosition.z);
                 }
                 zOffset += scale;
                 counter++;

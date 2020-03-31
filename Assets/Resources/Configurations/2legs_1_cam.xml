@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- New XML document created with EditiX XML Editor (http://www.editix.com) at Tue Nov 13 00:24:10 MSK 2018 -->
+<robot name="2Legs" moduleType="M3R2" position="3.258,0,2.159" rotation="0,179.6,90">
+<modules>
+<module id="0" q1="0" />
+<module id="21" q1="0"/>
+<module id="22" q1="0"/>
+  <module id="23" q1="0"/>
+  <module id="24" q1="0"/>
+  <module id="25" q1="0"/>
+  <module id="26" q1="0"/>
+  <module id="27" q1="0"/>
+  <module id="28" q1="0"/>
+  <module id="29" q1="0"/>
+  <module id="20" q1="0"/>
+</modules>
+<connections>
+<connection from="0" to="21" surfaceFrom="left" surfaceTo="bottom" />
+<connection from="21" to="22" surfaceFrom="top" surfaceTo="top"/>
+<connection from="22" to="23" surfaceFrom="bottom" surfaceTo="right"/>
+<connection from="23" to="24" surfaceFrom="left" surfaceTo="bottom"/>
+<connection from="24" to="25" surfaceFrom="top" surfaceTo="top"/>
+<connection from="0" to="26" surfaceFrom="right" surfaceTo="bottom" />
+<connection from="26" to="27" surfaceFrom="top" surfaceTo="top"/>
+<connection from="27" to="28" surfaceFrom="bottom" surfaceTo="right"/>
+<connection from="28" to="29" surfaceFrom="left" surfaceTo="bottom"/>
+ <connection from="29" to="20" surfaceFrom="top" surfaceTo="top"/>
+</connections>
+</robot>

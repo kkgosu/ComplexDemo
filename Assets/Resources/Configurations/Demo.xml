@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--- 
+E.Shestakov
+2018
+====================================================================
+Root element:
+<robot /> 
+attributes:
+	name - Robot name;
+	refId - id of starting module (optional, first module id as a default)
+	moduleType  - type of all modules in the robot
+	position - x,y,z coordinates of reference module (optional, 0,0,0 as a default)
+	rotation - a,b,c Euler angles of reference module (optional, 0,0,0 as a default) 
+	type - (optional) Предполагается, что если указан тип робота, то к нему автоматически предлагаются алгоритмы управления, соответствующие данному типу. Возможно реализуем через ООП.
+====================================================================
+Modules container:
+<modules />
+
+inside this container each module describes:
+<module />
+attributes:
+	id - unique identifier
+	qX - start angle of module, where X is the number of DOF
+	type - type of module (optional parameter)
+====================================================================
+Connections container:
+<connections />
+
+inside this container each connection describes:
+<connection />
+attributes:
+	from - id of the firts connected module
+	to - id of the second connected module
+	surfaceFrom - side name (depends on modyle type)
+					T - Top
+					B - Bottom
+					L - Left
+					R - Right
+	surfaceTo - side name
+	tilt - angle of connection (optional, 0 as a default)
+====================================================================
+Module group container, for logic unite
+<union />
+attributes:
+
+
+====================================================================
+-->
+<robot name="snake" refId="2" moduleType="M3R" position="0, 4, 0" rotation="0,0,0">
+	<modules>
+		<module id="1" q1="30" />
+		<module id="2" q1="30" />
+		<module id="3" q1="30" />
+		<module id="4" q1="30" />
+		<module id="5" q1="30" />
+		<module id="6" q1="30" />
+		<module id="7" q1="30" />
+		<module id="8" q1="30" />
+		<module id="9" q1="30" />
+		<module id="10" q1="30" />
+		<module id="11" q1="30" />
+		<module id="12" q1="30" />
+	</modules>
+	<connections>
+		<connection from="1" to="2" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="2" to="3" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="3" to="4" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="4" to="5" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="5" to="6" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="6" to="7" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="7" to="8" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="8" to="9" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="9" to="10" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="10" to="11" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="11" to="12" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="12" to="1" surfaceFrom="top" surfaceTo="bottom"/>
+	</connections>
+</robot>

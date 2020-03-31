@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <meta charset="utf-8">
+  <title>ModRobSim</title>
+ </head>
+ <body>  
+ <!-- onsubmit="return false"-->
+ <form action="handler" method="get" >
+  <p>Robot name<input type="text" name="robot"></p>
+  <p>Configuration<input type="file" name="Configuration">
+  <p>Number of steps<input type="text" name="numberofsteps"></p>
+  <p><input type="button" value="Add Step" onclick="AddStep();"><input type="button" value="Remove Step" onclick="RemoveStep();"></p>
+  <div id="steps">
+  </div>
+<p><input type="submit" value="Отправить"></p>
+ </form>
+ </body>
+</html>
+<script type="text/javascript">
+	var step=0;
+	function AddStep(){
+		step++;
+		document.getElementById("steps").innerHTML+="<div id=\"step"+step+"\"><p>Step"+step+"<input type=\"text\" name=\"step"+step+"\"></p></div>";
+	}
+	function RemoveStep()
+	{
+		if (step>0){
+			document.getElementById("step"+step).remove();
+			step--;
+		}
+	}
+	
+</script>

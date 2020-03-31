@@ -1,0 +1,130 @@
+<robot name="wheel12"  moduleType="M3R2" position="0,1, 0" rotation="0,0,0">
+	<modules>
+		<module id="1" q1="30" />
+		<module id="2" q1="30" />
+		<module id="3" q1="30" />    
+		<module id="4" q1="30" />
+		<module id="5" q1="30" />
+		<module id="6" q1="30" />
+		<module id="7" q1="30" />
+		<module id="8" q1="30" />
+		<module id="9" q1="30" />    
+		<module id="10" q1="30" />
+		<module id="11" q1="30" />
+		<module id="12" q1="30" />
+
+    <module id="13" q1="0" />
+    <module id="14" q1="0" />
+    <module id="15" q1="0" />
+    <module id="16" q1="0" />
+
+    <module id="17" q1="30" />
+    <module id="18" q1="30" />
+    <module id="19" q1="30" />
+    <module id="20" q1="0" />
+    <module id="21" q1="30" />
+    <module id="22" q1="30" />
+    <module id="23" q1="30" />
+
+    <module id="24" q1="30" />
+    <module id="25" q1="30" />
+    <module id="26" q1="30" />
+    <module id="27" q1="0" />
+    <module id="28" q1="30" />
+    <module id="29" q1="30" />
+    <module id="30" q1="30" />
+
+    
+    <module id="31" q1="30" />
+    <module id="32" q1="30" />
+    <module id="33" q1="30" />
+    
+    <module id="34" q1="30" />
+    <module id="35" q1="30" />
+    <module id="36" q1="30" />
+
+    
+    <module id="37" q1="30" />
+    <module id="38" q1="30" />
+    <module id="39" q1="30" />
+
+    <module id="40" q1="30" />
+    <module id="41" q1="30" />
+    <module id="42" q1="30" />
+    
+	</modules>
+	<connections>
+		<connection from="1" to="2" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="2" to="3" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="3" to="13" surfaceFrom="top" surfaceTo="bottom"/>
+    
+    <connection from="13" to="4" surfaceFrom="top" surfaceTo="bottom"/>
+    
+		<connection from="4" to="5" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="5" to="6" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="6" to="16" surfaceFrom="top" surfaceTo="bottom"/>
+    
+    <connection from="16" to="7" surfaceFrom="top" surfaceTo="bottom"/>
+    
+		<connection from="7" to="8" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="8" to="9" surfaceFrom="top" surfaceTo="bottom"/>	
+    <connection from="9" to="14" surfaceFrom="top" surfaceTo="bottom"/>
+    
+    <connection from="14" to="10" surfaceFrom="top" surfaceTo="bottom"/>
+    
+		<connection from="10" to="11" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="11" to="12" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="12" to="15" surfaceFrom="top" surfaceTo="bottom"/>
+    
+    <connection from="15" to="1" surfaceFrom="top" surfaceTo="bottom"/>
+
+    <connection from="13" to="17" surfaceFrom="right" surfaceTo="top"/>
+    <connection from="17" to="18" surfaceFrom="bottom" surfaceTo="top"/>
+    <connection from="18" to="19" surfaceFrom="bottom" surfaceTo="top"/>
+    <connection from="19" to="20" surfaceFrom="bottom" surfaceTo="top"/>
+    <connection from="20" to="21" surfaceFrom="bottom" surfaceTo="top"/>
+    <connection from="21" to="22" surfaceFrom="bottom" surfaceTo="top"/>
+    <connection from="22" to="23" surfaceFrom="bottom" surfaceTo="top"/>
+    <connection from="23" to="14" surfaceFrom="bottom" surfaceTo="right"/>
+
+    <connection from="13" to="24" surfaceFrom="left" surfaceTo="bottom"/>
+    <connection from="24" to="25" surfaceFrom="top" surfaceTo="bottom"/>
+    <connection from="25" to="26" surfaceFrom="top" surfaceTo="bottom"/>
+    <connection from="26" to="27" surfaceFrom="top" surfaceTo="bottom"/>
+    <connection from="27" to="28" surfaceFrom="top" surfaceTo="bottom"/>
+    <connection from="28" to="29" surfaceFrom="top" surfaceTo="bottom"/>
+    <connection from="29" to="30" surfaceFrom="top" surfaceTo="bottom"/>
+    <connection from="30" to="14" surfaceFrom="top" surfaceTo="left"/>
+    
+    
+    
+
+    <connection from="15" to="31" surfaceFrom="right" surfaceTo="top"/>
+    <connection from="31" to="32" surfaceFrom="bottom" surfaceTo="top"/>
+    <connection from="32" to="33" surfaceFrom="bottom" surfaceTo="top"/>
+    <connection from="33" to="20" surfaceFrom="bottom" surfaceTo="letf"/>
+
+    <connection from="20" to="34" surfaceFrom="right" surfaceTo="top"/>
+    <connection from="34" to="35" surfaceFrom="bottom" surfaceTo="top"/>
+    <connection from="35" to="36" surfaceFrom="bottom" surfaceTo="top"/>
+    <connection from="36" to="16" surfaceFrom="bottom" surfaceTo="right"/>
+
+
+
+
+
+    <connection from="16" to="37" surfaceFrom="letf" surfaceTo="top"/>
+    <connection from="37" to="38" surfaceFrom="bottom" surfaceTo="top"/>
+    <connection from="38" to="39" surfaceFrom="bottom" surfaceTo="top"/>
+    <connection from="39" to="27" surfaceFrom="bottom" surfaceTo="right"/>
+
+    <connection from="27" to="40" surfaceFrom="letf" surfaceTo="top"/>
+    <connection from="40" to="41" surfaceFrom="bottom" surfaceTo="top"/>
+    <connection from="41" to="42" surfaceFrom="bottom" surfaceTo="top"/>
+    <connection from="42" to="15" surfaceFrom="bottom" surfaceTo="letf"/>
+    
+    
+    
+    
+	</connections>
+</robot>
