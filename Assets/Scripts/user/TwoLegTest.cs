@@ -112,15 +112,16 @@ public class TwoLegTest : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         StartTransformWheelToSnake();
+        
 
     }
 
     void StartTransformWheelToSnake()
     {
         MR.modules[412].surfaces["top"].Disconnect();
-        gctWheel = gameObject.AddComponent<GaitControlTable>();
-        gctWheel.ReadFromFile(MR, "WheelExtension.txt");
-        StartCoroutine(TransformWheelToSnake());
+        //gctWheel.ReadFromFile(MR, "WheelExtension.txt");
+        //StartCoroutine(TransformWheelToSnake());
+        StartCoroutine(TransformSnakeToWalker());
     }
 
     IEnumerator TransformWheelToSnake()
@@ -136,21 +137,17 @@ public class TwoLegTest : MonoBehaviour
 
     IEnumerator TransformSnakeToWalker()
     {
-        gctWheel = gameObject.AddComponent<GaitControlTable>();
         gctWheel.ReadFromFile(MR, "SnakeToWalker_1.txt");
         gctWheel.BeginTillEnd();
         while (gctWheel.inProgress || !gctWheel.isReady)
         {
-            print("Povorot noG_G");
             yield return new WaitForEndOfFrame();
         }
 
-        gctWheel = gameObject.AddComponent<GaitControlTable>();
         gctWheel.ReadFromFile(MR, "SnakeToWalker_2.txt");
         gctWheel.BeginTillEnd();
         while (gctWheel.inProgress || !gctWheel.isReady)
         {
-            print("Povorot noG_G");
             yield return new WaitForEndOfFrame();
         }
 
@@ -159,7 +156,6 @@ public class TwoLegTest : MonoBehaviour
         MR.modules[412].surfaces["top"].Connect(MR.modules[42].surfaces["right"]);
         MR.modules[413].surfaces["bottom"].Connect(MR.modules[42].surfaces["left"]);
 
-        gctWheel = gameObject.AddComponent<GaitControlTable>();
         gctWheel.ReadFromFile(MR, "SnakeToWalker_3.txt");
         gctWheel.BeginTillEnd();
         while (gctWheel.inProgress || !gctWheel.isReady)
@@ -168,7 +164,6 @@ public class TwoLegTest : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        gctWheel = gameObject.AddComponent<GaitControlTable>();
         gctWheel.ReadFromFile(MR, "SnakeToWalker_4.txt");
         gctWheel.BeginTillEnd();
         while (gctWheel.inProgress || !gctWheel.isReady)
@@ -177,7 +172,6 @@ public class TwoLegTest : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        gctWheel = gameObject.AddComponent<GaitControlTable>();
         gctWheel.ReadFromFile(MR, "SnakeToWalker_5.txt");
         gctWheel.BeginTillEnd();
         while (gctWheel.inProgress || !gctWheel.isReady)
