@@ -5,26 +5,20 @@ using UnityEngine;
 
 public class Transformations : MonoBehaviour
 {
-    public bool isExecuting = false;
-
-    public void ExecuteSteps(params Action[] steps)
+    public IEnumerator Execute(ModularRobot modularRobot, GaitControlTable controlTable, params Func<ModularRobot, GaitControlTable, IEnumerator>[] actions)
     {
-        foreach (Action step in steps)
+        foreach (Func<ModularRobot, GaitControlTable, IEnumerator> action in actions)
         {
-            step();
-            while (isExecuting)
-            {
-
-            }
+            yield return StartCoroutine(action(modularRobot, controlTable));
         }
     }
-    public void MoveWheelBack(ModularRobot modularRobot, GaitControlTable controlTable)
+
+    public IEnumerator MoveWheelBack(ModularRobot modularRobot, GaitControlTable controlTable)
     {
         controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
         controlTable.ReadFromFile(modularRobot, "WheelBack.txt");
-        StartCoroutine(MoveWheelBack(controlTable));
+        yield return StartCoroutine(MoveWheelBack(controlTable));
         print("TAGG: MoveWheelBack");
-
     }
 
     private IEnumerator MoveWheelBack(GaitControlTable controlTable)
@@ -34,7 +28,7 @@ public class Transformations : MonoBehaviour
         yield return WaitUntilMoveEnds(controlTable);
 
     }
-    public void WheelToSnake(ModularRobot modularRobot, GaitControlTable controlTable)
+    public IEnumerator WheelToSnake(ModularRobot modularRobot, GaitControlTable controlTable)
     {
         int midModule = getTopMidModule(modularRobot);
         if (midModule != -1)
@@ -42,9 +36,10 @@ public class Transformations : MonoBehaviour
             controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
             modularRobot.modules[midModule].surfaces["top"].Disconnect();
             controlTable.ReadFromFile(modularRobot, "SnakeToWalker_1.txt");
-            StartCoroutine(TransformWheelToSnake(controlTable));
+            yield return StartCoroutine(TransformWheelToSnake(controlTable));
         }
         print("TAGG: WheelToSnake");
+        yield return null;
     }
 
     private IEnumerator TransformWheelToSnake(GaitControlTable controlTable)
@@ -52,9 +47,9 @@ public class Transformations : MonoBehaviour
         yield return WaitUntilMoveEnds(controlTable);
     }
 
-    public void SnakeToWalker(ModularRobot modularRobot, GaitControlTable controlTable)
+    public IEnumerator SnakeToWalker(ModularRobot modularRobot, GaitControlTable controlTable)
     {
-        StartCoroutine(TransformSnakeToWalker(modularRobot, controlTable));
+        yield return StartCoroutine(TransformSnakeToWalker(modularRobot, controlTable));
         print("TAGG: SnakeToWalker");
     }
 
@@ -82,27 +77,28 @@ public class Transformations : MonoBehaviour
     private IEnumerator WaitUntilMoveEnds(GaitControlTable controlTable)
     {
         controlTable.BeginTillEnd();
-        isExecuting = true;
         while (controlTable.inProgress || !controlTable.isReady)
         {
             yield return new WaitForEndOfFrame();
         }
-        isExecuting = false;
     }
 
+    //fix ids in xml and txt
     private int getTopMidModule(ModularRobot modularRobot)
     {
-        float maxValue = -1;
+        float maxValue = 100;
         int id = -1;
         foreach (Module module in modularRobot.modules.Values)
         {
-            if (module.y > maxValue)
+            print("ID: " + module.id);
+            print("Y Value: " + module.y);
+            if (module.y < maxValue)
             {
                 maxValue = module.y;
                 id = module.id;
             }
         }
-        return id;
+        return id - 1;
     }
 
 

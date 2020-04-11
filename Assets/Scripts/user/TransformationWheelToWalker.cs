@@ -17,7 +17,11 @@ public class TransformationWheelToWalker : MonoBehaviour
 
 
         Transformations transformations = MR.gameObject.AddComponent<Transformations>();
-        transformations.ExecuteSteps(transformations.MoveWheelBack(MR, gctWheel))
+        StartCoroutine(transformations.Execute(
+            MR, gctWheel, 
+            transformations.MoveWheelBack,
+            transformations.WheelToSnake,
+            transformations.SnakeToWalker));
     }
 
     // Update is called once per frame
@@ -79,23 +83,5 @@ public class TransformationWheelToWalker : MonoBehaviour
         {
             yield return new WaitForEndOfFrame();
         }
-    }
-
-    //fix ids in xml and txt
-    private int getTopMidModule()
-    {
-        float maxValue = 100;
-        int id = -1;
-        foreach (Module module in MR.modules.Values)
-        {
-            print("ID: " + module.id);
-            print("Y Value: " + module.y);
-            if (module.y < maxValue)
-            {
-                maxValue = module.y;
-                id = module.id;
-            }
-        }
-        return id - 1;
     }
 }
