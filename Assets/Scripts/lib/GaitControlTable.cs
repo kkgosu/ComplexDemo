@@ -24,7 +24,7 @@ public class GaitControlTable : MonoBehaviour {
     /// </summary>
     public bool inProgress = false;
 
-    public bool isReversed = false;
+    public bool isReversed = false; 
 
     public bool isKeyboardControlled = false;
 
@@ -451,6 +451,23 @@ public class GaitControlTable : MonoBehaviour {
     /// </summary>
     public void BeginTillEnd()
     {
+        if (DriversAreReady())
+        {
+            if (!inProgress)
+            {
+                inProgress = true;
+                StartCoroutine(Worker());
+            }
+            else
+                Debug.LogError("Cannot start GCT while it's active.");
+        }
+        else
+            Debug.LogError("Cannot start GCT. Drivers are not ready.");
+    }
+
+    public void BeginTillEnd(bool isReversed)
+    {
+        this.isReversed = isReversed;
         if (DriversAreReady())
         {
             if (!inProgress)
