@@ -136,7 +136,6 @@ public class ModularRobot : MonoBehaviour {
 	{
 		Dictionary <int, moduleInfo> mInfo = new Dictionary<int, moduleInfo>();
 		Dictionary<int, Queue<connectionInfo>> cInfo = new Dictionary<int, Queue<connectionInfo>>();
-
 		XmlDocument doc = new XmlDocument();
 		doc.LoadXml (xml.ToLower()); 
 		XmlElement root = doc.DocumentElement; // get the root (robot) element
@@ -186,6 +185,7 @@ public class ModularRobot : MonoBehaviour {
 		mInfo.Remove(referModuleId);
 
 		XmlNode connectionsXML = root.SelectSingleNode ("connections");
+
 		foreach (XmlElement child in connectionsXML.ChildNodes) {
 			if (!(child.HasAttribute ("from") && child.HasAttribute ("to") && child.HasAttribute ("surfacefrom") && child.HasAttribute ("surfaceto"))) {
 				modules [referModuleId].Destroy ();
