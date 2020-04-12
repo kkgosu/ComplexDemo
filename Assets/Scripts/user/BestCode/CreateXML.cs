@@ -100,6 +100,16 @@ public class CreateXML : MonoBehaviour
         return this;
     }
 
+    public Dictionary<int, float> CreateModules(float[] array)
+    {
+        Dictionary<int, float> modules = new Dictionary<int, float>();
+        for(int i = 0; i < array.Length; i++)
+        {
+            modules.Add(i, array[i]);
+        }
+        return modules;
+    }
+
     public string Create(string name)
     {
         string path = Application.dataPath + "/Resources/Configurations/" + name + ".xml";

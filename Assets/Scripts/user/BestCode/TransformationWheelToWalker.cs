@@ -15,6 +15,9 @@ public class TransformationWheelToWalker : MonoBehaviour
         
 
         CreateXML createXML = MR.gameObject.AddComponent<CreateXML>();
+        CreateCFG createCFG = MR.gameObject.AddComponent<CreateCFG>();
+
+        float[] array = createCFG.CreateRoundedWheel(21);
 
         List<string> conenctions = new List<string>();
         conenctions.Add(createXML.CreateConnectionString(0, 1, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
@@ -37,10 +40,11 @@ public class TransformationWheelToWalker : MonoBehaviour
         conenctions.Add(createXML.CreateConnectionString(17, 18, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
         conenctions.Add(createXML.CreateConnectionString(18, 19, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
         conenctions.Add(createXML.CreateConnectionString(19, 20, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
+        conenctions.Add(createXML.CreateConnectionString(20, 0, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
 
         string path = createXML
             .CreateHeader("test123", new Vector3(0,1,0), Quaternion.Euler(0,0,-90))
-            .AddModules(21)
+            .AddModules(21, createXML.CreateModules(array))
             .AddConnections(conenctions)
             .Create("Znake2");
 
