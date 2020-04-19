@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 public class TransformationWheelToWalker : MonoBehaviour
 {
-    ModularRobot MR; // Колесо
+    ModularRobot MR;
     GaitControlTable gctWheel;
 
     // Start is called before the first frame update
@@ -15,17 +16,19 @@ public class TransformationWheelToWalker : MonoBehaviour
         
         CreateXML createXML = MR.gameObject.AddComponent<CreateXML>();
         CreateCFG createCFG = MR.gameObject.AddComponent<CreateCFG>();
+        Movement movement = MR.gameObject.AddComponent<Movement>();
 
-        float[] array = createCFG.CreateWalker(21);
-
+        float[] array = createCFG.CreateRoundedWheel(21);
         string path = createXML
-            .CreateHeader("test123", new Vector3(0,1,0), Quaternion.Euler(0,0,90))
+            .CreateHeader("test123", new Vector3(0,0,0), Quaternion.Euler(0,0,-90))
             .AddModules(21, createXML.CreateModules(array))
-            .AddConnections(createXML.CreateConnectionsForWalker(21))
+            .AddConnections(createXML.CreateSimpleConnections(21))
             .Create("Znake2");
 
         MR.Load(path);
         MR.gameObject.AddComponent<COM_Controller>();
+
+        StartCoroutine(movement.Forward(MR, array));
 
         /*        Transformations transformations = MR.gameObject.AddComponent<Transformations>();
                 StartCoroutine(transformations.Execute(

@@ -141,8 +141,8 @@ public class GaitControlTable : MonoBehaviour {
     public float ParseAngleValue(Driver drv, string line)
     {
         // Проверка, содержит ли запись угла специальные символы.
-        if (!Regex.IsMatch(line, @"min|max|default"))
-            return float.Parse(Regex.Match(line, @"([\-]?|[\+]?)([0-9]+(\.[0-9]+)?)").Groups[0].Value);
+       // if (!Regex.IsMatch(line, @"min|max|default"))
+        //    return float.Parse(Regex.Match(line, @"([\-]?|[\+]?)([0-9]+(\.[0-9]+)?)").Groups[0].Value);
         // Если да, обработка специальных символов.
 
 
