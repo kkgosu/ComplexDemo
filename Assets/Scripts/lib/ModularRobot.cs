@@ -73,7 +73,7 @@ public class ModularRobot : MonoBehaviour {
 	public void Load(string xmlPath, Vector3 position)
 	{
 		string xml = File.ReadAllText (xmlPath);
-		LoadXML (xml,position);
+		LoadXML (xml, position);
 	}
 
 

@@ -9,6 +9,32 @@ public class CreateCFG : MonoBehaviour
 
     private float n;
 
+    public float[] CreateWalker(int total)
+    {
+        float[] array = new float[total];
+        if (total > 12)
+        {
+            for (int i = 1; i < 5; i++)
+            {
+                int nextModule = i + 4;
+                array[nextModule] = 45;
+                array[nextModule + 4] = 45;
+            }
+        }
+        
+        return array;
+    } 
+
+     public float[] CreateSnake(int total)
+    {
+        float[] array = new float[total];
+        for (int i = 0; i < total; i++)
+        {
+            array[i] = 0;
+        }
+        return array;
+    }
+
     public float[] CreatePerfectWheel(int total)
     {
         float angle = 360f / total;

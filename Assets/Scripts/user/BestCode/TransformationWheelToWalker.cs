@@ -13,42 +13,18 @@ public class TransformationWheelToWalker : MonoBehaviour
         var Rob = new GameObject();
         MR = Rob.AddComponent<ModularRobot>();
         
-
         CreateXML createXML = MR.gameObject.AddComponent<CreateXML>();
         CreateCFG createCFG = MR.gameObject.AddComponent<CreateCFG>();
 
-        float[] array = createCFG.CreateRoundedWheel(21);
-
-        List<string> conenctions = new List<string>();
-        conenctions.Add(createXML.CreateConnectionString(0, 1, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(1, 2, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(2, 3, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(3, 4, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(4, 5, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(5, 6, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(6, 7, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(7, 8, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(8, 9, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(9, 10, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(10, 11, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(11, 12, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(12, 13, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(13, 14, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(14, 15, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(15, 16, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(16, 17, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(17, 18, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(18, 19, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(19, 20, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
-        conenctions.Add(createXML.CreateConnectionString(20, 0, CreateXML.Sides.TOP, CreateXML.Sides.BOTTOM));
+        float[] array = createCFG.CreateWalker(21);
 
         string path = createXML
-            .CreateHeader("test123", new Vector3(0,1,0), Quaternion.Euler(0,0,-90))
+            .CreateHeader("test123", new Vector3(0,1,0), Quaternion.Euler(0,0,90))
             .AddModules(21, createXML.CreateModules(array))
-            .AddConnections(conenctions)
+            .AddConnections(createXML.CreateConnectionsForWalker(21))
             .Create("Znake2");
 
-        MR.Load(path, Vector3.right * 1.095f);
+        MR.Load(path);
         MR.gameObject.AddComponent<COM_Controller>();
 
         /*        Transformations transformations = MR.gameObject.AddComponent<Transformations>();

@@ -140,6 +140,45 @@ public class CreateXML : MonoBehaviour
         return "<connection from=\"" + from + "\" to=\"" + to + "\" surfaceFrom=\"" + sides[sFrom] + "\" surfaceTo=\"" + sides[sTo] + "\"></connection>";
     }
 
+    /// <summary>
+    /// Создает соединения для ходячего робота
+    /// </summary>
+    /// <param name="total">Кол-во модулей</param>
+    /// <returns></returns>
+    public List<string> CreateConnectionsForWalker(int total)
+    {
+        List<string> conenctions = new List<string>();
+
+        //creating central connections
+        if (total > 4)
+        {
+            conenctions.Add(CreateConnectionString(0, 1, Sides.TOP, Sides.TOP));
+            conenctions.Add(CreateConnectionString(0, 2, Sides.RIGHT, Sides.TOP));
+            conenctions.Add(CreateConnectionString(0, 3, Sides.BOTTOM, Sides.TOP));
+            conenctions.Add(CreateConnectionString(0, 4, Sides.LEFT, Sides.TOP));
+
+            //add leg modules
+            for (int i = 1; i < total - 4; i++)
+            {
+                conenctions.Add(CreateConnectionString(i, i + 4, Sides.BOTTOM, Sides.TOP));
+            }
+        }
+
+        return conenctions;
+    }
+
+    public List<string> CreateSimpleConnections(int total)
+    {
+        List<string> conenctions = new List<string>();
+        for (int i = 0; i < total - 1; i++)
+        {
+            conenctions.Add(CreateConnectionString(i, i + 1, Sides.TOP, Sides.BOTTOM));
+        }
+
+        conenctions.Add(CreateConnectionString(total - 1, 0, Sides.TOP, Sides.BOTTOM));
+        return conenctions;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
