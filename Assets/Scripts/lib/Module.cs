@@ -86,6 +86,7 @@ public class Module : MonoBehaviour {
         }
         foreach (Rigidbody rb in GetComponentsInChildren(typeof(Rigidbody))) {
             rb.maxDepenetrationVelocity /= 100;
+            rb.mass = 2;
             //print(rb.maxDepenetrationVelocity);
         }
         initialised = true;

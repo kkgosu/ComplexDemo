@@ -7,18 +7,21 @@ public class TransformationWheelToWalker : MonoBehaviour
 {
     ModularRobot MR;
     GaitControlTable gctWheel;
-
+    private WheelMovement wheelMovement;
+    private CreateXML createXML;
+    private CreateCFG createCFG;
+    private float[] array;
     // Start is called before the first frame update
     void Start()
     {
         var Rob = new GameObject();
         MR = Rob.AddComponent<ModularRobot>();
         
-        CreateXML createXML = MR.gameObject.AddComponent<CreateXML>();
-        CreateCFG createCFG = MR.gameObject.AddComponent<CreateCFG>();
-        Movement movement = MR.gameObject.AddComponent<Movement>();
+        createXML = MR.gameObject.AddComponent<CreateXML>();
+        createCFG = MR.gameObject.AddComponent<CreateCFG>();
+        wheelMovement = MR.gameObject.AddComponent<WheelMovement>();
 
-        float[] array = createCFG.CreateRoundedWheel(21);
+        array = createCFG.CreateRoundedWheel(21);
         string path = createXML
             .CreateHeader("test123", new Vector3(0,0,0), Quaternion.Euler(0,0,-90))
             .AddModules(21, createXML.CreateModules(array))
@@ -28,7 +31,6 @@ public class TransformationWheelToWalker : MonoBehaviour
         MR.Load(path);
         MR.gameObject.AddComponent<COM_Controller>();
 
-        StartCoroutine(movement.Forward(MR, array));
 
         /*        Transformations transformations = MR.gameObject.AddComponent<Transformations>();
                 StartCoroutine(transformations.Execute(
@@ -41,7 +43,20 @@ public class TransformationWheelToWalker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyUp(KeyCode.W))
+        {
+            wheelMovement.isMoving = false;
+            StartCoroutine(wheelMovement.MoveForward(MR, array));
+        }
+        if (Input.GetKeyUp(KeyCode.Z))
+        {
+            wheelMovement.isMoving = false;
+        }
+        if (Input.GetKeyUp(KeyCode.S))
+        {
+            wheelMovement.isMoving = false;
+            StartCoroutine(wheelMovement.MoveBackward(MR, array));
+        }
     }
 
     public void WalkerToWheel()

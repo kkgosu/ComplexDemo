@@ -51,7 +51,7 @@ public class CreateCFG : MonoBehaviour
     public float[] CreateRoundedWheel(int total)
     {
         float[] array = new float[total];
-        int lastFlat = 4;
+        int lastFlat = 5;
 
         n = lastFlat * 1f / (total - lastFlat);
         print("n: " + n);
