@@ -67,16 +67,12 @@ public abstract class Movement : MonoBehaviour, IMovement
         }
 
         string values = builder.ToString();
+        print(values);
         string path = Application.dataPath + "/Resources/Gait Control Tables/" + "teztz" + ".gct";
         File.WriteAllText(path, header + values);
         return path;
     }
     protected IEnumerator Move(GaitControlTable controlTable)
-    {
-        yield return WaitUntilMoveEnds(controlTable);
-    }
-
-    private IEnumerator WaitUntilMoveEnds(GaitControlTable controlTable)
     {
         controlTable.BeginTillEnd();
         while (controlTable.inProgress || !controlTable.isReady)

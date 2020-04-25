@@ -71,10 +71,10 @@ public class CreateXML : MonoBehaviour
         {
             if (modules.ContainsKey(i))
             {
-                builder.AppendLine("\t\t<module id=\"" + i + "\" " + "q1=\"" + modules[i] + "\"></module>");
+                builder.AppendLine("\t\t<module id=\"" + i + "\" " + "q1=\"" + modules[i] + "\"/>");
             } else
             {
-                builder.AppendLine("\t\t<module id=\"" + i + "\" " + "q1=\"0\"></module>");
+                builder.AppendLine("\t\t<module id=\"" + i + "\" " + "q1=\"0\"/>");
             }
         }
         builder.AppendLine("\t</modules>");
@@ -126,7 +126,7 @@ public class CreateXML : MonoBehaviour
     /// <param name="sFrom">Какой стороной</param>
     /// <param name="sTo">К какой стороне</param>
     /// <returns></returns>
-    public string CreateConnectionString(int from, int to, Sides sFrom, Sides sTo)
+    public string CreateConnectionString(int from, int to, Sides sFrom, Sides sTo, int tilt = 0)
     {
         //<connection from="41" to="42" surfaceFrom="top" surfaceTo="bottom">
         //</ connection >
@@ -137,7 +137,11 @@ public class CreateXML : MonoBehaviour
             sides.Add(Sides.RIGHT, "right");
             sides.Add(Sides.LEFT, "left");
         }
-        return "<connection from=\"" + from + "\" to=\"" + to + "\" surfaceFrom=\"" + sides[sFrom] + "\" surfaceTo=\"" + sides[sTo] + "\"></connection>";
+        if (tilt == 0)
+        {
+            return "<connection from=\"" + from + "\" to=\"" + to + "\" surfaceFrom=\"" + sides[sFrom] + "\" surfaceTo=\"" + sides[sTo] + "\"/>";
+        }
+        return "<connection from=\"" + from + "\" to=\"" + to + "\" surfaceFrom=\"" + sides[sFrom] + "\" surfaceTo=\"" + sides[sTo] + "\"" + " tilt=\"" + tilt + "\"/>";
     }
 
     /// <summary>
@@ -152,15 +156,21 @@ public class CreateXML : MonoBehaviour
         //creating central connections
         if (total > 4)
         {
-            conenctions.Add(CreateConnectionString(0, 1, Sides.TOP, Sides.TOP));
-            conenctions.Add(CreateConnectionString(0, 2, Sides.RIGHT, Sides.TOP));
-            conenctions.Add(CreateConnectionString(0, 3, Sides.BOTTOM, Sides.TOP));
-            conenctions.Add(CreateConnectionString(0, 4, Sides.LEFT, Sides.TOP));
+            conenctions.Add(CreateConnectionString(0, 1, Sides.TOP, Sides.TOP, 90));
+            conenctions.Add(CreateConnectionString(0, 2, Sides.RIGHT, Sides.TOP, 90));
+            conenctions.Add(CreateConnectionString(0, 3, Sides.BOTTOM, Sides.TOP, 90));
+            conenctions.Add(CreateConnectionString(0, 4, Sides.LEFT, Sides.TOP, 90));
 
             //add leg modules
             for (int i = 1; i < total - 4; i++)
             {
-                conenctions.Add(CreateConnectionString(i, i + 4, Sides.BOTTOM, Sides.TOP));
+                if (i >= 1 && i <= 4)
+                {
+                    conenctions.Add(CreateConnectionString(i, i + 4, Sides.BOTTOM, Sides.TOP, -90));
+                } else
+                {
+                    conenctions.Add(CreateConnectionString(i, i + 4, Sides.BOTTOM, Sides.TOP));
+                }
             }
         }
 

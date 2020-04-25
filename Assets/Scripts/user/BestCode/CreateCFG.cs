@@ -17,8 +17,8 @@ public class CreateCFG : MonoBehaviour
             for (int i = 1; i < 5; i++)
             {
                 int nextModule = i + 4;
-                array[nextModule] = 45;
-                array[nextModule + 4] = 45;
+                array[nextModule] = 20;
+                array[nextModule + 4] = 70;
             }
         }
         

@@ -8,6 +8,7 @@ public class TransformationWheelToWalker : MonoBehaviour
     ModularRobot MR;
     GaitControlTable gctWheel;
     private WheelMovement wheelMovement;
+    private WalkerMovement walkerMovement;
     private CreateXML createXML;
     private CreateCFG createCFG;
     private float[] array;
@@ -20,12 +21,13 @@ public class TransformationWheelToWalker : MonoBehaviour
         createXML = MR.gameObject.AddComponent<CreateXML>();
         createCFG = MR.gameObject.AddComponent<CreateCFG>();
         wheelMovement = MR.gameObject.AddComponent<WheelMovement>();
+        walkerMovement = MR.gameObject.AddComponent<WalkerMovement>();
 
-        array = createCFG.CreateRoundedWheel(21);
+        array = createCFG.CreateWalker(21);
         string path = createXML
-            .CreateHeader("test123", new Vector3(0,0,0), Quaternion.Euler(0,0,-90))
+            .CreateHeader("test123", new Vector3(0,1,0), Quaternion.Euler(0,0,90))
             .AddModules(21, createXML.CreateModules(array))
-            .AddConnections(createXML.CreateSimpleConnections(21))
+            .AddConnections(createXML.CreateConnectionsForWalker(21))
             .Create("Znake2");
 
         MR.Load(path);
@@ -43,19 +45,25 @@ public class TransformationWheelToWalker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.W))
+        if (Input.GetKeyUp(KeyCode.Q))
         {
             wheelMovement.isMoving = false;
             StartCoroutine(wheelMovement.MoveForward(MR, array));
         }
-        if (Input.GetKeyUp(KeyCode.Z))
+        if (Input.GetKeyUp(KeyCode.W))
         {
             wheelMovement.isMoving = false;
+            walkerMovement.isMoving = false;
         }
-        if (Input.GetKeyUp(KeyCode.S))
+        if (Input.GetKeyUp(KeyCode.E))
         {
             wheelMovement.isMoving = false;
             StartCoroutine(wheelMovement.MoveBackward(MR, array));
+        }
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            walkerMovement.isMoving = false;
+            StartCoroutine(walkerMovement.MoveBackward(MR, array));
         }
     }
 
