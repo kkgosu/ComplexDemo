@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WalkerMovement : Movement
 {
+    private int offset = 0;
+
     private float[] CreateSecondtStep(float[] angles)
     {
         for (int i = 1; i <= 12; i++)
@@ -11,7 +13,8 @@ public class WalkerMovement : Movement
             if (angles[i] == 15)
             {
                 angles[i] -= 30;
-            } else if (angles[i] == -15)
+            }
+            else if (angles[i] == -15)
             {
                 angles[i] += 30;
             }
@@ -37,42 +40,36 @@ public class WalkerMovement : Movement
 
     private float[] CreateFirstStep(float[] angles)
     {
-        for (int i = 1; i <= 12; i++)
-        {
-            if (angles[i] == 0)
-            {
-                if (angles[i] % 2 == 1)
-                {
-                    angles[i] = -15;
-                } else
-                {
-                    angles[i] = 15;
-                }
-            } else if (angles[i] == 70)
-            {
-                if (angles[i] % 2 == 1)
-                {
-                    angles[i] = 50;
-                }
-            } else if (angles[i] == 20)
-            {
-                if (angles[i] % 2 == 1)
-                {
-                    angles[i] = 40;
-                }
-            }
-        }
+        angles[1] = 15;
+        angles[2] = -15;
+        angles[3] = -15;
+        angles[4] = 15;
+
+        angles[5] = 20;
+        angles[6] = 40;
+        angles[7] = 20;
+        angles[8] = 40;
+
+        angles[9] = 70;
+        angles[10] = 50;
+        angles[11] = 70;
+        angles[12] = 50;
+
         return angles;
     }
+
     override public IEnumerator MoveBackward(ModularRobot modularRobot, float[] angles)
     {
         isMoving = true;
+        float[] newAngles = angles;
         GaitControlTable controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
-        controlTable.ReadFromFile(modularRobot, CreateGCT(CreateFirstStep(angles), 1));
-        yield return StartCoroutine(Move(controlTable));
         while (isMoving)
         {
-            controlTable.ReadFromFile(modularRobot, CreateGCT(CreateSecondtStep(angles), 1));
+            newAngles = CreateFirstStep(angles);
+            controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 1));
+            yield return StartCoroutine(Move(controlTable));
+            newAngles = CreateSecondtStep(angles);
+            controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 1));
             yield return StartCoroutine(Move(controlTable));
         }
         isMoving = false;

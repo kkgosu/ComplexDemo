@@ -11,10 +11,11 @@ public class CreateCFG : MonoBehaviour
 
     public float[] CreateWalker(int total)
     {
+        int offset = 0;
         float[] array = new float[total];
         if (total > 12)
         {
-            for (int i = 1; i < 5; i++)
+            for (int i = 1 + offset; i < 5 + offset; i++)
             {
                 int nextModule = i + 4;
                 array[nextModule] = 20;
