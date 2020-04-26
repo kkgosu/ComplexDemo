@@ -45,6 +45,11 @@ public class TransformationWheelToWalker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            wheelMovement.isMoving = false;
+            walkerMovement.isMoving = false;
+        }
         if (Input.GetKeyUp(KeyCode.Q))
         {
             wheelMovement.isMoving = false;
@@ -53,17 +58,27 @@ public class TransformationWheelToWalker : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.W))
         {
             wheelMovement.isMoving = false;
-            walkerMovement.isMoving = false;
-        }
-        if (Input.GetKeyUp(KeyCode.E))
-        {
-            wheelMovement.isMoving = false;
             StartCoroutine(wheelMovement.MoveBackward(MR, array));
         }
         if (Input.GetKeyUp(KeyCode.A))
         {
             walkerMovement.isMoving = false;
+            StartCoroutine(walkerMovement.MoveForward(MR, array));
+        }
+        if (Input.GetKeyUp(KeyCode.S))
+        {
+            walkerMovement.isMoving = false;
             StartCoroutine(walkerMovement.MoveBackward(MR, array));
+        }
+        if (Input.GetKeyUp(KeyCode.D))
+        {
+            walkerMovement.isMoving = false;
+            StartCoroutine(walkerMovement.MoveRight(MR, array));
+        }
+        if (Input.GetKeyUp(KeyCode.F))
+        {
+            walkerMovement.isMoving = false;
+            StartCoroutine(walkerMovement.MoveLeft(MR, array));
         }
     }
 
