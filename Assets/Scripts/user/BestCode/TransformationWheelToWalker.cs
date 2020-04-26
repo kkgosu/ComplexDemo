@@ -9,6 +9,8 @@ public class TransformationWheelToWalker : MonoBehaviour
     GaitControlTable gctWheel;
     private WheelMovement wheelMovement;
     private WalkerMovement walkerMovement;
+    private SnakeLocomotionManager locomotionManager;
+    private SnakeMovement snakeMovement;
     private CreateXML createXML;
     private CreateCFG createCFG;
     private float[] array;
@@ -22,16 +24,26 @@ public class TransformationWheelToWalker : MonoBehaviour
         createCFG = MR.gameObject.AddComponent<CreateCFG>();
         wheelMovement = MR.gameObject.AddComponent<WheelMovement>();
         walkerMovement = MR.gameObject.AddComponent<WalkerMovement>();
+        gctWheel = MR.gameObject.AddComponent<GaitControlTable>();
 
-        array = createCFG.CreateWalker(21);
-        string path = createXML
-            .CreateHeader("test123", new Vector3(0,1,0), Quaternion.Euler(0,0,90))
-            .AddModules(21, createXML.CreateModules(array))
-            .AddConnections(createXML.CreateConnectionsForWalker(21))
-            .Create("Znake2");
+        Quaternion rot = new Quaternion();
+        rot.eulerAngles = new Vector3(0, 0, 90);
+        MR = Robots.CreateSnake(Modules.M3R, Vector3.zero, rot, 6, robotName: "Position Test");
+        gctWheel.ReadFromFile(MR, "Test_Snake_GCT.txt");
+        gctWheel.Begin();
 
-        MR.Load(path);
-        MR.gameObject.AddComponent<COM_Controller>();
+        /* snakeMovement = MR.gameObject.AddComponent<SnakeMovement>();
+         locomotionManager = MR.gameObject.AddComponent<SnakeLocomotionManager>();*/
+
+        /*        array = createCFG.CreateWalker(21);
+                string path = createXML
+                    .CreateHeader("test123", new Vector3(0, 1, 0), Quaternion.Euler(0, 0, 90))
+                    .AddModules(21, createXML.CreateModules(array))
+                    .AddConnections(createXML.CreateConnectionsForWalker(21))
+                    .Create("Znake2");
+
+                MR.Load(path);
+                MR.gameObject.AddComponent<COM_Controller>();*/
 
 
         /*        Transformations transformations = MR.gameObject.AddComponent<Transformations>();
@@ -80,6 +92,22 @@ public class TransformationWheelToWalker : MonoBehaviour
             walkerMovement.isMoving = false;
             StartCoroutine(walkerMovement.MoveLeft(MR, array));
         }
+        /*        if (Input.GetKeyDown(KeyCode.Z))
+                {
+                    snakeMovement.ClimbOnWheel(GameObject.Find("Robot wheel24").GetComponent<ModularRobot>());
+                }
+                if (Input.GetKeyDown(KeyCode.X))
+                {
+                    snakeMovement.side.Move(1);
+                }
+                if (snakeMovement.busy)
+                {
+                    snakeMovement.Go();
+                }
+                if (Input.GetKeyDown(KeyCode.C))
+                {
+                    snakeMovement.fold.Rotate(90);
+                }*/
     }
 
     public void WalkerToWheel()
