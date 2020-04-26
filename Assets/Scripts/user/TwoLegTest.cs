@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class TwoLegTest : MonoBehaviour
@@ -19,8 +21,8 @@ public class TwoLegTest : MonoBehaviour
     void Start()
     {
         //TestWheelRobot();
-      OneWheelRobot();
-      //CreateCamera();
+        OneWheelRobot();
+        //CreateCamera();
         //TwoWheelRobot();
         CameraTwo();
 
@@ -92,150 +94,34 @@ public class TwoLegTest : MonoBehaviour
         var Rob1 = new GameObject();
         MR1 = Rob1.AddComponent<ModularRobot>();
         MR1.Load(Application.dataPath + "/Resources/Configurations/2legs_1_cam.xml");
-       
-    }
 
-    void InitWheelToSnake()
-    {
-        gctWheel = gameObject.AddComponent<GaitControlTable>();
-        gctWheel.ReadFromFile(MR, "WheelBack.txt");
-        StartCoroutine(MoveWheelBack());
-    }
-
-    IEnumerator MoveWheelBack()
-    {
-        gctWheel.BeginTillEnd();
-        yield return new WaitForSeconds(1f);
-        yield return new WaitForEndOfFrame();
-        while (gctWheel.inProgress || !gctWheel.isReady)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-        StartTransformWheelToSnake();
-        
-
-    }
-
-    void StartTransformWheelToSnake()
-    {
-        MR.modules[412].surfaces["top"].Disconnect();
-        //gctWheel.ReadFromFile(MR, "WheelExtension.txt");
-        //StartCoroutine(TransformWheelToSnake());
-        StartCoroutine(TransformSnakeToWalker());
-    }
-
-    IEnumerator TransformWheelToSnake()
-    {
-        gctWheel.BeginTillEnd();
-        while (gctWheel.inProgress || !gctWheel.isReady)
-        {
-            print("Razvora4ivaemsya");
-            yield return new WaitForEndOfFrame();
-        }
-        StartCoroutine(TransformSnakeToWalker());
-    }
-
-    IEnumerator TransformSnakeToWalker()
-    {
-        gctWheel.ReadFromFile(MR, "SnakeToWalker_1.txt");
-        gctWheel.BeginTillEnd();
-        while (gctWheel.inProgress || !gctWheel.isReady)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-
-        gctWheel.ReadFromFile(MR, "SnakeToWalker_2.txt");
-        gctWheel.BeginTillEnd();
-        while (gctWheel.inProgress || !gctWheel.isReady)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-
-        MR.modules[417].surfaces["top"].Disconnect();
-        MR.modules[47].surfaces["top"].Disconnect();
-        MR.modules[412].surfaces["top"].Connect(MR.modules[42].surfaces["right"]);
-        MR.modules[413].surfaces["bottom"].Connect(MR.modules[42].surfaces["left"]);
-
-        gctWheel.ReadFromFile(MR, "SnakeToWalker_3.txt");
-        gctWheel.BeginTillEnd();
-        while (gctWheel.inProgress || !gctWheel.isReady)
-        {
-            print("Ramikanie noG_G");
-            yield return new WaitForEndOfFrame();
-        }
-
-        gctWheel.ReadFromFile(MR, "SnakeToWalker_4.txt");
-        gctWheel.BeginTillEnd();
-        while (gctWheel.inProgress || !gctWheel.isReady)
-        {
-            print("Ramikanie noG_G");
-            yield return new WaitForEndOfFrame();
-        }
-
-        gctWheel.ReadFromFile(MR, "SnakeToWalker_5.txt");
-        gctWheel.BeginTillEnd();
-        while (gctWheel.inProgress || !gctWheel.isReady)
-        {
-            print("Ramikanie noG_G");
-            yield return new WaitForEndOfFrame();
-        }
     }
 
     void InitLegsSnake()
     {
         gct01 = gameObject.AddComponent<GaitControlTable>();
-        //gct02 = gameObject.AddComponent<GaitControlTable>();
+        gct02 = gameObject.AddComponent<GaitControlTable>();
         gctWheel = gameObject.AddComponent<GaitControlTable>();
         gct01.ReadFromFile(MR1, "SLegs.txt");
-        //gct02.ReadFromFile(MR1, "SLegs_0.txt");
+        gct02.ReadFromFile(MR1, "SLegs_0.txt");
         gctWheel.ReadFromFile(MR, "WheelBack.txt");
         StartCoroutine(Demo2());
     }
-
-    IEnumerator Demo()
-    {
-        gct01.Begin(3);
-        while (gct01.inProgress && !gct01.isReady)
-            yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForSeconds(2f);
-        MR1.modules[20].surfaces["bottom"].Connect(MR.modules[46].surfaces["left"]);
-        MR1.modules[25].surfaces["bottom"].Connect(MR.modules[46].surfaces["right"]);
-        //gct02.Begin();
-        while (gct02.inProgress && !gct02.isReady)
-            yield return new WaitForEndOfFrame();
-        yield return new WaitForSeconds(1f);
-       // gct03.Begin();
-        gctWheel.Begin();
-    }
-
-    void LegsUp()
-    {
-        gct01 = gameObject.AddComponent<GaitControlTable>();
-        //gct02 = gameObject.AddComponent<GaitControlTable>();
-        //gct03 = gameObject.AddComponent<GaitControlTable>();
-        gctWheel = gameObject.AddComponent<GaitControlTable>();
-        gct01.ReadFromFile(MR1, "Slegs_0.txt");
-        //gct02.ReadFromFile(MR1, "Slegs_1.txt");
-        //gct03.ReadFromFile(MR1, "Slegs_2.txt");
-        gctWheel.ReadFromFile(MR, "WheelFwd.txt");
-        StartCoroutine(Demo());
-
-    }
     IEnumerator Demo2()
     {
+
         float delay = 1f;
+        float zaderzka = 2f;
 
         gctWheel.BeginTillEnd();
         gct01.BeginTillEnd();
         yield return new WaitForSeconds(delay);
         yield return new WaitForEndOfFrame();
-        while (gctWheel.inProgress || !gctWheel.isReady || gct01.inProgress || !gct01.isReady)
-        {
+        while (gctWheel.inProgress && !gctWheel.isReady && gct01.inProgress && !gct01.isReady)
             yield return new WaitForEndOfFrame();
-        }
         yield return new WaitForSeconds(delay);
-        LegsUp();
+
+
     }
 
     void Demo1Init()
@@ -261,7 +147,7 @@ public class TwoLegTest : MonoBehaviour
 
         print("Step 1");
         gctWheel.NextStep(); // step 1
-        gct01.BeginTillEnd();    
+        gct01.BeginTillEnd();
         yield return new WaitForSeconds(5.3f);
         yield return new WaitForEndOfFrame();
         while (gctWheel.inProgress && !gctWheel.isReady && gct01.inProgress && !gct01.isReady)
@@ -272,31 +158,31 @@ public class TwoLegTest : MonoBehaviour
         MR1.modules[25].surfaces["bottom"].Disconnect();
         yield return new WaitForEndOfFrame();
 
-        print("Step 2");         
+        print("Step 2");
         gctWheel.NextStep(); // step 2
         gct02.BeginTillEnd();
         yield return new WaitForSeconds(5.3f);
         yield return new WaitForEndOfFrame();
         while (gctWheel.inProgress && !gctWheel.isReady && gct02.inProgress && !gct02.isReady)
-                yield return new WaitForEndOfFrame();
-                yield return new WaitForSeconds(zaderzka);
+            yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(zaderzka);
         MR1.modules[25].surfaces["bottom"].Connect(MR.modules[410].surfaces["left"]);
-                yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
         MR1.modules[20].surfaces["bottom"].Disconnect();
-                yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
 
         print("Step 3");
         gctWheel.NextStep(); // step 3
         gct01.BeginTillEnd();
         yield return new WaitForSeconds(6f);
         yield return new WaitForEndOfFrame();
-        while (gctWheel.inProgress && !gctWheel.isReady&& gct01.inProgress && !gct01.isReady)
-                yield return new WaitForEndOfFrame();
-                yield return new WaitForSeconds(delay);
+        while (gctWheel.inProgress && !gctWheel.isReady && gct01.inProgress && !gct01.isReady)
+            yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(delay);
         MR1.modules[20].surfaces["bottom"].Connect(MR.modules[48].surfaces["right"]);
-                yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
         MR1.modules[25].surfaces["bottom"].Disconnect();
-                yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
 
         print("Step 4");
         gctWheel.NextStep(); // step 4
@@ -304,19 +190,19 @@ public class TwoLegTest : MonoBehaviour
         yield return new WaitForSeconds(6f);
         yield return new WaitForEndOfFrame();
         while (gctWheel.inProgress && !gctWheel.isReady && gct02.inProgress && !gct02.isReady)
-                yield return new WaitForEndOfFrame();
-                yield return new WaitForSeconds(zaderzka);
+            yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(zaderzka);
         MR1.modules[25].surfaces["bottom"].Connect(MR.modules[48].surfaces["left"]);
-                yield return new WaitForEndOfFrame();
-        
+        yield return new WaitForEndOfFrame();
+
         print("Step 5");
         gctWheel.NextStep(); // step 5
 
-            while (gctWheel.inProgress && !gctWheel.isReady)
-                yield return new WaitForEndOfFrame();
-                yield return new WaitForSeconds(delay);
+        while (gctWheel.inProgress && !gctWheel.isReady)
+            yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(delay);
         MR1.modules[20].surfaces["bottom"].Disconnect();
-                yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
 
         print("Step 6");
         gctWheel.NextStep(); // step 6
@@ -325,11 +211,11 @@ public class TwoLegTest : MonoBehaviour
         yield return new WaitForEndOfFrame();
         while (gctWheel.inProgress && !gctWheel.isReady && gct01.inProgress && !gct01.isReady)
             yield return new WaitForEndOfFrame();
-            yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(delay);
         MR1.modules[20].surfaces["bottom"].Connect(MR.modules[46].surfaces["right"]);
-            yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
         MR1.modules[25].surfaces["bottom"].Disconnect();
-            yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
 
         print("Step 7");
         gctWheel.NextStep(); // step 7
@@ -363,27 +249,27 @@ public class TwoLegTest : MonoBehaviour
         yield return new WaitForSeconds(7.4f);
         yield return new WaitForEndOfFrame();
         while (gctWheel.inProgress && !gctWheel.isReady && gct02.inProgress && !gct02.isReady)
-                yield return new WaitForEndOfFrame();
-                yield return new WaitForSeconds(zaderzka);
+            yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(zaderzka);
         MR1.modules[25].surfaces["bottom"].Connect(MR.modules[44].surfaces["left"]);
-                yield return new WaitForEndOfFrame();       
-                yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
 
         print("Step 10");
         gctWheel.NextStep(); // step 10
         while (gctWheel.inProgress && !gctWheel.isReady)
             yield return new WaitForEndOfFrame();
-            yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.5f);
         MR1.modules[20].surfaces["bottom"].Disconnect();
-                yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
         gct01.BeginTillEnd();
         yield return new WaitForSeconds(8.1f);
         yield return new WaitForEndOfFrame();
         while (gct01.inProgress && !gct01.isReady)
-                yield return new WaitForEndOfFrame();
-                yield return new WaitForSeconds(1.5f);
+            yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(1.5f);
         MR1.modules[20].surfaces["bottom"].Connect(MR.modules[42].surfaces["right"]);
-                yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
         MR1.modules[25].surfaces["bottom"].Disconnect();
         yield return new WaitForEndOfFrame();
 
@@ -393,29 +279,58 @@ public class TwoLegTest : MonoBehaviour
         yield return new WaitForSeconds(8.1f);
         yield return new WaitForEndOfFrame();
         while (gctWheel.inProgress && !gctWheel.isReady && gct02.inProgress && !gct02.isReady)
-                yield return new WaitForEndOfFrame();
-                yield return new WaitForSeconds(5f);
+            yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(5f);
         MR1.modules[25].surfaces["bottom"].Connect(MR.modules[42].surfaces["left"]);
-                yield return new WaitForEndOfFrame();
-       // MR1.modules[20].surfaces["bottom"].Disconnect();
-                yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        // MR1.modules[20].surfaces["bottom"].Disconnect();
+        yield return new WaitForEndOfFrame();
 
     }
 
+    void LegsUp()
+    {
+        gct01 = gameObject.AddComponent<GaitControlTable>();
+        gct02 = gameObject.AddComponent<GaitControlTable>();
+        gct03 = gameObject.AddComponent<GaitControlTable>();
+        gctWheel = gameObject.AddComponent<GaitControlTable>();
+        gct01.ReadFromFile(MR1, "Slegs_0.txt");
+        gct02.ReadFromFile(MR1, "Slegs_1.txt");
+        gct03.ReadFromFile(MR1, "Slegs_2.txt");
+        gctWheel.ReadFromFile(MR, "WheelFwd.txt");
+        StartCoroutine(Demo());
 
+    }
     void WheelUP()
     {
         gctWheel = gameObject.AddComponent<GaitControlTable>();
-        
-        gctWheel.ReadFromFile(MR, "WheelUP.txt");    
+
+        gctWheel.ReadFromFile(MR, "WheelUP.txt");
         StartCoroutine(DemoUP());
-        
+
 
     }
+    IEnumerator Demo()
+    {
 
+
+        gct01.Begin(3);
+        while (gct01.inProgress && !gct01.isReady)
+            yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(2f);
+        MR1.modules[20].surfaces["bottom"].Connect(MR.modules[46].surfaces["left"]);
+        MR1.modules[25].surfaces["bottom"].Connect(MR.modules[46].surfaces["right"]);
+        gct02.Begin();
+        while (gct02.inProgress && !gct02.isReady)
+            yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(1f);
+        gct03.Begin();
+        gctWheel.Begin();
+    }
     IEnumerator DemoUP()
     {
-        
+
         gctWheel.Begin();
         while (gctWheel.inProgress && !gctWheel.isReady)
             yield return new WaitForEndOfFrame();
@@ -425,10 +340,6 @@ public class TwoLegTest : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Q))
-        {
-            InitWheelToSnake();
-        }
         if (Input.GetKeyUp(KeyCode.Z))
         {
             InitLegsSnake();
@@ -480,10 +391,10 @@ public class TwoLegTest : MonoBehaviour
         {
 
             //demo2();
-           
+
         }
 
-            if (Input.GetKeyUp(KeyCode.Keypad1))
+        if (Input.GetKeyUp(KeyCode.Keypad1))
         {
 
             var gct = gameObject.AddComponent<GaitControlTable>();
@@ -541,7 +452,7 @@ public class TwoLegTest : MonoBehaviour
         {
             var gct = gameObject.AddComponent<GaitControlTable>();
             var gct1 = gameObject.AddComponent<GaitControlTable>();
-           
+
             MR1.modules[20].surfaces["bottom"].Disconnect();
             gct.ReadFromFile(MR, "Test_wheel22_5_GCT.txt");
             gct1.ReadFromFile(MR1, "Legs_3_GCT.txt");
@@ -608,28 +519,3 @@ public class TwoLegTest : MonoBehaviour
         }
     }
 }
-       
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -59,7 +59,7 @@ public class ModulePositionTest : MonoBehaviour {
         robot = gameObject.AddComponent<RobotInsectoid>();
         robot.Create(new Vector3 (5, 0.17f, 5));
 
-        gct = robot.gameObject.AddComponent<GaitControlTable>();
+/*        gct = robot.gameObject.AddComponent<GaitControlTable>();
         Driver[] drvs = new Driver[12];
         drvs[0] = robot.modules[1, 3].drivers["q1"];
         drvs[1] = robot.modules[1, 2].drivers["q1"];
@@ -79,7 +79,7 @@ public class ModulePositionTest : MonoBehaviour {
         gct.AddLine("45, 45, 45, 0, 45, 45, 45, 45, 45, 0, 45, 45");
         gct.AddLine("45, 45, 45, 0, 10, 80, 45, 45, 45, 0, 10, 80");
         gct.AddLine("-45, 45, 45, 0, 10, 80, -45, 45, 45, 0, 10, 80");
-        gct.Begin();
+        gct.Begin();*/
 
         gct = testRobot.gameObject.AddComponent<GaitControlTable>();
         gct.ReadFromFile(testRobot, "Test_Snake_GCT.txt");

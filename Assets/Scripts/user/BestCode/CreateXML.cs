@@ -50,7 +50,7 @@ public class CreateXML : MonoBehaviour
         StringBuilder builder = new StringBuilder("\t<modules>\n");
         for(int i = 0; i < total; i ++)
         {
-            builder.AppendLine("\t\t<module id=\"" + i + "\" " + "q1=\"0\"></module>");
+            builder.AppendLine("\t\t<module id=\"" + i + "\" " + "q1=\"0\"/>");
         }
         builder.AppendLine("\t</modules>");
         modules = builder.ToString();
@@ -126,7 +126,7 @@ public class CreateXML : MonoBehaviour
     /// <param name="sFrom">Какой стороной</param>
     /// <param name="sTo">К какой стороне</param>
     /// <returns></returns>
-    public string CreateConnectionString(int from, int to, Sides sFrom, Sides sTo, int tilt = 0)
+    private string CreateConnectionString(int from, int to, Sides sFrom, Sides sTo, int tilt = 0)
     {
         //<connection from="41" to="42" surfaceFrom="top" surfaceTo="bottom">
         //</ connection >
@@ -177,7 +177,7 @@ public class CreateXML : MonoBehaviour
         return conenctions;
     }
 
-    public List<string> CreateSimpleConnections(int total)
+    public List<string> CreateSimpleConnections(int total, bool isWheel)
     {
         List<string> conenctions = new List<string>();
         for (int i = 0; i < total - 1; i++)
@@ -185,7 +185,10 @@ public class CreateXML : MonoBehaviour
             conenctions.Add(CreateConnectionString(i, i + 1, Sides.TOP, Sides.BOTTOM));
         }
 
-        conenctions.Add(CreateConnectionString(total - 1, 0, Sides.TOP, Sides.BOTTOM));
+        if (isWheel)
+        {
+            conenctions.Add(CreateConnectionString(total - 1, 0, Sides.TOP, Sides.BOTTOM));
+        }
         return conenctions;
     }
 

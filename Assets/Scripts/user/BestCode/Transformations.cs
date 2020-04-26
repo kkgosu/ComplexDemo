@@ -59,10 +59,10 @@ public class Transformations : MonoBehaviour
         controlTable.ReadFromFile(modularRobot, "SnakeToWalker_2.txt");
         yield return WaitUntilMoveEnds(controlTable);
 
-        modularRobot.modules[417].surfaces["top"].Disconnect();
-        modularRobot.modules[47].surfaces["top"].Disconnect();
-        modularRobot.modules[412].surfaces["top"].Connect(modularRobot.modules[42].surfaces["right"]);
-        modularRobot.modules[413].surfaces["bottom"].Connect(modularRobot.modules[42].surfaces["left"]);
+        modularRobot.modules[16].surfaces["top"].Disconnect();
+        modularRobot.modules[6].surfaces["top"].Disconnect();
+        modularRobot.modules[11].surfaces["top"].Connect(modularRobot.modules[1].surfaces["right"]);
+        modularRobot.modules[12].surfaces["bottom"].Connect(modularRobot.modules[1].surfaces["left"]);
 
         controlTable.ReadFromFile(modularRobot, "SnakeToWalker_3.txt");
         yield return WaitUntilMoveEnds(controlTable);

@@ -10,7 +10,12 @@ using UnityEngine;
 public abstract class Movement : MonoBehaviour, IMovement
 {
     public bool isMoving = false;
-   
+
+    private static readonly string[] snakeStepOne = "max / 2 (3), min / 2 (3), min / 2 (3), max / 2 (3), max /2 (3), min / 2 (3)".Split(',');
+    private static readonly string[] snakeStepTwo = "min / 2 (3), min / 2 (3), max / 2 (3), max / 2 (3), min / 2 (3), min / 2 (3)".Split(',');
+    private static readonly string[] snakeStepThree = "min / 2 (3), max / 2 (3), max /2 (3), min / 2 (3), min / 2 (3), max / 2 (3)".Split(',');
+    private static readonly string[] snakeStepFour = "default + 45 (3), default + 45 (3), default - 45 (3), min + 45 (3), max - 45 (3), default + 45 (3)".Split(',');
+
     protected float[] NextStep(float[] angles)
     {
         float last = angles[angles.Length - 1];
@@ -71,6 +76,58 @@ public abstract class Movement : MonoBehaviour, IMovement
         string path = Application.dataPath + "/Resources/Gait Control Tables/" + "teztz" + ".gct";
         File.WriteAllText(path, header + values);
         return path;
+    }
+
+    protected string CreateGCTForSnake(float[] angles, int time)
+    {
+        StringBuilder builder = new StringBuilder("header = \"");
+        for (int i = 0; i < angles.Length; i++)
+        {
+            builder.Append(i);
+            if (i != angles.Length - 1)
+            {
+                builder.Append(",");
+            }
+            else
+            {
+                builder.Append("\"\n");
+            }
+        }
+        string header = builder.ToString();
+        builder.Clear();
+
+        AddSnakeStep(builder, snakeStepOne, angles.Length);
+        AddSnakeStep(builder, snakeStepTwo, angles.Length);
+        AddSnakeStep(builder, snakeStepThree, angles.Length);
+        AddSnakeStep(builder, snakeStepFour, angles.Length);
+
+        string values = builder.ToString();
+        print(values);
+        string path = Application.dataPath + "/Resources/Gait Control Tables/" + "teztz" + ".gct";
+        File.WriteAllText(path, header + values);
+        return path;
+    }
+
+    private void AddSnakeStep(StringBuilder builder, string[] step, int anglesLength)
+    {
+        int item = 0;
+        for (int i = 0; i < anglesLength; i++)
+        {
+            if (item > 5)
+            {
+                item = 0;
+            }
+            builder.Append(step[item++]);
+
+            if (i != anglesLength - 1)
+            {
+                builder.Append(",");
+            }
+            else
+            {
+                builder.Append("\n");
+            }
+        }
     }
     protected IEnumerator Move(GaitControlTable controlTable)
     {
