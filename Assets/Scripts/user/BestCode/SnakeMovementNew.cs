@@ -7,7 +7,11 @@ public class SnakeMovementNew : Movement
     public override IEnumerator MoveBackward(ModularRobot modularRobot, float[] angles)
     {
         isMoving = true;
-        GaitControlTable controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+        GaitControlTable controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
+        if (controlTable == null)
+        {
+            controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+        }
         while (isMoving)
         {
             controlTable.ReadFromFile(modularRobot, CreateGCTForSnake(angles, 3));

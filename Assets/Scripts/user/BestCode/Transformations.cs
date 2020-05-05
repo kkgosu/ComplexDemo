@@ -15,7 +15,10 @@ public class Transformations : MonoBehaviour
 
     public IEnumerator MoveWheelBack(ModularRobot modularRobot, GaitControlTable controlTable)
     {
-        controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+        if (controlTable == null)
+        {
+            controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+        }
         controlTable.ReadFromFile(modularRobot, "WheelBack.txt");
         yield return StartCoroutine(MoveWheelBack(controlTable));
         print("TAGG: MoveWheelBack");
@@ -33,7 +36,11 @@ public class Transformations : MonoBehaviour
         int midModule = getTopMidModule(modularRobot);
         if (midModule != -1)
         {
-            controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+            controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
+            if (controlTable == null)
+            {
+                controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+            }
             modularRobot.modules[midModule].surfaces["top"].Disconnect();
             controlTable.ReadFromFile(modularRobot, "SnakeToWalker_1.txt");
             yield return StartCoroutine(TransformWheelToSnake(controlTable));
@@ -55,7 +62,11 @@ public class Transformations : MonoBehaviour
 
     private IEnumerator TransformSnakeToWalker(ModularRobot modularRobot, GaitControlTable controlTable)
     {
-        controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+        controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
+        if (controlTable == null)
+        {
+            controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+        }
         controlTable.ReadFromFile(modularRobot, "SnakeToWalker_2.txt");
         yield return WaitUntilMoveEnds(controlTable);
 

@@ -33,11 +33,11 @@ public class TransformationWheelToWalker : MonoBehaviour
          locomotionManager = MR.gameObject.AddComponent<SnakeLocomotionManager>();*/
         int numOfModules = 21;
 
-        array = createCFG.CreateRoundedWheel(numOfModules);
+        array = createCFG.CreateWalker(numOfModules);
         string path = createXML
-            .CreateHeader("test123", new Vector3(0, 1, 0), Quaternion.Euler(0, 0, -90))
+            .CreateHeader("test123", new Vector3(0, 1, 0), Quaternion.Euler(0, 0, 90))
             .AddModules(numOfModules, createXML.CreateModules(array))
-            .AddConnections(createXML.CreateSimpleConnections(numOfModules, true))
+            .AddConnections(createXML.CreateConnectionsForWalker(numOfModules))
             .Create("Znake2");
 
         MR.Load(path);
@@ -88,6 +88,11 @@ public class TransformationWheelToWalker : MonoBehaviour
         {
             walkerMovement.isMoving = false;
             StartCoroutine(walkerMovement.MoveLeft(MR, array));
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            walkerMovement.isMoving = false;
+            StartCoroutine(walkerMovement.RotateToTheLeft(MR, array));
         }
         if (Input.GetKeyDown(KeyCode.Z))
         {

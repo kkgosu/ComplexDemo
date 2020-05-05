@@ -32,7 +32,26 @@ public class WalkerMovement : Movement
 
     override public IEnumerator RotateToTheLeft(ModularRobot modularRobot, float[] angles)
     {
-        throw new System.NotImplementedException();
+        isMoving = true;
+        GaitControlTable controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
+        if (controlTable == null)
+        {
+            controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+        }
+
+        float[] newAngles = RotateRobotByAngle(angles, 30, 1);
+        controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 2));
+        yield return StartCoroutine(Move(controlTable));
+
+        newAngles = RotateRobotByAngle(newAngles, 30, 2);
+        controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 2));
+        yield return StartCoroutine(Move(controlTable));
+
+        newAngles = RotateRobotByAngle(newAngles, 30, -1);
+        controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 2));
+        yield return StartCoroutine(Move(controlTable));
+
+        isMoving = false;
     }
 
     override public IEnumerator RotateToTheRight(ModularRobot modularRobot, float[] angles)
@@ -43,7 +62,12 @@ public class WalkerMovement : Movement
     private IEnumerator DefaultStep(ModularRobot modularRobot, float[] angles, int offset)
     {
         isMoving = true;
-        GaitControlTable controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+        
+        GaitControlTable controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
+        if (controlTable == null)
+        {
+            controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+        }
         float[] newAngles = CreateFirstStep(angles);
         ChangeDirection(newAngles, offset);
         controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 1));
@@ -122,6 +146,64 @@ public class WalkerMovement : Movement
         }
         angles[1] = last;
         return ChangeDirection(angles, offset - 1);
+    }
+
+    /// <summary>
+    /// Поворачиваем робота на определенный угол
+    /// </summary>
+    /// <param name="angles">Углы всех суставов</param>
+    /// <param name="angle">Угол, на который поворачиваем. Для поворота вправо - положительное число, для поворота влево - отрицательное</param>
+    /// <param name="pair">Номер пары противоположенных ног. 1 - ноги с модулями 1,5,9.., 3,7,11...; 2 - ноги с модулями 2,6,10.., 4,8,12...</param>
+    /// <returns>Новые углы всех суставов</returns>
+    private float[] RotateRobotByAngle(float[] angles, int angle, int pair)
+    {
+        if (pair == 1)
+        {
+            angles[1] += angle;
+            angles[3] += angle;
+
+            angles[5] = alphaSmall;
+            angles[6] = betaSmall;
+            angles[7] = alphaSmall;
+            angles[8] = betaSmall;
+
+            angles[9] = alphaBig;
+            angles[10] = betaBig;
+            angles[11] = alphaBig;
+            angles[12] = betaBig;
+        } else if (pair == 2)
+        {
+            angles[2] += angle;
+            angles[4] += angle;
+
+            angles[5] = betaSmall;
+            angles[6] = alphaSmall;
+            angles[7] = betaSmall;
+            angles[8] = alphaSmall;
+
+            angles[9] = betaBig;
+            angles[10] = alphaBig;
+            angles[11] = betaBig;
+            angles[12] = alphaBig;
+        } else
+        {
+            angles[1] = 0;
+            angles[2] = 0;
+            angles[3] = 0;
+            angles[4] = 0;
+
+            angles[5] = alphaSmall;
+            angles[6] = betaSmall;
+            angles[7] = alphaSmall;
+            angles[8] = betaSmall;
+
+            angles[9] = alphaBig;
+            angles[10] = betaBig;
+            angles[11] = alphaBig;
+            angles[12] = betaBig;
+        }
+
+        return angles;
     }
 
     // Start is called before the first frame update

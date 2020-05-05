@@ -39,6 +39,12 @@ public abstract class Movement : MonoBehaviour, IMovement
         return angles;
     }
 
+    /// <summary>
+    /// Создание таблицы управления
+    /// </summary>
+    /// <param name="angles">Массив уголов всех суставов</param>
+    /// <param name="time">Время выполнения поворота сустава</param>
+    /// <returns></returns>
     protected string CreateGCT(float[] angles, int time)
     {
         StringBuilder builder = new StringBuilder("header = \"");
