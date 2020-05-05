@@ -94,6 +94,11 @@ public class TransformationWheelToWalker : MonoBehaviour
             walkerMovement.isMoving = false;
             StartCoroutine(walkerMovement.RotateToTheLeft(MR, array));
         }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            walkerMovement.isMoving = false;
+            StartCoroutine(walkerMovement.RotateToTheRight(MR, array));
+        }
         if (Input.GetKeyDown(KeyCode.Z))
         {
 /*            gctWheel = MR.gameObject.AddComponent<GaitControlTable>();

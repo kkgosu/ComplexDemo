@@ -32,31 +32,12 @@ public class WalkerMovement : Movement
 
     override public IEnumerator RotateToTheLeft(ModularRobot modularRobot, float[] angles)
     {
-        isMoving = true;
-        GaitControlTable controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
-        if (controlTable == null)
-        {
-            controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
-        }
-
-        float[] newAngles = RotateRobotByAngle(angles, 30, 1);
-        controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 2));
-        yield return StartCoroutine(Move(controlTable));
-
-        newAngles = RotateRobotByAngle(newAngles, 30, 2);
-        controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 2));
-        yield return StartCoroutine(Move(controlTable));
-
-        newAngles = RotateRobotByAngle(newAngles, 30, -1);
-        controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 2));
-        yield return StartCoroutine(Move(controlTable));
-
-        isMoving = false;
+        return DefaultRotation(modularRobot, angles, 30);
     }
 
     override public IEnumerator RotateToTheRight(ModularRobot modularRobot, float[] angles)
     {
-        throw new System.NotImplementedException();
+        return DefaultRotation(modularRobot, angles, -30);
     }
 
     private IEnumerator DefaultStep(ModularRobot modularRobot, float[] angles, int offset)
@@ -133,6 +114,12 @@ public class WalkerMovement : Movement
         return angles;
     }
 
+    /// <summary>
+    /// Меняет направление движения робота
+    /// </summary>
+    /// <param name="angles">Массив углов суставов</param>
+    /// <param name="offset">0 - назад, 1 - направо, 2 - прямо, 3 - налево</param>
+    /// <returns></returns>
     private float[] ChangeDirection(float[] angles, int offset)
     {
         if (offset == 0)
@@ -146,6 +133,30 @@ public class WalkerMovement : Movement
         }
         angles[1] = last;
         return ChangeDirection(angles, offset - 1);
+    }
+
+    private IEnumerator DefaultRotation(ModularRobot modularRobot, float[] angles, int angleToRotate)
+    {
+        isMoving = true;
+        GaitControlTable controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
+        if (controlTable == null)
+        {
+            controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+        }
+
+        float[] newAngles = RotateRobotByAngle(angles, angleToRotate, 1);
+        controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 2));
+        yield return StartCoroutine(Move(controlTable));
+
+        newAngles = RotateRobotByAngle(newAngles, angleToRotate, 2);
+        controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 2));
+        yield return StartCoroutine(Move(controlTable));
+
+        newAngles = RotateRobotByAngle(newAngles, 30, -1);
+        controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 2));
+        yield return StartCoroutine(Move(controlTable));
+
+        isMoving = false;
     }
 
     /// <summary>
