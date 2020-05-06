@@ -8,7 +8,7 @@ public class ModularRobot : MonoBehaviour {
 
 	GameObject robot;
 	public Quaternion rotation = Quaternion.Euler(Vector3.zero);
-	public Dictionary<int, Module> modules =  new Dictionary<int, Module>();
+	public Dictionary<int, Module> modules = new Dictionary<int, Module>();
 	private string robotType;
 	public GaitControlTable ControlTable; 
 	public int referModuleId=-1;
@@ -20,7 +20,7 @@ public class ModularRobot : MonoBehaviour {
 
 	public float[] angles;
 
-    public Vector3 position
+	public Vector3 position
     {
         get
         {

@@ -11,6 +11,7 @@ public class EntryPoint : MonoBehaviour
     private WalkerMovement walkerMovement;
     private SnakeMovementNew snakeMovementNew;
     private SnakeMovement snakeMovement;
+    private Transformations transformations;
     private CreateXML createXML;
     private CreateCFG createCFG;
     private float[] array;
@@ -26,6 +27,7 @@ public class EntryPoint : MonoBehaviour
         walkerMovement = MR.gameObject.AddComponent<WalkerMovement>();
         snakeMovementNew = MR.gameObject.AddComponent<SnakeMovementNew>();
         gctWheel = MR.gameObject.AddComponent<GaitControlTable>();
+        transformations = MR.gameObject.AddComponent<Transformations>();
         MR.gameObject.AddComponent<COM_Controller>();
 
 /*         snakeMovement = MR.gameObject.AddComponent<SnakeMovement>();
@@ -108,7 +110,6 @@ public class EntryPoint : MonoBehaviour
         }
         if (Input.GetKeyUp(KeyCode.T))
         {
-            Transformations transformations = MR.gameObject.AddComponent<Transformations>();
             StartCoroutine(transformations.Execute(
                 MR, gctWheel,
                 transformations.WheelToSnake/*,

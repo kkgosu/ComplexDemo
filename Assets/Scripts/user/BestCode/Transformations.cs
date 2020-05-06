@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Transformations : MonoBehaviour
 {
+    private ModularRobot MR;
     public IEnumerator Execute(ModularRobot modularRobot, GaitControlTable controlTable, params Func<ModularRobot, IEnumerator>[] actions)
     {
         foreach (Func<ModularRobot, IEnumerator> action in actions)
@@ -16,8 +17,12 @@ public class Transformations : MonoBehaviour
     public IEnumerator WheelToSnake(ModularRobot modularRobot)
     {
         int midModule = getTopMidModule(modularRobot);
-        if (midModule != -1)
+        if (midModule != -2)
         {
+            if (midModule == -1)
+            {
+                midModule = modularRobot.angles.Length - 1;
+            }
             GaitControlTable controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
             if (controlTable == null)
             {
@@ -103,6 +108,30 @@ public class Transformations : MonoBehaviour
         return angles;
     }
 
+    private int getTopMidModule(ModularRobot modularRobot)
+    {
+        float maxValue = -100;
+        int id = -1;
+        foreach (Module module in modularRobot.modules.Values)
+        {
+            print("ID: " + module.id);
+            print("Y Value: " + module.position.y);
+            if (module.position.y > maxValue)
+            {
+                maxValue = module.position.y;
+                id = module.id;
+            }
+        }
+        return id - 1;
+    }
+
+    private float[] SnakeToWalker2(float[] angles, int midModule)
+    {
+
+
+        return angles;
+    }
+
     private IEnumerator WaitUntilMoveEnds(GaitControlTable controlTable)
     {
         controlTable.BeginTillEnd();
@@ -112,35 +141,16 @@ public class Transformations : MonoBehaviour
         }
     }
 
-    //fix ids in xml and txt
-    private int getTopMidModule(ModularRobot modularRobot)
-    {
-        float maxValue = 100;
-        int id = -1;
-        foreach (Module module in modularRobot.modules.Values)
-        {
-            print("ID: " + module.id);
-            print("Y Value: " + module.y);
-            if (module.y < maxValue)
-            {
-                maxValue = module.y;
-                id = module.id;
-            }
-        }
-        return id - 1;
-    }
-
-
     // Start is called before the first frame update
     void Start()
     {
-
+        MR = GetComponent<ModularRobot>();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+       
     }
 
 
