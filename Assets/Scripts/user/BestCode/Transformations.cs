@@ -6,6 +6,7 @@ using UnityEngine;
 public class Transformations : MonoBehaviour
 {
     private ModularRobot MR;
+    private int midModule;
     public IEnumerator Execute(params Func<IEnumerator>[] actions)
     {
         foreach (Func<IEnumerator> action in actions)
@@ -16,7 +17,7 @@ public class Transformations : MonoBehaviour
 
     public IEnumerator WheelToSnake()
     {
-        int midModule = getTopMidModule();
+        midModule = getTopMidModule();
         if (midModule != -2)
         {
             if (midModule == -1)
@@ -30,8 +31,7 @@ public class Transformations : MonoBehaviour
             }
 
             MR.modules[midModule].surfaces["top"].Disconnect();
-            //controlTable.ReadFromFile(modularRobot, "SnakeToWalker_1.txt");
-            MR.angles = SnakeToWalker1(MR.angles, midModule);
+            MR.angles = WheelToSnakeAngles(MR.angles);
             controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2));
 
             yield return StartCoroutine(WaitUntilMoveEnds(controlTable));
@@ -48,10 +48,11 @@ public class Transformations : MonoBehaviour
         {
             controlTable = MR.gameObject.AddComponent<GaitControlTable>();
         }
-        controlTable.ReadFromFile(MR, "SnakeToWalker_2.txt");
+        Dictionary<int, float> modulesQ2 = SnakeToWalker2Angles(MR.angles.Length);
+        controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2, modulesQ2));
         yield return WaitUntilMoveEnds(controlTable);
 
-        MR.modules[16].surfaces["top"].Disconnect();
+/*        MR.modules[16].surfaces["top"].Disconnect();
         MR.modules[6].surfaces["top"].Disconnect();
         MR.modules[11].surfaces["top"].Connect(MR.modules[1].surfaces["right"]);
         MR.modules[12].surfaces["bottom"].Connect(MR.modules[1].surfaces["left"]);
@@ -63,10 +64,10 @@ public class Transformations : MonoBehaviour
         yield return WaitUntilMoveEnds(controlTable);
 
         controlTable.ReadFromFile(MR, "SnakeToWalker_5.txt");
-        yield return WaitUntilMoveEnds(controlTable);
+        yield return WaitUntilMoveEnds(controlTable);*/
     }
 
-    private float[] SnakeToWalker1(float[] angles, int midModule)
+    private float[] WheelToSnakeAngles(float[] angles)
     {
         int offset = angles.Length / 4;
         int leftModule = midModule - offset;
@@ -97,6 +98,35 @@ public class Transformations : MonoBehaviour
 
         print(leftModule + " " + leftSecondModule + " " + rightModule + " " + rightSecondModule);
 
+        return angles;
+    }
+
+    private Dictionary<int, float> SnakeToWalker2Angles(int total)
+    {
+        int offset = total / 3;
+        int leftModule = midModule - offset;
+        int rightModule = midModule + offset;
+
+        if (leftModule < 0)
+        {
+            leftModule = total + leftModule;
+        }
+        if (rightModule >= total)
+        {
+            rightModule = total - rightModule;
+        }
+
+        Dictionary<int, float> keyValuePairs = new Dictionary<int, float>
+        {
+            { leftModule, 90 },
+            { rightModule, 90 }
+        };
+
+        return keyValuePairs;
+    }
+
+    private float[] SnakeToWalker2(float[] angles)
+    {
         return angles;
     }
 
@@ -131,13 +161,6 @@ public class Transformations : MonoBehaviour
             }
         }
         return id - 1;
-    }
-
-    private float[] SnakeToWalker2(float[] angles, int midModule)
-    {
-
-
-        return angles;
     }
 
     private IEnumerator WaitUntilMoveEnds(GaitControlTable controlTable)

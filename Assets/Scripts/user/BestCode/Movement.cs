@@ -84,6 +84,63 @@ public abstract class Movement : MonoBehaviour, IMovement
         return path;
     }
 
+    /// <summary>
+    /// Создание таблицы управления c q2
+    /// </summary>
+    /// <param name="angles">Массив уголов всех суставов</param>
+    /// <param name="time">Время выполнения поворота сустава</param>
+    /// <param name="modulesQ2">Модули, у которых надо повернуть q2</param>
+    /// <returns></returns>
+    public static string CreateGCT(float[] angles, int time, Dictionary<int, float> modules)
+    {
+        StringBuilder builder = new StringBuilder("header = \"");
+        for (int i = 0; i < angles.Length; i++)
+        {
+            builder.Append(i);
+            if (modules.ContainsKey(i))
+            {
+                builder.Append("_" + "q2");
+            }
+            if (i != angles.Length - 1)
+            {
+                builder.Append(",");
+            }
+            else
+            {
+                builder.Append("\"\n");
+            }
+        }
+        string header = builder.ToString();
+        builder.Clear();
+
+        for (int i = 0; i < angles.Length; i++)
+        {
+            string angle = angles[i].ToString().Replace(",", ".");
+            if (modules.ContainsKey(i))
+            {
+                builder.Append(modules[i]);
+            } else
+            {
+                builder.Append(angle);
+            }
+            builder.Append("(" + time + ")");
+            if (i != angles.Length - 1)
+            {
+                builder.Append(",");
+            }
+            else
+            {
+                builder.Append("\n");
+            }
+        }
+
+        string values = builder.ToString();
+        print(values);
+        string path = Application.dataPath + "/Resources/Gait Control Tables/" + "teztz" + ".gct";
+        File.WriteAllText(path, header + values);
+        return path;
+    }
+
     protected string CreateGCTForSnake(float[] angles, int time)
     {
         StringBuilder builder = new StringBuilder("header = \"");

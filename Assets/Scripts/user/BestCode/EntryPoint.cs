@@ -111,8 +111,8 @@ public class EntryPoint : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.T))
         {
             StartCoroutine(transformations.Execute(
-                transformations.WheelToSnake/*,
-                transformations.SnakeToWalker*/));
+                transformations.WheelToSnake,
+                transformations.SnakeToWalker));
         }
     }
 
