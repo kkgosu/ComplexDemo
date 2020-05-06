@@ -6,33 +6,33 @@ using UnityEngine;
 public class Transformations : MonoBehaviour
 {
     private ModularRobot MR;
-    public IEnumerator Execute(ModularRobot modularRobot, GaitControlTable controlTable, params Func<ModularRobot, IEnumerator>[] actions)
+    public IEnumerator Execute(params Func<IEnumerator>[] actions)
     {
-        foreach (Func<ModularRobot, IEnumerator> action in actions)
+        foreach (Func<IEnumerator> action in actions)
         {
-            yield return StartCoroutine(action(modularRobot));
+            yield return StartCoroutine(action());
         }
     }
 
-    public IEnumerator WheelToSnake(ModularRobot modularRobot)
+    public IEnumerator WheelToSnake()
     {
-        int midModule = getTopMidModule(modularRobot);
+        int midModule = getTopMidModule();
         if (midModule != -2)
         {
             if (midModule == -1)
             {
-                midModule = modularRobot.angles.Length - 1;
+                midModule = MR.angles.Length - 1;
             }
-            GaitControlTable controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
+            GaitControlTable controlTable = MR.gameObject.GetComponent<GaitControlTable>();
             if (controlTable == null)
             {
-                controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+                controlTable = MR.gameObject.AddComponent<GaitControlTable>();
             }
-            
-            modularRobot.modules[midModule].surfaces["top"].Disconnect();
+
+            MR.modules[midModule].surfaces["top"].Disconnect();
             //controlTable.ReadFromFile(modularRobot, "SnakeToWalker_1.txt");
-            modularRobot.angles = SnakeToWalker1(modularRobot.angles, midModule);
-            controlTable.ReadFromFile(modularRobot, Movement.CreateGCT(modularRobot.angles, 2));
+            MR.angles = SnakeToWalker1(MR.angles, midModule);
+            controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2));
 
             yield return StartCoroutine(WaitUntilMoveEnds(controlTable));
         }
@@ -41,28 +41,28 @@ public class Transformations : MonoBehaviour
         yield return null;
     }
 
-    public IEnumerator SnakeToWalker(ModularRobot modularRobot)
+    public IEnumerator SnakeToWalker()
     {
-        GaitControlTable controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
+        GaitControlTable controlTable = MR.gameObject.GetComponent<GaitControlTable>();
         if (controlTable == null)
         {
-            controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+            controlTable = MR.gameObject.AddComponent<GaitControlTable>();
         }
-        controlTable.ReadFromFile(modularRobot, "SnakeToWalker_2.txt");
+        controlTable.ReadFromFile(MR, "SnakeToWalker_2.txt");
         yield return WaitUntilMoveEnds(controlTable);
 
-        modularRobot.modules[16].surfaces["top"].Disconnect();
-        modularRobot.modules[6].surfaces["top"].Disconnect();
-        modularRobot.modules[11].surfaces["top"].Connect(modularRobot.modules[1].surfaces["right"]);
-        modularRobot.modules[12].surfaces["bottom"].Connect(modularRobot.modules[1].surfaces["left"]);
+        MR.modules[16].surfaces["top"].Disconnect();
+        MR.modules[6].surfaces["top"].Disconnect();
+        MR.modules[11].surfaces["top"].Connect(MR.modules[1].surfaces["right"]);
+        MR.modules[12].surfaces["bottom"].Connect(MR.modules[1].surfaces["left"]);
 
-        controlTable.ReadFromFile(modularRobot, "SnakeToWalker_3.txt");
+        controlTable.ReadFromFile(MR, "SnakeToWalker_3.txt");
         yield return WaitUntilMoveEnds(controlTable);
 
-        controlTable.ReadFromFile(modularRobot, "SnakeToWalker_4.txt");
+        controlTable.ReadFromFile(MR, "SnakeToWalker_4.txt");
         yield return WaitUntilMoveEnds(controlTable);
 
-        controlTable.ReadFromFile(modularRobot, "SnakeToWalker_5.txt");
+        controlTable.ReadFromFile(MR, "SnakeToWalker_5.txt");
         yield return WaitUntilMoveEnds(controlTable);
     }
 
@@ -81,19 +81,10 @@ public class Transformations : MonoBehaviour
             rightModule = angles.Length - rightModule;
         }
 
-        int leftSecondModule = leftModule + 1;
-        if (leftSecondModule >= angles.Length)
-        {
-            leftSecondModule = 0;
-        }
+        int leftSecondModule = CheckEdgeModule(angles, leftModule);
+        int rightSecondModule = CheckEdgeModule(angles, rightModule);
 
-        int rightSecondModule = rightModule + 1;
-        if (rightSecondModule < 0)
-        {
-            rightSecondModule = angles.Length - 1;
-        }
-       
-        for(int i = 0; i < angles.Length; i++)
+        for (int i = 0; i < angles.Length; i++)
         {
             angles[i] = 0;
         }
@@ -103,16 +94,33 @@ public class Transformations : MonoBehaviour
         angles[rightModule] = 90;
         angles[rightSecondModule] = 90;
 
+
         print(leftModule + " " + leftSecondModule + " " + rightModule + " " + rightSecondModule);
 
         return angles;
     }
 
-    private int getTopMidModule(ModularRobot modularRobot)
+    private int CheckEdgeModule(float[] angles, int module)
+    {
+        int secondModule = module + 1;
+        if (secondModule >= angles.Length)
+        {
+            secondModule = 0;
+        }
+
+        if (secondModule < 0)
+        {
+            secondModule = angles.Length - 1;
+        }
+
+        return secondModule;
+    }
+
+    private int getTopMidModule()
     {
         float maxValue = -100;
         int id = -1;
-        foreach (Module module in modularRobot.modules.Values)
+        foreach (Module module in MR.modules.Values)
         {
             print("ID: " + module.id);
             print("Y Value: " + module.position.y);
