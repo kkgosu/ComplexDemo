@@ -4,46 +4,54 @@ using UnityEngine;
 
 public class WheelMovement : Movement
 {
-    override public IEnumerator MoveBackward(ModularRobot modularRobot, float[] angles)
+    override public IEnumerator MoveBackward(ModularRobot modularRobot)
     {
         isMoving = true;
-        GaitControlTable controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+        GaitControlTable controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
+        if (controlTable == null)
+        {
+            controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+        }
         while (isMoving)
         {
-            controlTable.ReadFromFile(modularRobot, CreateGCT(PreviousStep(angles), 2));
+            controlTable.ReadFromFile(modularRobot, CreateGCT(PreviousStep(modularRobot.angles), 2));
             yield return StartCoroutine(Move(controlTable));
         }
         isMoving = false;
     }
 
-    override public IEnumerator MoveForward(ModularRobot modularRobot, float[] angles)
+    override public IEnumerator MoveForward(ModularRobot modularRobot)
     {
         isMoving = true;
-        GaitControlTable controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+        GaitControlTable controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
+        if (controlTable == null)
+        {
+            controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+        }
         while (isMoving)
         {
-            controlTable.ReadFromFile(modularRobot, CreateGCT(NextStep(angles), 2));
+            controlTable.ReadFromFile(modularRobot, CreateGCT(NextStep(modularRobot.angles), 2));
             yield return StartCoroutine(Move(controlTable));
         }
         isMoving = false;
     }
 
-    override public IEnumerator MoveLeft(ModularRobot modularRobot, float[] angles)
+    override public IEnumerator MoveLeft(ModularRobot modularRobot)
     {
         throw new System.NotImplementedException();
     }
 
-    override public IEnumerator MoveRight(ModularRobot modularRobot, float[] angles)
+    override public IEnumerator MoveRight(ModularRobot modularRobot)
     {
         throw new System.NotImplementedException();
     }
 
-    override public IEnumerator RotateToTheLeft(ModularRobot modularRobot, float[] angles)
+    override public IEnumerator RotateToTheLeft(ModularRobot modularRobot)
     {
         throw new System.NotImplementedException();
     }
 
-    override public IEnumerator RotateToTheRight(ModularRobot modularRobot, float[] angles)
+    override public IEnumerator RotateToTheRight(ModularRobot modularRobot)
     {
         throw new System.NotImplementedException();
     }

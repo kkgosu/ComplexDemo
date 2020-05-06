@@ -18,6 +18,8 @@ public class SnakeMovement : MonoBehaviour
     public SnakeSideways side;
     double dist;
     Vector3 znack = new Vector3(0, 0, 0);
+    public Vector3 position;
+
 
     int FirstModule()
     {
@@ -205,6 +207,8 @@ public class SnakeMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        robot = gameObject.AddComponent<ModularRobot>();
+        gameObject.AddComponent<lineRobAdmin>();
         robot = GetComponent<ModularRobot>();
         goTo = GetComponent<SnakeGoToPoint>();
         if (goTo == null)
@@ -227,10 +231,14 @@ public class SnakeMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-/*        if (Input.GetKeyDown(KeyCode.Z))
+        if (robot != null)
         {
-            ClimbOnWheel(GameObject.Find("Robot wheel24").GetComponent<ModularRobot>());
-        }*/
+            position = robot.position;
+        }
+        /*        if (Input.GetKeyDown(KeyCode.Z))
+                {
+                    ClimbOnWheel(GameObject.Find("Robot wheel24").GetComponent<ModularRobot>());
+                }*/
         if (Input.GetKeyDown(KeyCode.X))
         {
             side.Move(1);

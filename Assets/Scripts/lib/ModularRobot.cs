@@ -18,6 +18,8 @@ public class ModularRobot : MonoBehaviour {
 	public float z=0, dz=0;
 	private int firstUpdate=2;
 
+	public float[] angles;
+
     public Vector3 position
     {
         get

@@ -45,7 +45,7 @@ public abstract class Movement : MonoBehaviour, IMovement
     /// <param name="angles">Массив уголов всех суставов</param>
     /// <param name="time">Время выполнения поворота сустава</param>
     /// <returns></returns>
-    protected string CreateGCT(float[] angles, int time)
+    public string CreateGCT(float[] angles, int time)
     {
         StringBuilder builder = new StringBuilder("header = \"");
         for (int i = 0; i < angles.Length; i++)
@@ -154,10 +154,10 @@ public abstract class Movement : MonoBehaviour, IMovement
     {
         
     }
-    public abstract IEnumerator MoveForward(ModularRobot modularRobot, float[] angles);
-    public abstract IEnumerator MoveBackward(ModularRobot modularRobot, float[] angles);
-    public abstract IEnumerator MoveRight(ModularRobot modularRobot, float[] angles);
-    public abstract IEnumerator MoveLeft(ModularRobot modularRobot, float[] angles);
-    public abstract IEnumerator RotateToTheRight(ModularRobot modularRobot, float[] angles);
-    public abstract IEnumerator RotateToTheLeft(ModularRobot modularRobot, float[] angles);
+    public abstract IEnumerator MoveForward(ModularRobot modularRobot);
+    public abstract IEnumerator MoveBackward(ModularRobot modularRobot);
+    public abstract IEnumerator MoveRight(ModularRobot modularRobot);
+    public abstract IEnumerator MoveLeft(ModularRobot modularRobot);
+    public abstract IEnumerator RotateToTheRight(ModularRobot modularRobot);
+    public abstract IEnumerator RotateToTheLeft(ModularRobot modularRobot);
 }

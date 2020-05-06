@@ -16,20 +16,20 @@ public class WaveController_5 : MonoBehaviour {
 		public List<float[]> intermAngles;
 	}
 	private io angles = new io ();				//углы текущей конфигурации волны
-	int NumberOfModulesInwave;					//величина гребня волны в модулях
-	WaveGenerator WaveGen;
+	int numberOfModulesInwave;					//величина гребня волны в модулях
+	WaveGenerator waveGen;
 
-	public int SideOnGroundVertical =  1;		//переменная нужна что бы определить знак угла поворота привода. 1 означает, что для поворота от земли подаётся положительный угол.
-	public int FirstModuleOnGround;				//переменная показывает какой модуль первым лежит на земле нужной стороной
-	public int ConfigurationOfRobot = 2;		//показывает через сколько модулей идёт чередование. 1 означает что все модули на земле нужной стороной, 2 что через 1 и т.д.
-	public int DirectionOfMotion = 1;			//направление движения
-	public float MaxAngle = 90;
-	public float MinAngle = -90;
+	public int sideOnGroundVertical =  1;		//переменная нужна что бы определить знак угла поворота привода. 1 означает, что для поворота от земли подаётся положительный угол.
+	public int firstModuleOnGround;				//переменная показывает какой модуль первым лежит на земле нужной стороной
+	public int configurationOfRobot = 2;		//показывает через сколько модулей идёт чередование. 1 означает что все модули на земле нужной стороной, 2 что через 1 и т.д.
+	public int directionOfMotion = 1;			//направление движения
+	public float maxAngle = 90;
+	public float minAngle = -90;
 
 
     public double[] MinMaxH(double dl)
     {
-        NumberOfModulesInwave = 4;
+        numberOfModulesInwave = 4;
         angles.intermAngles.Clear();
         double bottom = 4 - dl;
         double maxH = 2 * Math.Sin(Math.Acos(bottom / (2 * 2)));
@@ -51,7 +51,7 @@ public class WaveController_5 : MonoBehaviour {
     }
 
 	public bool Check (double dl, double h){
-		NumberOfModulesInwave = 4;
+		numberOfModulesInwave = 4;
 		angles.intermAngles.Clear ();
 		double bottom = 4 - dl;
 		double bottomAngle = Math.Atan (2 * h / bottom);
@@ -81,13 +81,13 @@ public class WaveController_5 : MonoBehaviour {
             return false;
         }
         double da = (a / (int)(a * 600 / Math.PI));
-		float[] Figure = new float[6];
+		float[] figure = new float[6];
 		for (double i = a - da; i > 0; i -= da) {
-			Figure [0] = (float)i;
-			Figure [5] = (float)(a - i);
+			figure [0] = (float)i;
+			figure [5] = (float)(a - i);
 			double c = bottom + 1;
-			double m = c - Math.Cos (Figure [0]) - Math.Cos (Figure [5]);
-			double p = Math.Sin (Figure [0]) - Math.Sin (Figure [5]);
+			double m = c - Math.Cos (figure [0]) - Math.Cos (figure [5]);
+			double p = Math.Sin (figure [0]) - Math.Sin (figure [5]);
 			double s = m/(Math.Cos(Math.Atan(p/m)));
 			double g = Math.Acos ((s - 1) / 2);
             if (Math.Abs(g) > (Math.PI / 2))
@@ -96,20 +96,20 @@ public class WaveController_5 : MonoBehaviour {
                 angles.intermAngles.Clear();
                 return false;
             }
-            Figure [1] = -(float)(Figure [0] - g + Math.Atan (p / m));
-            if (Math.Abs(Figure[1]) > (Math.PI / 2))
+            figure [1] = -(float)(figure [0] - g + Math.Atan (p / m));
+            if (Math.Abs(figure[1]) > (Math.PI / 2))
             {
                 Debug.LogError("Angle value is higher than possible maximum for this algorithm.");
                 angles.intermAngles.Clear();
                 return false;
             }
-            Figure [2] = -(float)g;
-			Figure [3] = -(float)g;
-			Figure [4] = (float)(g + Math.Atan (p / m) - Figure [5]);
+            figure [2] = -(float)g;
+			figure [3] = -(float)g;
+			figure [4] = (float)(g + Math.Atan (p / m) - figure [5]);
 			for (int j = 0; j < 6; j++) {
-				Figure [j] *= (float)(180 / Math.PI);
+				figure [j] *= (float)(180 / Math.PI);
 			}
-			angles.intermAngles.Add (Figure.Clone () as float[]);
+			angles.intermAngles.Add (figure.Clone () as float[]);
 		}
 		angles.bottom = (float)(a * 180 / Math.PI);
 		angles.wave = -(float)(waveAngle * 180 / Math.PI);
@@ -119,40 +119,40 @@ public class WaveController_5 : MonoBehaviour {
 
 	public void Wave (bool isReversed)
 	{
-		WaveGen.Sequences.Clear ();
-		float[] Figure = new float[(NumberOfModulesInwave + 2) * ConfigurationOfRobot];
-		for (int i = 0; i<Figure.Length; i++) {
-			Figure[i] = 0;
+		waveGen.Sequences.Clear ();
+		float[] figure = new float[(numberOfModulesInwave + 2) * configurationOfRobot];
+		for (int i = 0; i<figure.Length; i++) {
+			figure[i] = 0;
 		}
 		if (angles.intermAngles.Count != 0) {
 			for (int i = 0; i < angles.intermAngles.Count; i++) {       //Почему i = 1?
 				for (int j = 0; j < 6; j++) {
-                    Figure [j * ConfigurationOfRobot] = angles.intermAngles [i] [j] * SideOnGroundVertical;
+                    figure [j * configurationOfRobot] = angles.intermAngles [i] [j] * sideOnGroundVertical;
 				}
-				WaveGen.Sequences.Add (Figure.Clone () as float[]);
+				waveGen.Sequences.Add (figure.Clone () as float[]);
 			}
 		}
 
-		Figure [0 * ConfigurationOfRobot] = 0;
-		Figure [1 * ConfigurationOfRobot] = angles.bottom * SideOnGroundVertical;
-		Figure [2 * ConfigurationOfRobot] = angles.wave * SideOnGroundVertical;
-		Figure [3 * ConfigurationOfRobot] = angles.vertex * SideOnGroundVertical;
-		Figure [4 * ConfigurationOfRobot] = angles.wave * SideOnGroundVertical;
-		Figure [5 * ConfigurationOfRobot] = angles.bottom * SideOnGroundVertical;
-		WaveGen.Sequences.Add (Figure.Clone () as float[]);
+		figure [0 * configurationOfRobot] = 0;
+		figure [1 * configurationOfRobot] = angles.bottom * sideOnGroundVertical;
+		figure [2 * configurationOfRobot] = angles.wave * sideOnGroundVertical;
+		figure [3 * configurationOfRobot] = angles.vertex * sideOnGroundVertical;
+		figure [4 * configurationOfRobot] = angles.wave * sideOnGroundVertical;
+		figure [5 * configurationOfRobot] = angles.bottom * sideOnGroundVertical;
+		waveGen.Sequences.Add (figure.Clone () as float[]);
         if(isReversed)
         {
-            WaveGen.StartMo(WaveGen.modules.Count + 2, (NumberOfModulesInwave - 2) * 2, isReversed, 2);
+            waveGen.StartMo(waveGen.modules.Count + 2, (numberOfModulesInwave - 2) * 2, isReversed, 2);
         }
         else
         {
-            WaveGen.StartMo(-3, WaveGen.modules.Count + 2, isReversed, 2);
+            waveGen.StartMo(-3, waveGen.modules.Count + 2, isReversed, 2);
         }
-        WaveGen.busy = true;
+        waveGen.busy = true;
 	}
 
 	public bool DriversAreReady () {
-		foreach (Driver drv in WaveGen.modules) {
+		foreach (Driver drv in waveGen.modules) {
 			if (drv.busy)
 				return false;
 		}
@@ -160,9 +160,9 @@ public class WaveController_5 : MonoBehaviour {
 	}
 
     public void Stop () {
-        WaveGen.Stop();
+        waveGen.Stop();
         waveDist = 0;
-        WaveGen.TotalWaves = 0;
+        waveGen.TotalWaves = 0;
     }
 
     public void Go(int Dist_in_waves, double dl, double h, bool isReversed)
@@ -175,23 +175,23 @@ public class WaveController_5 : MonoBehaviour {
                 Wave(isReversed);
             }
         }
-        busy = WaveGen.busy;
+        busy = waveGen.busy;
     }
 
     private void Start()
     {
-        WaveGen = GetComponent<WaveGenerator>();
-        if (WaveGen == null)
+        waveGen = GetComponent<WaveGenerator>();
+        if (waveGen == null)
         {
-            WaveGen = gameObject.AddComponent<WaveGenerator>();
+            waveGen = gameObject.AddComponent<WaveGenerator>();
         }
-        FirstModuleOnGround = 1;
+        firstModuleOnGround = 1;
         angles.intermAngles = new List<float[]>();
     }
     // Update is called once per frame
     void Update () {
-        if (WaveGen.TotalWaves >= waveDist)
-            WaveGen.Stop();
-        busy = WaveGen.busy;
+        if (waveGen.TotalWaves >= waveDist)
+            waveGen.Stop();
+        busy = waveGen.busy;
     }
 }

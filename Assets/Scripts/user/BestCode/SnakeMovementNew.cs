@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SnakeMovementNew : Movement
 {
-    public override IEnumerator MoveBackward(ModularRobot modularRobot, float[] angles)
+    public override IEnumerator MoveBackward(ModularRobot modularRobot)
     {
         isMoving = true;
         GaitControlTable controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
@@ -14,33 +14,33 @@ public class SnakeMovementNew : Movement
         }
         while (isMoving)
         {
-            controlTable.ReadFromFile(modularRobot, CreateGCTForSnake(angles, 3));
+            controlTable.ReadFromFile(modularRobot, CreateGCTForSnake(modularRobot.angles, 3));
             yield return StartCoroutine(Move(controlTable));
         }
         isMoving = false;
     }
 
-    public override IEnumerator MoveForward(ModularRobot modularRobot, float[] angles)
+    public override IEnumerator MoveForward(ModularRobot modularRobot)
     {
         throw new System.NotImplementedException();
     }
 
-    public override IEnumerator MoveLeft(ModularRobot modularRobot, float[] angles)
+    public override IEnumerator MoveLeft(ModularRobot modularRobot)
     {
         throw new System.NotImplementedException();
     }
 
-    public override IEnumerator MoveRight(ModularRobot modularRobot, float[] angles)
+    public override IEnumerator MoveRight(ModularRobot modularRobot)
     {
         throw new System.NotImplementedException();
     }
 
-    public override IEnumerator RotateToTheLeft(ModularRobot modularRobot, float[] angles)
+    public override IEnumerator RotateToTheLeft(ModularRobot modularRobot)
     {
         throw new System.NotImplementedException();
     }
 
-    public override IEnumerator RotateToTheRight(ModularRobot modularRobot, float[] angles)
+    public override IEnumerator RotateToTheRight(ModularRobot modularRobot)
     {
         throw new System.NotImplementedException();
     }

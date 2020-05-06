@@ -5,19 +5,19 @@ using System;
 
 public class SnakeGoToPoint : MonoBehaviour
 {
-    WaveController_5 Straight;
-    SnakeFold Fold;
+    WaveController_5 straight;
+    SnakeFold fold;
     ModularRobot robot;
     public bool busy = false;
-    double MaxFoldError = 4;
+    double maxFoldError = 4;
     double foldError = 2;
     double distError = 0.1;
-    double Max_dist_for_1_wave = 1.5;
-    double Max_height_of_wave = 1.5;
-    double SizeOfModule = 0.38;
+    double maxDistFor1wave = 1.5;
+    double maxHeightOfWave = 1.5;
+    double sizeOfModule = 0.38;
     Vector3 robotPosition = new Vector3(0, 0, 0);
     bool correct = false;
-    Vector3 Position = new Vector3(0, 0, 0);
+    Vector3 position = new Vector3(0, 0, 0);
     bool isReversed = false;
     int modul = 0;
     int middle = 0;
@@ -69,16 +69,16 @@ public class SnakeGoToPoint : MonoBehaviour
     {
         bool dir = isReversed;
         robotPosition = robot.modules[middle].position;
-        double direction = GetRotation(robotPosition, Position);
-        double distance = Math.Abs(GetDistance(robot.modules[modul].position, Position));
-        if((((GetRotationOfRobot(isReversed) - direction) > 90) || ((GetRotationOfRobot(isReversed) - direction) < -90)) && (GetDistance(robot.modules[FirstModule()].position, Position) < GetDistance(robot.modules[FirstModule()].position, robot.modules[modul].position)))
+        double direction = GetRotation(robotPosition, position);
+        double distance = Math.Abs(GetDistance(robot.modules[modul].position, position));
+        if((((GetRotationOfRobot(isReversed) - direction) > 90) || ((GetRotationOfRobot(isReversed) - direction) < -90)) && (GetDistance(robot.modules[FirstModule()].position, position) < GetDistance(robot.modules[FirstModule()].position, robot.modules[modul].position)))
         {
             dir = !isReversed;
             direction += 180;
             if (direction > 180)
                 direction -= 360;
         }
-        if (distance < distError && !Fold.busy && !Straight.busy)
+        if (distance < distError && !fold.busy && !straight.busy)
         {
             busy = false;
             if(correct)
@@ -89,34 +89,34 @@ public class SnakeGoToPoint : MonoBehaviour
         }
         else if (correct)
         {
-            if (!Straight.busy)
+            if (!straight.busy)
             {
-                Fold.Rotate((float)(GetRotationOfRobot(isReversed) - direction));
-                foldError = MaxFoldError/2;
+                fold.Rotate((float)(GetRotationOfRobot(isReversed) - direction));
+                foldError = maxFoldError/2;
                 correct = false;
             }
         }
-        else if (distance > distError && Math.Abs(GetRotationOfRobot(isReversed) - direction) > foldError && !Fold.busy)
+        else if (distance > distError && Math.Abs(GetRotationOfRobot(isReversed) - direction) > foldError && !fold.busy)
         {
-            Straight.Stop();
+            straight.Stop();
             correct = true;
         }
-        else if (distance > distError && !Straight.busy && !Fold.busy)
+        else if (distance > distError && !straight.busy && !fold.busy)
         {
             int Dist_in_waves = 0;
-            Dist_in_waves = (int) (distance / (Max_dist_for_1_wave* SizeOfModule * 2));
+            Dist_in_waves = (int) (distance / (maxDistFor1wave* sizeOfModule * 2));
             if (Dist_in_waves > 0)
-                Straight.Go(Dist_in_waves, Max_dist_for_1_wave, Max_height_of_wave, dir);
+                straight.Go(Dist_in_waves, maxDistFor1wave, maxHeightOfWave, dir);
             else
-                Straight.Go(1, distance, (Straight.MinMaxH(distance)[0] + Straight.MinMaxH(distance)[1]) / 2, dir);
-            foldError = MaxFoldError;
+                straight.Go(1, distance, (straight.MinMaxH(distance)[0] + straight.MinMaxH(distance)[1]) / 2, dir);
+            foldError = maxFoldError;
         }
     }
 
     public void GoToPoint(Vector3 Position, bool isReversed = false, int modul = 1)
     {
         this.isReversed = isReversed;
-        this.Position = Position;
+        this.position = Position;
         this.modul = modul;
         busy = true;
     }
@@ -125,17 +125,17 @@ public class SnakeGoToPoint : MonoBehaviour
     void Start()
     {
         robot = GetComponent<ModularRobot>();
-        Straight = GetComponent<WaveController_5>();
-        if (Straight == null)
+        straight = GetComponent<WaveController_5>();
+        if (straight == null)
         {
-            Straight = gameObject.AddComponent<WaveController_5>();
+            straight = gameObject.AddComponent<WaveController_5>();
         }
-        Fold = GetComponent<SnakeFold>();
-        if (Fold == null)
+        fold = GetComponent<SnakeFold>();
+        if (fold == null)
         {
-            Fold = gameObject.AddComponent<SnakeFold>();
+            fold = gameObject.AddComponent<SnakeFold>();
         }
-        foldError = MaxFoldError / 2;
+        foldError = maxFoldError / 2;
         middle = (int)robot.modules.Count / 2;
         if (middle % 2 != 0)
             middle++;

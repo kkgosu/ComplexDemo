@@ -10,37 +10,37 @@ public class WalkerMovement : Movement
     private static float betaBig = 50f;
     private static float betaSmall = 90 - betaBig;
 
-    override public IEnumerator MoveBackward(ModularRobot modularRobot, float[] angles)
+    override public IEnumerator MoveBackward(ModularRobot modularRobot)
     {
-        return DefaultStep(modularRobot, angles, 0);
+        return DefaultStep(modularRobot, 0);
     }
 
-    override public IEnumerator MoveForward(ModularRobot modularRobot, float[] angles)
+    override public IEnumerator MoveForward(ModularRobot modularRobot)
     {
-        return DefaultStep(modularRobot, angles, 2);
+        return DefaultStep(modularRobot, 2);
     }
 
-    override public IEnumerator MoveLeft(ModularRobot modularRobot, float[] angles)
+    override public IEnumerator MoveLeft(ModularRobot modularRobot)
     {
-        return DefaultStep(modularRobot, angles, 3);
+        return DefaultStep(modularRobot, 3);
     }
 
-    override public IEnumerator MoveRight(ModularRobot modularRobot, float[] angles)
+    override public IEnumerator MoveRight(ModularRobot modularRobot)
     {
-        return DefaultStep(modularRobot, angles, 1);
+        return DefaultStep(modularRobot, 1);
     }
 
-    override public IEnumerator RotateToTheLeft(ModularRobot modularRobot, float[] angles)
+    override public IEnumerator RotateToTheLeft(ModularRobot modularRobot)
     {
-        return DefaultRotation(modularRobot, angles, 30);
+        return DefaultRotation(modularRobot, 30);
     }
 
-    override public IEnumerator RotateToTheRight(ModularRobot modularRobot, float[] angles)
+    override public IEnumerator RotateToTheRight(ModularRobot modularRobot)
     {
-        return DefaultRotation(modularRobot, angles, -30);
+        return DefaultRotation(modularRobot, -30);
     }
 
-    private IEnumerator DefaultStep(ModularRobot modularRobot, float[] angles, int offset)
+    private IEnumerator DefaultStep(ModularRobot modularRobot, int offset)
     {
         isMoving = true;
         
@@ -49,14 +49,14 @@ public class WalkerMovement : Movement
         {
             controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
         }
-        float[] newAngles = CreateFirstStep(angles);
-        ChangeDirection(newAngles, offset);
-        controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 1));
+        modularRobot.angles = CreateFirstStep(modularRobot.angles);
+        ChangeDirection(modularRobot.angles, offset);
+        controlTable.ReadFromFile(modularRobot, CreateGCT(modularRobot.angles, 1));
         yield return StartCoroutine(Move(controlTable));
         while (isMoving)
         {
-            newAngles = CreateSecondtStep(angles);
-            controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 1));
+            modularRobot.angles = CreateSecondtStep(modularRobot.angles);
+            controlTable.ReadFromFile(modularRobot, CreateGCT(modularRobot.angles, 1));
             yield return StartCoroutine(Move(controlTable));
         }
         isMoving = false;
@@ -135,7 +135,7 @@ public class WalkerMovement : Movement
         return ChangeDirection(angles, offset - 1);
     }
 
-    private IEnumerator DefaultRotation(ModularRobot modularRobot, float[] angles, int angleToRotate)
+    private IEnumerator DefaultRotation(ModularRobot modularRobot, int angleToRotate)
     {
         isMoving = true;
         GaitControlTable controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
@@ -144,16 +144,16 @@ public class WalkerMovement : Movement
             controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
         }
 
-        float[] newAngles = RotateRobotByAngle(angles, angleToRotate, 1);
-        controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 2));
+        modularRobot.angles = RotateRobotByAngle(modularRobot.angles, angleToRotate, 1);
+        controlTable.ReadFromFile(modularRobot, CreateGCT(modularRobot.angles, 2));
         yield return StartCoroutine(Move(controlTable));
 
-        newAngles = RotateRobotByAngle(newAngles, angleToRotate, 2);
-        controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 2));
+        modularRobot.angles = RotateRobotByAngle(modularRobot.angles, angleToRotate, 2);
+        controlTable.ReadFromFile(modularRobot, CreateGCT(modularRobot.angles, 2));
         yield return StartCoroutine(Move(controlTable));
 
-        newAngles = RotateRobotByAngle(newAngles, 30, -1);
-        controlTable.ReadFromFile(modularRobot, CreateGCT(newAngles, 2));
+        modularRobot.angles = RotateRobotByAngle(modularRobot.angles, 30, -1);
+        controlTable.ReadFromFile(modularRobot, CreateGCT(modularRobot.angles, 2));
         yield return StartCoroutine(Move(controlTable));
 
         isMoving = false;
