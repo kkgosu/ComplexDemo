@@ -48,6 +48,23 @@ public class CreateCFG : MonoBehaviour
         return array;
     }
 
+    public float[] CreateSqaureWheel(int total)
+    {
+        float[] array = new float[total];
+        float angle = 360f / 7f;
+
+
+        for (int i = 0; i < array.Length - 1; i++)
+        {
+            if (i % 3 == 0)
+            {
+                array[i] = angle;
+            }
+        }
+
+        return array;
+    }
+
     //Нормально работает на lastFlat 3-5 при total = 21'
     public float[] CreateRoundedWheel(int total)
     {

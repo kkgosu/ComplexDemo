@@ -7,6 +7,7 @@ public class Transformations : MonoBehaviour
 {
     private ModularRobot MR;
     private int midModule;
+    private int centralModule;
     public IEnumerator Execute(params Func<IEnumerator>[] actions)
     {
         foreach (Func<IEnumerator> action in actions)
@@ -17,7 +18,7 @@ public class Transformations : MonoBehaviour
 
     public IEnumerator WheelToSnake()
     {
-        midModule = getTopMidModule();
+        midModule = GetTopMidModule();
         if (midModule != -2)
         {
             if (midModule == -1)
@@ -51,6 +52,8 @@ public class Transformations : MonoBehaviour
         Dictionary<int, float> modulesQ2 = SnakeToWalker2Angles(MR.angles.Length);
         controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2, modulesQ2));
         yield return WaitUntilMoveEnds(controlTable);
+
+        SnakeToWalker2(MR.angles);
 
 /*        MR.modules[16].surfaces["top"].Disconnect();
         MR.modules[6].surfaces["top"].Disconnect();
@@ -127,6 +130,8 @@ public class Transformations : MonoBehaviour
 
     private float[] SnakeToWalker2(float[] angles)
     {
+        
+        
         return angles;
     }
 
@@ -146,7 +151,7 @@ public class Transformations : MonoBehaviour
         return secondModule;
     }
 
-    private int getTopMidModule()
+    private int GetTopMidModule()
     {
         float maxValue = -100;
         int id = -1;
@@ -161,6 +166,19 @@ public class Transformations : MonoBehaviour
             }
         }
         return id - 1;
+    }
+
+    private int GetCentralModule(int total)
+    {
+        centralModule = midModule - total / 2;
+        if (centralModule < 0)
+        {
+            centralModule = total + centralModule;
+        } else if (centralModule >= total)
+        {
+            centralModule = total - centralModule;
+        }
+        return centralModule;
     }
 
     private IEnumerator WaitUntilMoveEnds(GaitControlTable controlTable)

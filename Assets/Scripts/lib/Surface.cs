@@ -34,6 +34,30 @@ public class Surface : MonoBehaviour {
         }
     }
 
+    public Vector3 BeautyConnect(Module module, string surface)
+    {
+        Vector3 relativePosition, position;
+        Quaternion relativeRotation, rotation;
+
+        Quaternion tiltedRotation = Quaternion.AngleAxis(0, module.surfaces[surface].realOffset);
+
+        // Расчет относительного положения модуля относительно текущего.
+        relativePosition = realOffset.AddVectorWithinDirection(module.surfaces[surface].realOffset);
+        // Расчитаем необходимый поворот модуля, чтобы интерфейсные площадки модулей
+        // смотрели в сторону друг друга. Для этого перевернем один вектор.
+        relativeRotation = Quaternion.FromToRotation(module.surfaces[surface].realOffset * (-1), realOffset) * tiltedRotation;
+
+        // Расчет ориентации нового модуля:
+        rotation = anchor.rotation * relativeRotation;
+        // Расчет положения нового модуля:
+        // Изменение относительного положения модуля в соответствии с ориентацией.
+        relativePosition = anchor.rotation * relativePosition;
+        // Сложение относительного положения нового модуля и координат уже существующего.
+        position = anchor.position + relativePosition - (relativeRotation * module.surfaces[surface].anchor.localPosition);
+
+        return position;
+    }
+
     public Module Add(Module moduleType, Surface connectingSurface, float[] angles = null, float tilt = 0, Transform parent = null, int ID = -1) {
 		
         Vector3 relativePosition, position;
@@ -58,7 +82,7 @@ public class Surface : MonoBehaviour {
         Module connectingModule = Modules.Create (moduleType, position, rotation, parent: parent, ID: ID);
 		connectingModule.isPhysical = false;
 		string surfaceName = connectingSurface.name;
-		connectingSurface = connectingModule.GetSurfaceByName (surfaceName);
+		connectingSurface = connectingModule.GetSurfaceByName(surfaceName);
 
 		if (connectingSurface == null) {
 			Debug.LogError (string.Format ("Couldn't add module. Attaching surface of module {1} " +
