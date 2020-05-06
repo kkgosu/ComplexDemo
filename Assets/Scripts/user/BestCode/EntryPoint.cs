@@ -32,11 +32,11 @@ public class EntryPoint : MonoBehaviour
          */
         int numOfModules = 21;
 
-        array = createCFG.CreateWalker(numOfModules);
+        array = createCFG.CreateRoundedWheel(numOfModules);
         string path = createXML
-            .CreateHeader("test123", new Vector3(0, 1, 0), Quaternion.Euler(0, 0, 90))
+            .CreateHeader("test123", new Vector3(0, 1, 0), Quaternion.Euler(0, 0, -90))
             .AddModules(numOfModules, createXML.CreateModules(array))
-            .AddConnections(createXML.CreateConnectionsForWalker(numOfModules))
+            .AddConnections(createXML.CreateSimpleConnections(numOfModules, true))
             .Create("Znake2");
         MR.angles = array;
         MR.Load(path);
@@ -111,8 +111,8 @@ public class EntryPoint : MonoBehaviour
             Transformations transformations = MR.gameObject.AddComponent<Transformations>();
             StartCoroutine(transformations.Execute(
                 MR, gctWheel,
-                transformations.WheelToSnake,
-                transformations.SnakeToWalker));
+                transformations.WheelToSnake/*,
+                transformations.SnakeToWalker*/));
         }
     }
 

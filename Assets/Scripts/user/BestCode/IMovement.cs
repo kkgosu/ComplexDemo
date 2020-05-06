@@ -4,10 +4,10 @@ using UnityEngine;
 
 public interface IMovement
 {
-    IEnumerator MoveForward(ModularRobot modularRobot, float[] angles);
-    IEnumerator MoveBackward(ModularRobot modularRobot, float[] angles);
-    IEnumerator MoveRight(ModularRobot modularRobot, float[] angles);
-    IEnumerator MoveLeft(ModularRobot modularRobot, float[] angles);
-    IEnumerator RotateToTheRight(ModularRobot modularRobot, float[] angles);
-    IEnumerator RotateToTheLeft(ModularRobot modularRobot, float[] angles);
+    IEnumerator MoveForward(ModularRobot modularRobot);
+    IEnumerator MoveBackward(ModularRobot modularRobot);
+    IEnumerator MoveRight(ModularRobot modularRobot);
+    IEnumerator MoveLeft(ModularRobot modularRobot);
+    IEnumerator RotateToTheRight(ModularRobot modularRobot);
+    IEnumerator RotateToTheLeft(ModularRobot modularRobot);
 }

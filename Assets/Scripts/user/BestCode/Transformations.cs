@@ -24,20 +24,41 @@ public class Transformations : MonoBehaviour
                 controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
             }
             
-            Movement movement = modularRobot.gameObject.GetComponent<Movement>();
-            if (movement == null)
-            {
-                movement = modularRobot.gameObject.AddComponent<Movement>();
-            }
-            /*            modularRobot.modules[midModule].surfaces["top"].Disconnect();
-                        controlTable.ReadFromFile(modularRobot, "SnakeToWalker_1.txt");*/
+            modularRobot.modules[midModule].surfaces["top"].Disconnect();
+            //controlTable.ReadFromFile(modularRobot, "SnakeToWalker_1.txt");
             modularRobot.angles = SnakeToWalker1(modularRobot.angles, midModule);
-            controlTable.ReadFromFile(modularRobot, movement.CreateGCT(modularRobot.angles, 2));
+            controlTable.ReadFromFile(modularRobot, Movement.CreateGCT(modularRobot.angles, 2));
 
-            yield return StartCoroutine(TransformWheelToSnake(controlTable));
+            yield return StartCoroutine(WaitUntilMoveEnds(controlTable));
         }
+        print("MidModule: " + midModule);
         print("TAGG: WheelToSnake");
         yield return null;
+    }
+
+    public IEnumerator SnakeToWalker(ModularRobot modularRobot)
+    {
+        GaitControlTable controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
+        if (controlTable == null)
+        {
+            controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
+        }
+        controlTable.ReadFromFile(modularRobot, "SnakeToWalker_2.txt");
+        yield return WaitUntilMoveEnds(controlTable);
+
+        modularRobot.modules[16].surfaces["top"].Disconnect();
+        modularRobot.modules[6].surfaces["top"].Disconnect();
+        modularRobot.modules[11].surfaces["top"].Connect(modularRobot.modules[1].surfaces["right"]);
+        modularRobot.modules[12].surfaces["bottom"].Connect(modularRobot.modules[1].surfaces["left"]);
+
+        controlTable.ReadFromFile(modularRobot, "SnakeToWalker_3.txt");
+        yield return WaitUntilMoveEnds(controlTable);
+
+        controlTable.ReadFromFile(modularRobot, "SnakeToWalker_4.txt");
+        yield return WaitUntilMoveEnds(controlTable);
+
+        controlTable.ReadFromFile(modularRobot, "SnakeToWalker_5.txt");
+        yield return WaitUntilMoveEnds(controlTable);
     }
 
     private float[] SnakeToWalker1(float[] angles, int midModule)
@@ -61,10 +82,15 @@ public class Transformations : MonoBehaviour
             leftSecondModule = 0;
         }
 
-        int rightSecondModule = leftModule - 1;
+        int rightSecondModule = rightModule + 1;
         if (rightSecondModule < 0)
         {
             rightSecondModule = angles.Length - 1;
+        }
+       
+        for(int i = 0; i < angles.Length; i++)
+        {
+            angles[i] = 0;
         }
 
         angles[leftModule] = 90;
@@ -72,43 +98,9 @@ public class Transformations : MonoBehaviour
         angles[rightModule] = 90;
         angles[rightSecondModule] = 90;
 
+        print(leftModule + " " + leftSecondModule + " " + rightModule + " " + rightSecondModule);
+
         return angles;
-    }
-
-    private IEnumerator TransformWheelToSnake(GaitControlTable controlTable)
-    {
-        yield return WaitUntilMoveEnds(controlTable);
-    }
-
-    public IEnumerator SnakeToWalker(ModularRobot modularRobot)
-    {
-        yield return StartCoroutine(TransformSnakeToWalker(modularRobot));
-        print("TAGG: SnakeToWalker");
-    }
-
-    private IEnumerator TransformSnakeToWalker(ModularRobot modularRobot)
-    {
-        GaitControlTable controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
-        if (controlTable == null)
-        {
-            controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
-        }
-        controlTable.ReadFromFile(modularRobot, "SnakeToWalker_2.txt");
-        yield return WaitUntilMoveEnds(controlTable);
-
-        modularRobot.modules[16].surfaces["top"].Disconnect();
-        modularRobot.modules[6].surfaces["top"].Disconnect();
-        modularRobot.modules[11].surfaces["top"].Connect(modularRobot.modules[1].surfaces["right"]);
-        modularRobot.modules[12].surfaces["bottom"].Connect(modularRobot.modules[1].surfaces["left"]);
-
-        controlTable.ReadFromFile(modularRobot, "SnakeToWalker_3.txt");
-        yield return WaitUntilMoveEnds(controlTable);
-
-        controlTable.ReadFromFile(modularRobot, "SnakeToWalker_4.txt");
-        yield return WaitUntilMoveEnds(controlTable);
-
-        controlTable.ReadFromFile(modularRobot, "SnakeToWalker_5.txt");
-        yield return WaitUntilMoveEnds(controlTable);
     }
 
     private IEnumerator WaitUntilMoveEnds(GaitControlTable controlTable)

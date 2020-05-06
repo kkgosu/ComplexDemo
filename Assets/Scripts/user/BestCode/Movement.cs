@@ -45,7 +45,7 @@ public abstract class Movement : MonoBehaviour, IMovement
     /// <param name="angles">Массив уголов всех суставов</param>
     /// <param name="time">Время выполнения поворота сустава</param>
     /// <returns></returns>
-    public string CreateGCT(float[] angles, int time)
+    public static string CreateGCT(float[] angles, int time)
     {
         StringBuilder builder = new StringBuilder("header = \"");
         for (int i = 0; i < angles.Length; i++)
