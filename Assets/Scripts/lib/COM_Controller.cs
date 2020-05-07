@@ -275,7 +275,7 @@ public class COM_Controller : MonoBehaviour
             case (byte)Command.AngleAdd:
             case (byte)Command.AngleSubstract:
             case (byte)Command.AngleSet:
-                print(string.Format((message[5] == 0x00) ? "{8}: TO: {0}, FROM: {1},\n" +
+               /* print(string.Format((message[5] == 0x00) ? "{8}: TO: {0}, FROM: {1},\n" +
                                     "COMMAND: {2} ({3}), PARAM 1: {4}, PARAM 2: {5}" +
                                     " (angle ~ {6}), PARAM 3: {7} (time)." :
                                     "{8}: TO: {0}, FROM: {1},\nCOMMAND: {2} ({3})," +
@@ -291,7 +291,7 @@ public class COM_Controller : MonoBehaviour
                                     DecodeAngle(message[3], message[4], 180, -90),
                                     message[5],                 // time
                                     prefix
-                                    ));
+                                    ));*/
                 break;
             default:
                 print(string.Format("{7}: TO: {0}, FROM: {1},\nCOMMAND: {2} ({3}), " +

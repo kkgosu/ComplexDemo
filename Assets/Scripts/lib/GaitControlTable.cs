@@ -273,7 +273,7 @@ public class GaitControlTable : MonoBehaviour {
                 }
             }
         }
-        print("Length of drivers is " + drivers.Count);
+
         SetHeader(drivers.ToArray());
         // 2. Строим таблицу.
         var line = "";

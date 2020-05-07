@@ -8,6 +8,10 @@ public class Transformations : MonoBehaviour
     private ModularRobot MR;
     private int midModule;
     private int centralModule;
+    private int leftEndModule;
+    private int rightEndModule;
+    private int leftMidModule;
+    private int rightMidModule;
     public IEnumerator Execute(params Func<IEnumerator>[] actions)
     {
         foreach (Func<IEnumerator> action in actions)
@@ -21,6 +25,14 @@ public class Transformations : MonoBehaviour
         midModule = GetTopMidModule();
         if (midModule != -2)
         {
+            leftEndModule = midModule;
+            if (midModule + 1 >= MR.angles.Length)
+            {
+                rightEndModule = 0;
+            } else
+            {
+                rightEndModule = midModule + 1;
+            }
             if (midModule == -1)
             {
                 midModule = MR.angles.Length - 1;
@@ -44,6 +56,8 @@ public class Transformations : MonoBehaviour
 
     public IEnumerator SnakeToWalker()
     {
+        centralModule = GetCentralModule(MR.angles.Length);
+        print("Central Module: " + centralModule);
         GaitControlTable controlTable = MR.gameObject.GetComponent<GaitControlTable>();
         if (controlTable == null)
         {
@@ -54,20 +68,22 @@ public class Transformations : MonoBehaviour
         yield return WaitUntilMoveEnds(controlTable);
 
         SnakeToWalker2(MR.angles);
-
-/*        MR.modules[16].surfaces["top"].Disconnect();
-        MR.modules[6].surfaces["top"].Disconnect();
-        MR.modules[11].surfaces["top"].Connect(MR.modules[1].surfaces["right"]);
-        MR.modules[12].surfaces["bottom"].Connect(MR.modules[1].surfaces["left"]);
-
-        controlTable.ReadFromFile(MR, "SnakeToWalker_3.txt");
+        controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2));
         yield return WaitUntilMoveEnds(controlTable);
 
-        controlTable.ReadFromFile(MR, "SnakeToWalker_4.txt");
-        yield return WaitUntilMoveEnds(controlTable);
+        /*        MR.modules[16].surfaces["top"].Disconnect();
+                MR.modules[6].surfaces["top"].Disconnect();
+                MR.modules[11].surfaces["top"].Connect(MR.modules[1].surfaces["right"]);
+                MR.modules[12].surfaces["bottom"].Connect(MR.modules[1].surfaces["left"]);
 
-        controlTable.ReadFromFile(MR, "SnakeToWalker_5.txt");
-        yield return WaitUntilMoveEnds(controlTable);*/
+                controlTable.ReadFromFile(MR, "SnakeToWalker_3.txt");
+                yield return WaitUntilMoveEnds(controlTable);
+
+                controlTable.ReadFromFile(MR, "SnakeToWalker_4.txt");
+                yield return WaitUntilMoveEnds(controlTable);
+
+                controlTable.ReadFromFile(MR, "SnakeToWalker_5.txt");
+                yield return WaitUntilMoveEnds(controlTable);*/
     }
 
     private float[] WheelToSnakeAngles(float[] angles)
@@ -107,22 +123,22 @@ public class Transformations : MonoBehaviour
     private Dictionary<int, float> SnakeToWalker2Angles(int total)
     {
         int offset = total / 3;
-        int leftModule = midModule - offset;
-        int rightModule = midModule + offset;
+        leftMidModule = midModule - offset;
+        rightMidModule = midModule + offset;
 
-        if (leftModule < 0)
+        if (leftMidModule < 0)
         {
-            leftModule = total + leftModule;
+            leftMidModule = total + leftMidModule;
         }
-        if (rightModule >= total)
+        if (rightMidModule >= total)
         {
-            rightModule = total - rightModule;
+            rightMidModule = total - rightMidModule;
         }
 
         Dictionary<int, float> keyValuePairs = new Dictionary<int, float>
         {
-            { leftModule, 90 },
-            { rightModule, 90 }
+            { leftMidModule, 90 },
+            { rightMidModule, 90 }
         };
 
         return keyValuePairs;
@@ -130,8 +146,65 @@ public class Transformations : MonoBehaviour
 
     private float[] SnakeToWalker2(float[] angles)
     {
+        CreateCFG createCFG = GetComponent<CreateCFG>();
+        float a = Mathf.Rad2Deg * createCFG.NewtonRaphson(4) * 2;
+
+        int[] rightPart = new int[angles.Length / 3];
+        int[] leftPart = new int[angles.Length / 3];
+
+        float angleRight = a / rightPart.Length;
+        float angleLeft = a / leftPart.Length;
+
+        for (int i = 0; i < rightPart.Length; i++)
+        {
+            if (midModule + 1 + i < angles.Length)
+            {
+                rightPart[i] = midModule + 1 + i;
+            } else 
+            {
+                rightPart[i] = midModule + 1 + i - angles.Length;
+            }
+        }
+
+        for (int i = 0; i < leftPart.Length; i++)
+        {
+            if (midModule - i >= 0)
+            {
+                leftPart[i] = midModule - i;
+            }
+            else
+            {
+                leftPart[i] = midModule - i + angles.Length;
+            }
+        }
+
+        foreach (int id in rightPart)
+        {
+            print("Right: " + id);
+            angles[id] = angleRight;
+        }
+
         
+        angles[rightPart[rightPart.Length - 1]] = 90;
+        angles[rightPart[0]] = 90 - 360 / (4 * 2);
+
+        foreach (int id in leftPart)
+        {
+            print("Left: " + id);
+            angles[id] = angleLeft;
+        }
         
+        angles[leftPart[leftPart.Length - 1]] = 90;
+        angles[leftPart[0]] = 90 - 360 / (4 * 2);
+
+
+        /*        array[lastFlat - 1] = 90 - 360 / (lastFlat * 2);
+                for (int i = lastFlat; i < total; i++)
+                {
+                    array[i] = angle;
+                }
+                array[total - 1] = array[lastFlat - 1];*/
+
         return angles;
     }
 
@@ -157,8 +230,8 @@ public class Transformations : MonoBehaviour
         int id = -1;
         foreach (Module module in MR.modules.Values)
         {
-            print("ID: " + module.id);
-            print("Y Value: " + module.position.y);
+/*            print("ID: " + module.id);
+            print("Y Value: " + module.position.y);*/
             if (module.position.y > maxValue)
             {
                 maxValue = module.position.y;

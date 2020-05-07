@@ -73,7 +73,6 @@ public class Module : MonoBehaviour {
         surfaces = new Dictionary<string, Surface>();
         foreach (Driver d in GetComponentsInChildren(typeof(Driver)))
         {
-            print(d.name);
             drivers.Add(d.name, d);
             d.module = this;
             d.BuildKinematicGroups();

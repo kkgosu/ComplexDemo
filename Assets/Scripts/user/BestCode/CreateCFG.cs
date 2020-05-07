@@ -104,7 +104,7 @@ public class CreateCFG : MonoBehaviour
     }
 
     // Function to find the root
-    private float NewtonRaphson(float x)
+    public float NewtonRaphson(float x)
     {
         float h = Func1(x) / DerivFunc(x);
 
