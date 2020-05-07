@@ -82,21 +82,11 @@ public class Transformations : MonoBehaviour
 
         Dictionary<int, float> modulesQ24 = SnakeToWalker4Angles(MR.angles.Length);
         controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2, modulesQ24));
-        yield return WaitUntilMoveEnds(controlTable); 
+        yield return WaitUntilMoveEnds(controlTable);
 
-        /*        MR.modules[16].surfaces["top"].Disconnect();
-                MR.modules[6].surfaces["top"].Disconnect();
-                MR.modules[11].surfaces["top"].Connect(MR.modules[1].surfaces["right"]);
-                MR.modules[12].surfaces["bottom"].Connect(MR.modules[1].surfaces["left"]);
-
-                controlTable.ReadFromFile(MR, "SnakeToWalker_3.txt");
-                yield return WaitUntilMoveEnds(controlTable);
-
-                controlTable.ReadFromFile(MR, "SnakeToWalker_4.txt");
-                yield return WaitUntilMoveEnds(controlTable);
-
-                controlTable.ReadFromFile(MR, "SnakeToWalker_5.txt");
-                yield return WaitUntilMoveEnds(controlTable);*/
+        MR.angles = SnakeToWalker5Angles(MR.angles);
+        controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2));
+        yield return WaitUntilMoveEnds(controlTable);
     }
 
     private float[] WheelToSnakeAngles(float[] angles)
@@ -242,15 +232,16 @@ public class Transformations : MonoBehaviour
 
     private Dictionary<int, float> SnakeToWalker4Angles(int total)
     {
-
+        secondLeg.Reverse();
+        fourthLeg.Reverse();
         Dictionary<int, float> keyValuePairs = new Dictionary<int, float>
         {
             { 0, 90 },
             { firstLeg[0], 90 },
             { firstLeg[1], 90 },
-            { secondLeg[secondLeg.Count - 1], 90 },
+            { secondLeg[0], 90 },
             { thirdLeg[0], 90 },
-            { fourthLeg[fourthLeg.Count - 2], 90 },
+            { fourthLeg[1], 90 },
         };
         
         for (int i = 0; i < total; i++)
@@ -262,6 +253,53 @@ public class Transformations : MonoBehaviour
         }
 
         return keyValuePairs;
+    }
+
+    private float[] SnakeToWalker5Angles(float[] angles)
+    {
+
+        angles[firstLeg[1]] = 20;
+        angles[firstLeg[2]] = 70;
+        angles[secondLeg[1]] = -20;
+        angles[secondLeg[2]] = -70;
+        angles[thirdLeg[1]] = 20;
+        angles[thirdLeg[2]] = 70;
+        angles[fourthLeg[1]] = -20;
+        angles[fourthLeg[2]]= -70;
+
+        return angles;
+    }
+
+    private void RenameModulesForWalker()
+    {
+        int counter = 1;
+        foreach (int id in firstLeg)
+        {
+            MR.modules[id].id = counter;
+            MR.modules[id].name = "Module " + counter;
+            counter += 4;
+        }
+        counter = 2;
+        foreach (int id in secondLeg)
+        {
+            MR.modules[id].id = counter;
+            MR.modules[id].name = "Module " + counter;
+            counter += 4;
+        }
+        counter = 3;
+        foreach (int id in thirdLeg)
+        {
+            MR.modules[id].id = counter;
+            MR.modules[id].name = "Module " + counter;
+            counter += 4;
+        }
+        counter = 4;
+        foreach (int id in fourthLeg)
+        {
+            MR.modules[id].id = counter;
+            MR.modules[id].name = "Module " + counter;
+            counter += 4;
+        }
     }
 
     private int CheckEdgeModule(float[] angles, int module)
