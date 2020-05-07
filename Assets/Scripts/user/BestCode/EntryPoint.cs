@@ -34,7 +34,7 @@ public class EntryPoint : MonoBehaviour
          */
         int numOfModules = 21;
 
-        array = createCFG.CreateSqaureWheel(numOfModules);
+        array = createCFG.CreatePerfectWheel(numOfModules);
         string path = createXML
             .CreateHeader("test123", new Vector3(0, 1, 0), Quaternion.Euler(0, 0, -90))
             .AddModules(numOfModules, createXML.CreateModules(array))

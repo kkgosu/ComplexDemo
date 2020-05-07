@@ -12,6 +12,10 @@ public class Transformations : MonoBehaviour
     private int rightEndModule;
     private int leftMidModule;
     private int rightMidModule;
+
+    List<int> rightModules = new List<int>();
+    List<int> leftModules = new List<int>();
+
     public IEnumerator Execute(params Func<IEnumerator>[] actions)
     {
         foreach (Func<IEnumerator> action in actions)
@@ -67,7 +71,11 @@ public class Transformations : MonoBehaviour
         controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2, modulesQ2));
         yield return WaitUntilMoveEnds(controlTable);
 
-        SnakeToWalker2(MR.angles);
+        MR.angles = SnakeToWalker2(MR.angles);
+        controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2, 90, 1));
+        yield return WaitUntilMoveEnds(controlTable);
+
+        MR.angles = SnakeToWalker3(MR.angles);
         controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2));
         yield return WaitUntilMoveEnds(controlTable);
 
@@ -114,7 +122,6 @@ public class Transformations : MonoBehaviour
         angles[rightModule] = 90;
         angles[rightSecondModule] = 90;
 
-
         print(leftModule + " " + leftSecondModule + " " + rightModule + " " + rightSecondModule);
 
         return angles;
@@ -125,6 +132,11 @@ public class Transformations : MonoBehaviour
         int offset = total / 3;
         leftMidModule = midModule - offset;
         rightMidModule = midModule + offset;
+
+        if (total % 2 == 1)
+        {
+            leftMidModule--;
+        }
 
         if (leftMidModule < 0)
         {
@@ -149,62 +161,77 @@ public class Transformations : MonoBehaviour
         CreateCFG createCFG = GetComponent<CreateCFG>();
         float a = Mathf.Rad2Deg * createCFG.NewtonRaphson(4) * 2;
 
-        int[] rightPart = new int[angles.Length / 3];
-        int[] leftPart = new int[angles.Length / 3];
+        int rightPart = angles.Length / 3;
+        int leftPart;
 
-        float angleRight = a / rightPart.Length;
-        float angleLeft = a / leftPart.Length;
-
-        for (int i = 0; i < rightPart.Length; i++)
+        if (angles.Length % 2 == 1)
         {
-            if (midModule + 1 + i < angles.Length)
-            {
-                rightPart[i] = midModule + 1 + i;
-            } else 
-            {
-                rightPart[i] = midModule + 1 + i - angles.Length;
-            }
+            leftPart = angles.Length / 3 + 1;
+        } else
+        {
+            leftPart = angles.Length / 3;
         }
 
-        for (int i = 0; i < leftPart.Length; i++)
+        //получаем список "правых" и "левых" модулей
+        int connectedModule = centralModule;
+        while (MR.modules[connectedModule].surfaces["bottom"].connectedSurface != null)
         {
-            if (midModule - i >= 0)
-            {
-                leftPart[i] = midModule - i;
-            }
-            else
-            {
-                leftPart[i] = midModule - i + angles.Length;
-            }
+            connectedModule = MR.modules[connectedModule].surfaces["bottom"].connectedSurface.module.id;
+            rightModules.Add(connectedModule);
         }
 
-        foreach (int id in rightPart)
+        connectedModule = centralModule;
+        while (MR.modules[connectedModule].surfaces["top"].connectedSurface != null)
+        {
+            connectedModule = MR.modules[connectedModule].surfaces["top"].connectedSurface.module.id;
+            leftModules.Add(connectedModule);
+        }
+
+        //оставляем только ту часть, которая будет сгибаться
+        List<int> halfRightModules = rightModules.GetRange(rightModules.Count - rightPart, rightPart);
+        List<int> halfLeftModules = leftModules.GetRange(rightModules.Count - leftPart, leftPart);
+
+
+        float angleRight = a / rightPart;
+        float angleLeft = a / leftPart;
+
+        foreach (int id in halfRightModules)
         {
             print("Right: " + id);
             angles[id] = angleRight;
         }
 
-        
-        angles[rightPart[rightPart.Length - 1]] = 90;
-        angles[rightPart[0]] = 90 - 360 / (4 * 2);
+        angles[halfRightModules[halfRightModules.Count - 1]] = 90 - 360f / (3.5f * 2);
+        angles[halfRightModules[0]] = 90;
 
-        foreach (int id in leftPart)
+        foreach (int id in halfLeftModules)
         {
             print("Left: " + id);
             angles[id] = angleLeft;
         }
         
-        angles[leftPart[leftPart.Length - 1]] = 90;
-        angles[leftPart[0]] = 90 - 360 / (4 * 2);
+        angles[halfLeftModules[halfLeftModules.Count - 1]] = 0;
+        angles[halfLeftModules[0]] = 90;
 
+        return angles;
+    }
 
-        /*        array[lastFlat - 1] = 90 - 360 / (lastFlat * 2);
-                for (int i = lastFlat; i < total; i++)
-                {
-                    array[i] = angle;
-                }
-                array[total - 1] = array[lastFlat - 1];*/
+    private float[] SnakeToWalker3(float[] angles)
+    {
+        List<int> firstLeg = rightModules.GetRange(0, rightModules.Count / 2);
+        List<int> secondLeg = rightModules.GetRange(rightModules.Count / 2, rightModules.Count - firstLeg.Count);
+        List<int> thirdLeg = leftModules.GetRange(0, leftModules.Count / 2);
+        List<int> fourthLeg = leftModules.GetRange(leftModules.Count / 2, leftModules.Count - thirdLeg.Count);
 
+        MR.modules[firstLeg[firstLeg.Count - 1]].surfaces["bottom"].Disconnect();
+        MR.modules[thirdLeg[thirdLeg.Count - 1]].surfaces["top"].Disconnect();
+        MR.modules[secondLeg[secondLeg.Count - 1]].surfaces["bottom"].Connect(MR.modules[centralModule].surfaces["right"]);
+        MR.modules[fourthLeg[fourthLeg.Count - 1]].surfaces["top"].Connect(MR.modules[centralModule].surfaces["left"]);
+
+        for (int i = 0; i < angles.Length; i++)
+        {
+            angles[i] = 0f;
+        }
         return angles;
     }
 
