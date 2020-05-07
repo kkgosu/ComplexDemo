@@ -16,6 +16,11 @@ public class Transformations : MonoBehaviour
     List<int> rightModules = new List<int>();
     List<int> leftModules = new List<int>();
 
+    List<int> firstLeg;
+    List<int> secondLeg;
+    List<int> thirdLeg;
+    List<int> fourthLeg;
+
     public IEnumerator Execute(params Func<IEnumerator>[] actions)
     {
         foreach (Func<IEnumerator> action in actions)
@@ -27,7 +32,7 @@ public class Transformations : MonoBehaviour
     public IEnumerator WheelToSnake()
     {
         midModule = GetTopMidModule();
-        if (midModule != -2)
+        if (midModule != -1)
         {
             leftEndModule = midModule;
             if (midModule + 1 >= MR.angles.Length)
@@ -36,10 +41,6 @@ public class Transformations : MonoBehaviour
             } else
             {
                 rightEndModule = midModule + 1;
-            }
-            if (midModule == -1)
-            {
-                midModule = MR.angles.Length - 1;
             }
             GaitControlTable controlTable = MR.gameObject.GetComponent<GaitControlTable>();
             if (controlTable == null)
@@ -71,13 +72,17 @@ public class Transformations : MonoBehaviour
         controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2, modulesQ2));
         yield return WaitUntilMoveEnds(controlTable);
 
-        MR.angles = SnakeToWalker2(MR.angles);
+        MR.angles = SnakeToWalker2Angles(MR.angles);
         controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2, 90, 1));
         yield return WaitUntilMoveEnds(controlTable);
 
-        MR.angles = SnakeToWalker3(MR.angles);
+        MR.angles = SnakeToWalker3Angles(MR.angles);
         controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2));
         yield return WaitUntilMoveEnds(controlTable);
+
+        Dictionary<int, float> modulesQ24 = SnakeToWalker4Angles(MR.angles.Length);
+        controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2, modulesQ24));
+        yield return WaitUntilMoveEnds(controlTable); 
 
         /*        MR.modules[16].surfaces["top"].Disconnect();
                 MR.modules[6].surfaces["top"].Disconnect();
@@ -156,7 +161,7 @@ public class Transformations : MonoBehaviour
         return keyValuePairs;
     }
 
-    private float[] SnakeToWalker2(float[] angles)
+    private float[] SnakeToWalker2Angles(float[] angles)
     {
         CreateCFG createCFG = GetComponent<CreateCFG>();
         float a = Mathf.Rad2Deg * createCFG.NewtonRaphson(4) * 2;
@@ -216,12 +221,12 @@ public class Transformations : MonoBehaviour
         return angles;
     }
 
-    private float[] SnakeToWalker3(float[] angles)
+    private float[] SnakeToWalker3Angles(float[] angles)
     {
-        List<int> firstLeg = rightModules.GetRange(0, rightModules.Count / 2);
-        List<int> secondLeg = rightModules.GetRange(rightModules.Count / 2, rightModules.Count - firstLeg.Count);
-        List<int> thirdLeg = leftModules.GetRange(0, leftModules.Count / 2);
-        List<int> fourthLeg = leftModules.GetRange(leftModules.Count / 2, leftModules.Count - thirdLeg.Count);
+        firstLeg = rightModules.GetRange(0, rightModules.Count / 2);
+        secondLeg = rightModules.GetRange(rightModules.Count / 2, rightModules.Count - firstLeg.Count);
+        thirdLeg = leftModules.GetRange(0, leftModules.Count / 2);
+        fourthLeg = leftModules.GetRange(leftModules.Count / 2, leftModules.Count - thirdLeg.Count);
 
         MR.modules[firstLeg[firstLeg.Count - 1]].surfaces["bottom"].Disconnect();
         MR.modules[thirdLeg[thirdLeg.Count - 1]].surfaces["top"].Disconnect();
@@ -233,6 +238,30 @@ public class Transformations : MonoBehaviour
             angles[i] = 0f;
         }
         return angles;
+    }
+
+    private Dictionary<int, float> SnakeToWalker4Angles(int total)
+    {
+
+        Dictionary<int, float> keyValuePairs = new Dictionary<int, float>
+        {
+            { 0, 90 },
+            { firstLeg[0], 90 },
+            { firstLeg[1], 90 },
+            { secondLeg[secondLeg.Count - 1], 90 },
+            { thirdLeg[0], 90 },
+            { fourthLeg[fourthLeg.Count - 2], 90 },
+        };
+        
+        for (int i = 0; i < total; i++)
+        {
+            if (!keyValuePairs.ContainsKey(i))
+            {
+                keyValuePairs.Add(i, 0f);
+            }
+        }
+
+        return keyValuePairs;
     }
 
     private int CheckEdgeModule(float[] angles, int module)
@@ -257,15 +286,13 @@ public class Transformations : MonoBehaviour
         int id = -1;
         foreach (Module module in MR.modules.Values)
         {
-/*            print("ID: " + module.id);
-            print("Y Value: " + module.position.y);*/
             if (module.position.y > maxValue)
             {
                 maxValue = module.position.y;
                 id = module.id;
             }
         }
-        return id - 1;
+        return id;
     }
 
     private int GetCentralModule(int total)
