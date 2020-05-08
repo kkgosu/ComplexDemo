@@ -84,8 +84,10 @@ public class Transformations : MonoBehaviour
         controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2, modulesQ24));
         yield return WaitUntilMoveEnds(controlTable);
 
-        MR.angles = SnakeToWalker5Angles(MR.angles);
-        controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2));
+        RenameModulesForWalker();
+        //MR.angles = SnakeToWalker5Angles(MR.angles);
+        CreateCFG createCFG = GetComponent<CreateCFG>();
+        controlTable.ReadFromFile(MR, Movement.CreateGCT(createCFG.CreateWalker(MR.angles.Length), 2));
         yield return WaitUntilMoveEnds(controlTable);
     }
 
@@ -239,9 +241,9 @@ public class Transformations : MonoBehaviour
             { 0, 90 },
             { firstLeg[0], 90 },
             { firstLeg[1], 90 },
-            { secondLeg[0], 90 },
+            { secondLeg[0], -90 },
             { thirdLeg[0], 90 },
-            { fourthLeg[1], 90 },
+            { fourthLeg[1], -90 },
         };
         
         for (int i = 0; i < total; i++)
@@ -270,34 +272,38 @@ public class Transformations : MonoBehaviour
         return angles;
     }
 
+    Dictionary<int, Module> modulez;
     private void RenameModulesForWalker()
     {
+        modulez = new Dictionary<int, Module>(MR.modules);
+        MR.modules.Clear();
+        foreach (KeyValuePair<int, Module> keyValue in modulez)
+        {
+            print("BEFORE: " + keyValue.Key + ", " + keyValue.Value);
+        }
+        MR.modules[0] = modulez[centralModule];
         int counter = 1;
-        foreach (int id in firstLeg)
-        {
-            MR.modules[id].id = counter;
-            MR.modules[id].name = "Module " + counter;
-            counter += 4;
-        }
+        RenameModules(counter, firstLeg);
         counter = 2;
-        foreach (int id in secondLeg)
-        {
-            MR.modules[id].id = counter;
-            MR.modules[id].name = "Module " + counter;
-            counter += 4;
-        }
+        RenameModules(counter, secondLeg);
         counter = 3;
-        foreach (int id in thirdLeg)
-        {
-            MR.modules[id].id = counter;
-            MR.modules[id].name = "Module " + counter;
-            counter += 4;
-        }
+        RenameModules(counter, thirdLeg);
         counter = 4;
-        foreach (int id in fourthLeg)
+        RenameModules(counter, fourthLeg);
+
+        foreach (KeyValuePair<int, Module> keyValue in MR.modules)
         {
-            MR.modules[id].id = counter;
-            MR.modules[id].name = "Module " + counter;
+            print("AFTER: " + keyValue.Key + ", " + keyValue.Value);
+        }
+    }
+
+    private void RenameModules(int counter, List<int> leg)
+    {
+        foreach (int id in leg)
+        {
+            modulez[id].id = counter;
+            modulez[id].name = "Module " + counter;
+            MR.modules[counter] = modulez[id];
             counter += 4;
         }
     }
