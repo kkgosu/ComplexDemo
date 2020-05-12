@@ -156,12 +156,36 @@ public class CreateXML : MonoBehaviour
         //creating central connections
         if (total > 4)
         {
-            conenctions.Add(CreateConnectionString(0, 1, Sides.TOP, Sides.TOP, 90));
-            conenctions.Add(CreateConnectionString(0, 2, Sides.RIGHT, Sides.TOP, 90));
-            conenctions.Add(CreateConnectionString(0, 3, Sides.BOTTOM, Sides.TOP, 90));
-            conenctions.Add(CreateConnectionString(0, 4, Sides.LEFT, Sides.TOP, 90));
+            conenctions.Add(CreateConnectionString(0, 1, Sides.BOTTOM, Sides.TOP, 90));
+            conenctions.Add(CreateConnectionString(0, 2, Sides.LEFT, Sides.BOTTOM, 90));
+            conenctions.Add(CreateConnectionString(0, 3, Sides.TOP, Sides.BOTTOM, 90));
+            conenctions.Add(CreateConnectionString(0, 4, Sides.RIGHT, Sides.TOP, 90));
 
             //add leg modules
+            for (int i = 1; i <= 4; i++)
+            {
+                if (i == 1 || i == 4)
+                {
+                    for (int j = i; j <= total - 4; j += 4)
+                    {
+                        if (j == i) 
+                            conenctions.Add(CreateConnectionString(j, j + 4, Sides.BOTTOM, Sides.TOP, -90));
+                        else
+                            conenctions.Add(CreateConnectionString(j, j + 4, Sides.BOTTOM, Sides.TOP));
+                    }
+                } else if (i == 2 || i == 3)
+                {
+                    for (int j = i; j <= total - 4; j += 4)
+                    {
+                        if (j == i)
+                            conenctions.Add(CreateConnectionString(j, j + 4, Sides.TOP, Sides.BOTTOM, -90));
+                        else
+                            conenctions.Add(CreateConnectionString(j, j + 4, Sides.TOP, Sides.BOTTOM));
+                    }
+                }
+            }
+
+/*
             for (int i = 1; i < total - 4; i++)
             {
                 if (i >= 1 && i <= 4)
@@ -171,7 +195,7 @@ public class CreateXML : MonoBehaviour
                 {
                     conenctions.Add(CreateConnectionString(i, i + 4, Sides.BOTTOM, Sides.TOP));
                 }
-            }
+            }*/
         }
 
         return conenctions;

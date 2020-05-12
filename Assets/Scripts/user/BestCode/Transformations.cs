@@ -14,10 +14,10 @@ public class Transformations : MonoBehaviour
     List<int> rightModules = new List<int>();
     List<int> leftModules = new List<int>();
 
-    List<int> firstLeg;
-    List<int> secondLeg;
-    List<int> thirdLeg;
-    List<int> fourthLeg;
+    List<int> firstLeg = new List<int>();
+    List<int> secondLeg = new List<int>();
+    List<int> thirdLeg = new List<int>();
+    List<int> fourthLeg = new List<int>();
 
     Dictionary<int, Module> modulez;
 
@@ -35,10 +35,6 @@ public class Transformations : MonoBehaviour
         if (midModule != -1)
         {
             GaitControlTable controlTable = MR.gameObject.GetComponent<GaitControlTable>();
-            if (controlTable == null)
-            {
-                controlTable = MR.gameObject.AddComponent<GaitControlTable>();
-            }
 
             MR.modules[midModule].surfaces["top"].Disconnect();
             MR.angles = WheelToSnakeAngles(MR.angles);
@@ -72,8 +68,7 @@ public class Transformations : MonoBehaviour
           controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2));
           yield return WaitUntilMoveEnds(controlTable);
 
-          Dictionary<int, float> modulesQ24 = SnakeToWalker4Angles(MR.angles.Length);
-          controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2, modulesQ24));
+          controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2, SnakeToWalker4Angles()));
           yield return WaitUntilMoveEnds(controlTable);
 
           RenameModulesForWalker();
@@ -85,15 +80,160 @@ public class Transformations : MonoBehaviour
     public IEnumerator WalkerToSnake()
     {
         GaitControlTable controlTable = MR.gameObject.GetComponent<GaitControlTable>();
-        if (controlTable == null)
+        CreateCFG createCFG = GetComponent<CreateCFG>();
+
+        float[] snakeAngles = WalkerToSnake1Angles(MR.angles);
+        controlTable.ReadFromFile(MR, Movement.CreateGCT(snakeAngles, 2));
+        yield return WaitUntilMoveEnds(controlTable);
+
+        controlTable.ReadFromFile(MR, Movement.CreateGCT(snakeAngles, 2, WalkerToSnake2Angles()));
+        yield return WaitUntilMoveEnds(controlTable);
+
+        snakeAngles = WalkerToSnake3Angles(MR.angles);
+        controlTable.ReadFromFile(MR, Movement.CreateGCT(snakeAngles, 2));
+        yield return WaitUntilMoveEnds(controlTable);
+        yield return new WaitForSeconds(1f);
+
+        MR.modules[secondLeg[secondLeg.Count - 1]].surfaces["top"].Connect(MR.modules[firstLeg[firstLeg.Count - 1]].surfaces["bottom"]);
+        MR.modules[thirdLeg[thirdLeg.Count - 1]].surfaces["top"].Connect(MR.modules[fourthLeg[fourthLeg.Count - 1]].surfaces["bottom"]);
+
+        MR.modules[secondLeg[0]].surfaces["bottom"].Disconnect();
+        MR.modules[fourthLeg[0]].surfaces["top"].Disconnect();
+
+        controlTable.ReadFromFile(MR, Movement.CreateGCT(snakeAngles, 2, WalkerToSnake4Angles()));
+        yield return WaitUntilMoveEnds(controlTable);
+
+        yield return WalkerToSnake5Angles();
+    }
+
+    private IEnumerator WalkerToSnake5Angles()
+    {
+        GaitControlTable controlTable = MR.gameObject.GetComponent<GaitControlTable>();
+        RenameModulesForSnake();
+
+        for (int i = 0; i < MR.modules.Count; i++)
         {
-            controlTable = MR.gameObject.AddComponent<GaitControlTable>();
+            MR.angles = new float[MR.angles.Length];
+
+            MR.angles[MR.modules.Count / 2 - i] = 90;
+            MR.angles[MR.modules.Count / 2 - i - 1] = 90;
+
+            MR.angles[MR.modules.Count / 2 + i] = 90;
+            MR.angles[MR.modules.Count / 2 + i + 1] = 90;
+
+            controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2));
+            yield return WaitUntilMoveEnds(controlTable);
+        }
+    }
+
+    private Dictionary<int, float> WalkerToSnake4Angles()
+    {
+        MR.angles[1] = 90;
+        MR.angles[0] = -90;
+        MR.angles[firstLeg[(int)Math.Floor(firstLeg.Count / 2f)]] = 0;
+        MR.angles[thirdLeg[(int)Math.Floor(thirdLeg.Count / 2f)]] = 0;
+
+        return new Dictionary<int, float>
+        {
+            { 0, 90 },
+            { 1, - 90},
+            {firstLeg[(int)Math.Ceiling(firstLeg.Count / 2f)], -90 },
+            {thirdLeg[(int)Math.Ceiling(thirdLeg.Count / 2f)], -90 },
+        };
+    }
+
+    private float[] WalkerToSnake1Angles(float[] angles)
+    {
+        for (int i = 0; i < angles.Length; i++)
+        {
+            angles[i] = 0f;
         }
 
-        RenameModulesForWalker();
-        CreateCFG createCFG = GetComponent<CreateCFG>();
-        controlTable.ReadFromFile(MR, Movement.CreateGCT(createCFG.CreateWalker(MR.angles.Length), 2));
-        yield return WaitUntilMoveEnds(controlTable);
+        return angles;
+    }
+
+    private Dictionary<int, float> WalkerToSnake2Angles()
+    {
+        int connectedModule;
+        firstLeg.Clear();
+        secondLeg.Clear();
+        thirdLeg.Clear();
+        fourthLeg.Clear();
+
+        connectedModule = 0;
+        print("firstLeg!!");
+        while (MR.modules[connectedModule].surfaces["bottom"].connectedSurface != null)
+        {
+            connectedModule = MR.modules[connectedModule].surfaces["bottom"].connectedSurface.module.id;
+            firstLeg.Add(connectedModule);
+        }
+
+        connectedModule = 0;
+        print("secondLeg!!");
+        while (MR.modules[connectedModule].surfaces["top"].connectedSurface != null)
+        {
+            if (connectedModule == 0)
+            {
+                connectedModule = MR.modules[connectedModule].surfaces["left"].connectedSurface.module.id;
+            }
+            else
+            {
+                connectedModule = MR.modules[connectedModule].surfaces["top"].connectedSurface.module.id;
+            }
+            secondLeg.Add(connectedModule);
+        }
+
+        connectedModule = 0;
+                print("thirdLeg!!");
+        while (MR.modules[connectedModule].surfaces["top"].connectedSurface != null)
+        {
+            connectedModule = MR.modules[connectedModule].surfaces["top"].connectedSurface.module.id;
+            thirdLeg.Add(connectedModule);
+        }
+
+        connectedModule = 0;
+        print("fourthLeg!!");
+        while (MR.modules[connectedModule].surfaces["bottom"].connectedSurface != null)
+        {
+            if (connectedModule == 0)
+            {
+                connectedModule = MR.modules[connectedModule].surfaces["right"].connectedSurface.module.id;
+            }
+            else
+            {
+                connectedModule = MR.modules[connectedModule].surfaces["bottom"].connectedSurface.module.id;
+            }
+            fourthLeg.Add(connectedModule);
+        }
+
+        MR.angles[firstLeg[firstLeg.Count - 1]] = 43;
+        MR.angles[secondLeg[secondLeg.Count - 1]] = 43;
+        MR.angles[thirdLeg[thirdLeg.Count - 1]] = 43;
+        MR.angles[fourthLeg[fourthLeg.Count - 1]] = 43;
+
+        MR.angles[1] = -9;
+        MR.angles[2] = 9;
+        MR.angles[3] = -9;
+        MR.angles[4] = 9;
+        //поворачиваем суставы возле центрального модуля и следующие за ним
+        return new Dictionary<int, float>
+        {
+            { 0, 0 },
+            { 5, -90 },
+            { 2, 90 },
+            { 3, -90 },
+            { 8, 90 },
+        };
+    }
+
+    private float[] WalkerToSnake3Angles(float[] angles)
+    {
+        angles[9] = 90;
+        angles[10] = 90;
+        angles[11] = 90;
+        angles[12] = 90;
+
+        return angles;
     }
 
     private float[] WheelToSnakeAngles(float[] angles)
@@ -279,7 +419,7 @@ public class Transformations : MonoBehaviour
         return angles;
     }
 
-    private Dictionary<int, float> SnakeToWalker4Angles(int total)
+    private Dictionary<int, float> SnakeToWalker4Angles()
     {
         secondLeg.Reverse();
         fourthLeg.Reverse();
@@ -295,7 +435,7 @@ public class Transformations : MonoBehaviour
             { fourthLeg[1], -90 },
         };
         
-        for (int i = 0; i < total; i++)
+        for (int i = 0; i < MR.angles.Length; i++)
         {
             if (!keyValuePairs.ContainsKey(i))
             {
@@ -304,6 +444,32 @@ public class Transformations : MonoBehaviour
         }
 
         return keyValuePairs;
+    }
+
+    private void RenameModulesForSnake()
+    {
+        modulez = new Dictionary<int, Module>(MR.modules);
+        MR.modules.Clear();
+
+        int connectedModule = 0;
+        while (modulez[connectedModule].surfaces["top"].connectedSurface != null)
+        {
+            connectedModule = modulez[connectedModule].surfaces["top"].connectedSurface.module.id;
+        }
+
+        int counter = 0;
+        while (counter < modulez.Count)
+        {
+            modulez[connectedModule].id = counter;
+            modulez[connectedModule].name = "Module " + counter;
+            MR.modules[counter] = modulez[connectedModule];
+
+            if (modulez[connectedModule].surfaces["bottom"].connectedSurface != null)
+            {
+                connectedModule = modulez[connectedModule].surfaces["bottom"].connectedSurface.module.id;
+            }
+            counter++;
+        }
     }
 
     private void RenameModulesForWalker()
