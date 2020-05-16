@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
-public class SnakeMovement : MonoBehaviour
+public class SnakeClimbToWheel : MonoBehaviour
 {
-    SnakeGoToPoint goTo;
-    public SnakeFold fold;
+    SnakeGoToPoint GoTo;
+    SnakeFold Fold;
     ModularRobot robot;
     public ModularRobot wheel;
-    public bool busy = false;
+    bool busy = false;
     public Vector3 Point = new Vector3(0, 0, 0);
     int modToGo = 0;
     public int step = 0;
     bool isReversed = true;
     double angleSide = 0;
-    public SnakeSideways side;
+    SnakeSideways Side;
     double dist;
     Vector3 znack = new Vector3(0, 0, 0);
-    public Vector3 position;
 
 
     int FirstModule()
@@ -54,10 +53,10 @@ public class SnakeMovement : MonoBehaviour
         {
             if (wheel.modules[i].drivers["q1"].qValue != 0)
             {
-                if (goTo.GetDistance(robot.modules[8].position, wheel.modules[i].position) < dist)
+                if (GoTo.GetDistance(robot.modules[8].position, wheel.modules[i].position) < dist)
                 {
                     modToGo = i;
-                    dist = goTo.GetDistance(robot.modules[8].position, wheel.modules[i].position);
+                    dist = GoTo.GetDistance(robot.modules[8].position, wheel.modules[i].position);
                 }
             }
         }
@@ -79,9 +78,9 @@ public class SnakeMovement : MonoBehaviour
     public void Go()
     {
 
-        if (!goTo.busy && DriversAreReady())
+        if (!GoTo.busy && DriversAreReady())
         {
-            double angleBefor = goTo.GetRotation(wheel.modules[modToGo].position, wheel.modules[index(modToGo + wheel.modules.Count / 2)].position);
+            double angleBefor = GoTo.GetRotation(wheel.modules[modToGo].position, wheel.modules[index(modToGo + wheel.modules.Count / 2)].position);
             angleBefor -= 180;
             angleBefor = angleBefor * Mathf.PI / 180;
             Vector3 posBefor = new Vector3((float)(wheel.modules[modToGo].position.x + 0.38 * 1.8 * Math.Cos(angleBefor)), 0, (float)(wheel.modules[modToGo].position.z + 0.38 * 1.8 * Math.Sin(angleBefor)));
@@ -89,7 +88,7 @@ public class SnakeMovement : MonoBehaviour
             switch (step)
             {
                 case 1:
-                    angleSide = goTo.GetRotation(wheel.modules[modToGo].position, robot.modules[8].position);
+                    angleSide = GoTo.GetRotation(wheel.modules[modToGo].position, robot.modules[8].position);
                     angleSide = angleSide * Mathf.PI / 180;
                     Vector3 a = new Vector3(Mathf.Cos((float)angleBefor), 0, Mathf.Sin((float)angleBefor));
                     Vector3 b = new Vector3(Mathf.Cos((float)angleSide), 0, Mathf.Sin((float)angleSide));
@@ -103,37 +102,37 @@ public class SnakeMovement : MonoBehaviour
                     }
                     Vector3 posSide = new Vector3((float)(posBefor.x + 0.38 * 9 * Math.Cos(angleSide)), 0, (float)(posBefor.z + 0.38 * 9 * Math.Sin(angleSide)));
 
-                    goTo.GoToPoint(posSide, isReversed, 8);
+                    GoTo.GoToPoint(posSide, isReversed, 8);
                     step++;
                     break;
                 case 2:
                     Vector3 q = new Vector3((float)(posBefor.x + 0.38 * 0.4 * Math.Cos(angleSide)), 0, (float)(posBefor.z + 0.38 * 0.4 * Math.Sin(angleSide)));
-                    goTo.GoToPoint(q, isReversed, 8);
+                    GoTo.GoToPoint(q, isReversed, 8);
                     step++;
                     break;
                 case 3:
-                    if (!fold.busy)
+                    if (!Fold.busy)
                     {
-                        if (Math.Abs(goTo.GetRotation(robot.modules[LastModule()].position, robot.modules[FirstModule()].position) - (angleSide * 180 / Math.PI)) > 1)
+                        if (Math.Abs(GoTo.GetRotation(robot.modules[LastModule()].position, robot.modules[FirstModule()].position) - (angleSide * 180 / Math.PI)) > 1)
                         {
                             //float rot = (float)(GoTo.GetRotation(robot.modules[LastModule()].position, robot.modules[FirstModule()].position) - (angleSide * 180 / Math.PI));
-                            fold.Rotate((float)(goTo.GetRotation(robot.modules[LastModule()].position, robot.modules[FirstModule()].position) - (angleSide * 180 / Math.PI)));
+                            Fold.Rotate((float)(GoTo.GetRotation(robot.modules[LastModule()].position, robot.modules[FirstModule()].position) - (angleSide * 180 / Math.PI)));
                         }
                         else
                             step++;
                     }
                     break;
                 case 4:
-                    side.Move(-1 * znack.y / Math.Abs(znack.y));
+                    Side.Move(-1 * znack.y / Math.Abs(znack.y));
                     step++;
                     break;
                 case 5:
-                    if (!side.busy && !fold.busy)
+                    if (!Side.busy && !Fold.busy)
                     {
-                        if (Math.Abs(goTo.GetRotation(robot.modules[LastModule()].position, robot.modules[FirstModule()].position) - (angleSide * 180 / Math.PI)) > 1)
+                        if (Math.Abs(GoTo.GetRotation(robot.modules[LastModule()].position, robot.modules[FirstModule()].position) - (angleSide * 180 / Math.PI)) > 1)
                         {
                             //float rot = (float)(GoTo.GetRotation(robot.modules[LastModule()].position, robot.modules[FirstModule()].position) - (angleSide * 180 / Math.PI));
-                            fold.Rotate((float)(goTo.GetRotation(robot.modules[LastModule()].position, robot.modules[FirstModule()].position) - (angleSide * 180 / Math.PI)));
+                            Fold.Rotate((float)(GoTo.GetRotation(robot.modules[LastModule()].position, robot.modules[FirstModule()].position) - (angleSide * 180 / Math.PI)));
                         }
                         else
                             step++;
@@ -165,7 +164,7 @@ public class SnakeMovement : MonoBehaviour
                     step++;
                     break;
                 case 9:
-                    if (dist < goTo.GetDistance(robot.modules[15].position, wheel.modules[15].position))
+                    if (dist < GoTo.GetDistance(robot.modules[15].position, wheel.modules[15].position))
                     {
                         robot.modules[15].surfaces["top"].Connect(wheel.modules[15].surfaces["left"]);
                         robot.modules[3].drivers["q1"].Set(90 * -1 * znack.y / Math.Abs(znack.y));
@@ -173,7 +172,7 @@ public class SnakeMovement : MonoBehaviour
                         dist = 1000;
                     }
                     else
-                        dist = goTo.GetDistance(robot.modules[15].position, wheel.modules[15].position);
+                        dist = GoTo.GetDistance(robot.modules[15].position, wheel.modules[15].position);
                     break;
                 case 10:
                     robot.modules[4].drivers["q1"].Set(0);
@@ -181,14 +180,14 @@ public class SnakeMovement : MonoBehaviour
                     step++;
                     break;
                 case 11:
-                    if (dist < goTo.GetDistance(robot.modules[1].position, wheel.modules[15].position))
+                    if (dist < GoTo.GetDistance(robot.modules[1].position, wheel.modules[15].position))
                     {
                         robot.modules[1].surfaces["bottom"].Connect(wheel.modules[15].surfaces["right"]);
                         step++;
                         dist = 1000;
                     }
                     else
-                        dist = goTo.GetDistance(robot.modules[1].position, wheel.modules[15].position);
+                        dist = GoTo.GetDistance(robot.modules[1].position, wheel.modules[15].position);
                     break;
                 case 12:
                     robot.modules[13].drivers["q1"].Set(0);
@@ -207,24 +206,21 @@ public class SnakeMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        robot = gameObject.AddComponent<ModularRobot>();
-        gameObject.AddComponent<lineRobAdmin>();
-        gameObject.AddComponent<SnakeClimbToWheel>();
         robot = GetComponent<ModularRobot>();
-        goTo = GetComponent<SnakeGoToPoint>();
-        if (goTo == null)
+        GoTo = GetComponent<SnakeGoToPoint>();
+        if (GoTo == null)
         {
-            goTo = gameObject.AddComponent<SnakeGoToPoint>();
+            GoTo = gameObject.AddComponent<SnakeGoToPoint>();
         }
-        fold = GetComponent<SnakeFold>();
-        if (fold == null)
+        Fold = GetComponent<SnakeFold>();
+        if (Fold == null)
         {
-            fold = gameObject.AddComponent<SnakeFold>();
+            Fold = gameObject.AddComponent<SnakeFold>();
         }
-        side = GetComponent<SnakeSideways>();
-        if (side == null)
+        Side = GetComponent<SnakeSideways>();
+        if (Side == null)
         {
-            side = gameObject.AddComponent<SnakeSideways>();
+            Side = gameObject.AddComponent<SnakeSideways>();
         }
         step = 1;
     }
@@ -232,25 +228,21 @@ public class SnakeMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (robot != null)
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            position = robot.position;
+            //ClimbOnWheel(GameObject.Find("Robot wheel24").GetComponent<ModularRobot>());
         }
-        /*        if (Input.GetKeyDown(KeyCode.Z))
-                {
-                    ClimbOnWheel(GameObject.Find("Robot wheel24").GetComponent<ModularRobot>());
-                }*/
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            side.Move(1);
+            Side.Move(1);
         }
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (busy)
         {
             Go();
         }
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.W))
         {
-            fold.Rotate(90);
+            Fold.Rotate(90);
         }
     }
 }

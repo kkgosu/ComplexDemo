@@ -206,7 +206,19 @@ public class CreateXML : MonoBehaviour
         List<string> conenctions = new List<string>();
         for (int i = 0; i < total - 1; i++)
         {
-            conenctions.Add(CreateConnectionString(i, i + 1, Sides.TOP, Sides.BOTTOM));
+            if (isWheel)
+            {
+                conenctions.Add(CreateConnectionString(i, i + 1, Sides.TOP, Sides.BOTTOM));
+            } else
+            {
+                if (i % 2 == 0)
+                {
+                    conenctions.Add(CreateConnectionString(i, i + 1, Sides.TOP, Sides.BOTTOM, 90));
+                } else if (i % 2 == 1)
+                {
+                    conenctions.Add(CreateConnectionString(i, i + 1, Sides.TOP, Sides.BOTTOM, -90));
+                }
+            }
         }
 
         if (isWheel)

@@ -8,6 +8,7 @@ public class EntryPoint : MonoBehaviour
     ModularRobot MR;
     GaitControlTable gctWheel;
     private WheelMovement wheelMovement;
+    private WaveController_5 waveController_5;
     private WalkerMovement walkerMovement;
     private SnakeMovementNew snakeMovementNew;
     private SnakeMovement snakeMovement;
@@ -27,19 +28,19 @@ public class EntryPoint : MonoBehaviour
         walkerMovement = MR.gameObject.AddComponent<WalkerMovement>();
         snakeMovementNew = MR.gameObject.AddComponent<SnakeMovementNew>();
         gctWheel = MR.gameObject.AddComponent<GaitControlTable>();
+        waveController_5 = MR.gameObject.AddComponent<WaveController_5>();
         transformations = MR.gameObject.AddComponent<Transformations>();
-        MR.gameObject.AddComponent<COM_Controller>();
 
 /*         snakeMovement = MR.gameObject.AddComponent<SnakeMovement>();
          */
         int numOfModules = 21;
 
-/*        array = createCFG.CreatePerfectWheel(numOfModules);
-        string path = createXML
-            .CreateHeader("test123", new Vector3(0, 1, 0), Quaternion.Euler(0, 0, -90))
-            .AddModules(numOfModules, createXML.CreateModules(array))
-            .AddConnections(createXML.CreateSimpleConnections(numOfModules, true))
-            .Create("Znake2");*/
+        /*        array = createCFG.CreatePerfectWheel(numOfModules);
+                string path = createXML
+                    .CreateHeader("test123", new Vector3(0, 1, 0), Quaternion.Euler(0, 0, -90))
+                    .AddModules(numOfModules, createXML.CreateModules(array))
+                    .AddConnections(createXML.CreateSimpleConnections(numOfModules, true))
+                    .Create("Znake2");*/
 
         array = createCFG.CreateWalker(numOfModules);
         string path = createXML
@@ -48,6 +49,12 @@ public class EntryPoint : MonoBehaviour
             .AddConnections(createXML.CreateConnectionsForWalker(numOfModules))
             .Create("Znake2");
 
+        /*        array = createCFG.CreateSnake(numOfModules);
+                string path = createXML
+                    .CreateHeader("test123", new Vector3(0, 1, 0), Quaternion.Euler(90, 0, -90))
+                    .AddModules(numOfModules, createXML.CreateModules(array))
+                    .AddConnections(createXML.CreateSimpleConnections(numOfModules, false))
+                    .Create("Znake2");*/
 
         MR.angles = array;
         MR.Load(path);
@@ -64,10 +71,16 @@ public class EntryPoint : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            waveController_5.Go(10, 1.5, 1.5, true);
+        }
         if (Input.GetKeyUp(KeyCode.Space))
         {
             wheelMovement.isMoving = false;
             walkerMovement.isMoving = false;
+
+            waveController_5.Stop();
         }
         if (Input.GetKeyUp(KeyCode.Q))
         {
