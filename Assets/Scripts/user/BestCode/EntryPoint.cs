@@ -125,7 +125,8 @@ public class EntryPoint : MonoBehaviour
             StartCoroutine(transformations.Execute(
                 transformations.MakeSnake,
                 transformations.SnakeToWalker,
-                transformations.WalkerToSnake
+                transformations.WalkerToSnake,
+                transformations.SnakeToWheel
                 //transformations.WheelToSnake,
                 //transformations.SnakeToWalker
                 /*transformations.WalkerToSnake*/));
