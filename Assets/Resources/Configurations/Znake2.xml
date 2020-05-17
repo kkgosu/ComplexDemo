@@ -1,18 +1,18 @@
-<robot name="test123" moduleType="M3R2" position="0,1,0" rotation="0,180,90">
+<robot name="test123" moduleType="M3R2" position="0,1,0" rotation="0,0,270">
 	<modules>
 		<module id="0" q1="0"/>
 		<module id="1" q1="0"/>
 		<module id="2" q1="0"/>
 		<module id="3" q1="0"/>
 		<module id="4" q1="0"/>
-		<module id="5" q1="20"/>
-		<module id="6" q1="20"/>
-		<module id="7" q1="20"/>
-		<module id="8" q1="20"/>
-		<module id="9" q1="70"/>
-		<module id="10" q1="70"/>
-		<module id="11" q1="70"/>
-		<module id="12" q1="70"/>
+		<module id="5" q1="0"/>
+		<module id="6" q1="0"/>
+		<module id="7" q1="0"/>
+		<module id="8" q1="0"/>
+		<module id="9" q1="0"/>
+		<module id="10" q1="0"/>
+		<module id="11" q1="0"/>
+		<module id="12" q1="0"/>
 		<module id="13" q1="0"/>
 		<module id="14" q1="0"/>
 		<module id="15" q1="0"/>
@@ -23,26 +23,25 @@
 		<module id="20" q1="0"/>
 	</modules>
 	<connections>
-		<connection from="0" to="1" surfaceFrom="bottom" surfaceTo="top" tilt="90"/>
-		<connection from="0" to="2" surfaceFrom="left" surfaceTo="bottom" tilt="90"/>
-		<connection from="0" to="3" surfaceFrom="top" surfaceTo="bottom" tilt="90"/>
-		<connection from="0" to="4" surfaceFrom="right" surfaceTo="top" tilt="90"/>
-		<connection from="1" to="5" surfaceFrom="bottom" surfaceTo="top" tilt="-90"/>
-		<connection from="5" to="9" surfaceFrom="bottom" surfaceTo="top"/>
-		<connection from="9" to="13" surfaceFrom="bottom" surfaceTo="top"/>
-		<connection from="13" to="17" surfaceFrom="bottom" surfaceTo="top"/>
-		<connection from="17" to="21" surfaceFrom="bottom" surfaceTo="top"/>
-		<connection from="2" to="6" surfaceFrom="top" surfaceTo="bottom" tilt="-90"/>
-		<connection from="6" to="10" surfaceFrom="top" surfaceTo="bottom"/>
-		<connection from="10" to="14" surfaceFrom="top" surfaceTo="bottom"/>
-		<connection from="14" to="18" surfaceFrom="top" surfaceTo="bottom"/>
-		<connection from="3" to="7" surfaceFrom="top" surfaceTo="bottom" tilt="-90"/>
-		<connection from="7" to="11" surfaceFrom="top" surfaceTo="bottom"/>
-		<connection from="11" to="15" surfaceFrom="top" surfaceTo="bottom"/>
-		<connection from="15" to="19" surfaceFrom="top" surfaceTo="bottom"/>
-		<connection from="4" to="8" surfaceFrom="bottom" surfaceTo="top" tilt="-90"/>
-		<connection from="8" to="12" surfaceFrom="bottom" surfaceTo="top"/>
-		<connection from="12" to="16" surfaceFrom="bottom" surfaceTo="top"/>
-		<connection from="16" to="20" surfaceFrom="bottom" surfaceTo="top"/>
+		<connection from="0" to="1" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="1" to="2" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="2" to="3" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="3" to="4" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="4" to="5" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="5" to="6" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="6" to="7" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="7" to="8" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="8" to="9" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="9" to="10" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="10" to="11" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="11" to="12" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="12" to="13" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="13" to="14" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="14" to="15" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="15" to="16" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="16" to="17" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="17" to="18" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="18" to="19" surfaceFrom="top" surfaceTo="bottom"/>
+		<connection from="19" to="20" surfaceFrom="top" surfaceTo="bottom"/>
 	</connections>
 </robot>

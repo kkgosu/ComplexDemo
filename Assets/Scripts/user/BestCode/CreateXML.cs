@@ -185,17 +185,6 @@ public class CreateXML : MonoBehaviour
                 }
             }
 
-/*
-            for (int i = 1; i < total - 4; i++)
-            {
-                if (i >= 1 && i <= 4)
-                {
-                    conenctions.Add(CreateConnectionString(i, i + 4, Sides.BOTTOM, Sides.TOP, -90));
-                } else
-                {
-                    conenctions.Add(CreateConnectionString(i, i + 4, Sides.BOTTOM, Sides.TOP));
-                }
-            }*/
         }
 
         return conenctions;
@@ -213,10 +202,10 @@ public class CreateXML : MonoBehaviour
             {
                 if (i % 2 == 0)
                 {
-                    conenctions.Add(CreateConnectionString(i, i + 1, Sides.TOP, Sides.BOTTOM, 90));
+                    conenctions.Add(CreateConnectionString(i, i + 1, Sides.TOP, Sides.BOTTOM));
                 } else if (i % 2 == 1)
                 {
-                    conenctions.Add(CreateConnectionString(i, i + 1, Sides.TOP, Sides.BOTTOM, -90));
+                    conenctions.Add(CreateConnectionString(i, i + 1, Sides.TOP, Sides.BOTTOM));
                 }
             }
         }
