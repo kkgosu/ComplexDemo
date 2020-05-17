@@ -67,11 +67,6 @@ public class Transformations : MonoBehaviour
     {
         centralModule = GetCentralModule();
         print("Central Module: " + centralModule);
-        GaitControlTable controlTable = MR.gameObject.GetComponent<GaitControlTable>();
-        if (controlTable == null)
-        {
-            controlTable = MR.gameObject.AddComponent<GaitControlTable>();
-        }
 
         yield return Execute(
             NewSnakeToWalker2Angles,
@@ -79,37 +74,27 @@ public class Transformations : MonoBehaviour
             SnakeToWalker4Angles,
             SnakeToWalker5Angles
             );
-
-
-        /*                       controlTable.ReadFromFile(MR, Movement.CreateGCT(MR.angles, 2, SnakeToWalker4Angles()));
-                       yield return WaitUntilMoveEnds(controlTable);
-
-                       RenameModulesForWalker();
-                       CreateCFG createCFG = GetComponent<CreateCFG>();
-                       controlTable.ReadFromFile(MR, Movement.CreateGCT(createCFG.CreateWalker(MR.angles.Length), 2));
-                       yield return WaitUntilMoveEnds(controlTable);*/
     }
 
     public IEnumerator WalkerToSnake()
     {
         GaitControlTable controlTable = MR.gameObject.GetComponent<GaitControlTable>();
 
-        WalkerToSnake1Angles(MR.angles.Length);
-        yield return new WaitForSeconds(2f);
-        WalkerToSnake2Angles();
-        yield return new WaitForSeconds(2f);
-        WalkerToSnake3Angles();
-        yield return new WaitForSeconds(3f);
+        yield return Execute(
+            WalkerToSnake1Angles,
+            WalkerToSnake2Angles,
+            WalkerToSnake3Angles
+            );
 
-        MR.modules[secondLeg[secondLeg.Count - 1]].surfaces["top"].Connect(MR.modules[firstLeg[firstLeg.Count - 1]].surfaces["bottom"]);
-        MR.modules[thirdLeg[thirdLeg.Count - 1]].surfaces["top"].Connect(MR.modules[fourthLeg[fourthLeg.Count - 1]].surfaces["bottom"]);
-        MR.modules[secondLeg[0]].surfaces["bottom"].Disconnect();
-        MR.modules[fourthLeg[0]].surfaces["top"].Disconnect();
+        /*        MR.modules[secondLeg[secondLeg.Count - 1]].surfaces["top"].Connect(MR.modules[firstLeg[firstLeg.Count - 1]].surfaces["bottom"]);
+                MR.modules[thirdLeg[thirdLeg.Count - 1]].surfaces["top"].Connect(MR.modules[fourthLeg[fourthLeg.Count - 1]].surfaces["bottom"]);
+                MR.modules[secondLeg[0]].surfaces["bottom"].Disconnect();
+                MR.modules[fourthLeg[0]].surfaces["top"].Disconnect();
 
-        WalkerToSnake4Angles();
-        yield return new WaitForSeconds(2f);
+                WalkerToSnake4Angles();
+                yield return new WaitForSeconds(2f);
 
-        StartCoroutine(WalkerToSnake5Angles());
+                StartCoroutine(WalkerToSnake5Angles());*/
     }
 
     private IEnumerator WalkerToSnake5Angles()
@@ -204,15 +189,17 @@ public class Transformations : MonoBehaviour
         MR.modules[thirdLeg[(int)Math.Ceiling(thirdLeg.Count / 2f)]].drivers["q2"].Set(-90);
     }
 
-    private void WalkerToSnake1Angles(int total)
+    private IEnumerator WalkerToSnake1Angles()
     {
-        for (int i = 0; i < total; i++)
+        for (int i = 0; i < MR.modules.Count; i++)
         {
             MR.modules[i].drivers["q1"].Set(0);
         }
+
+        yield return WaitWhileDriversAreBusy();
     }
 
-    private void WalkerToSnake2Angles()
+    private IEnumerator WalkerToSnake2Angles()
     {
         int connectedModule;
         firstLeg.Clear();
@@ -234,7 +221,7 @@ public class Transformations : MonoBehaviour
         {
             if (connectedModule == 0)
             {
-                connectedModule = MR.modules[connectedModule].surfaces["left"].connectedSurface.module.id;
+                connectedModule = MR.modules[connectedModule].surfaces["right"].connectedSurface.module.id;
             }
             else
             {
@@ -257,7 +244,7 @@ public class Transformations : MonoBehaviour
         {
             if (connectedModule == 0)
             {
-                connectedModule = MR.modules[connectedModule].surfaces["right"].connectedSurface.module.id;
+                connectedModule = MR.modules[connectedModule].surfaces["left"].connectedSurface.module.id;
             }
             else
             {
@@ -266,20 +253,22 @@ public class Transformations : MonoBehaviour
             fourthLeg.Add(connectedModule);
         }
 
-        MR.modules[firstLeg[firstLeg.Count - 1]].drivers["q1"].Set(45);
-        MR.modules[secondLeg[secondLeg.Count - 1]].drivers["q1"].Set(45);
-        MR.modules[thirdLeg[thirdLeg.Count - 1]].drivers["q1"].Set(45);
-        MR.modules[fourthLeg[fourthLeg.Count - 1]].drivers["q1"].Set(45);
+        MR.modules[firstLeg[firstLeg.Count - 1]].drivers["q1"].Set(-35);
+        MR.modules[secondLeg[secondLeg.Count - 1]].drivers["q1"].Set(50);
+        MR.modules[thirdLeg[thirdLeg.Count - 1]].drivers["q1"].Set(-50);
+        MR.modules[fourthLeg[fourthLeg.Count - 1]].drivers["q1"].Set(35);
 
-        MR.modules[1].drivers["q1"].Set(-9);
-        MR.modules[2].drivers["q1"].Set(9);
-        MR.modules[3].drivers["q1"].Set(-9);
-        MR.modules[4].drivers["q1"].Set(9);
+        MR.modules[1].drivers["q1"].Set(-7);
+        MR.modules[2].drivers["q1"].Set(7);
+        MR.modules[3].drivers["q1"].Set(-7);
+        MR.modules[4].drivers["q1"].Set(7);
 
-        MR.modules[5].drivers["q2"].Set(-90);
-        MR.modules[2].drivers["q2"].Set(90);
-        MR.modules[3].drivers["q2"].Set(-90);
-        MR.modules[8].drivers["q2"].Set(90);
+        MR.modules[5].drivers["q2"].Set(0);
+        MR.modules[2].drivers["q2"].Set(0);
+        MR.modules[3].drivers["q2"].Set(0);
+        MR.modules[8].drivers["q2"].Set(0);
+
+        yield return WaitWhileDriversAreBusy();
     }
 
     public double GetRotation(Vector3 from, Vector3 to)
@@ -301,12 +290,14 @@ public class Transformations : MonoBehaviour
         return dist;
     }
 
-    private void WalkerToSnake3Angles()
+    private IEnumerator WalkerToSnake3Angles()
     {
-        MR.modules[9].drivers["q1"].Set(90);
+        MR.modules[9].drivers["q1"].Set(-90);
         MR.modules[10].drivers["q1"].Set(90);
-        MR.modules[11].drivers["q1"].Set(90);
+        MR.modules[11].drivers["q1"].Set(-90);
         MR.modules[12].drivers["q1"].Set(90);
+
+        yield return WaitWhileDriversAreBusy();
     }
 
     private float[] WheelToSnakeAngles(float[] angles)

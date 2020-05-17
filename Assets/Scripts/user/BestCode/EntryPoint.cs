@@ -58,14 +58,6 @@ public class EntryPoint : MonoBehaviour
 
         MR.angles = array;
         MR.Load(path);
-
-
-        /*        Transformations transformations = MR.gameObject.AddComponent<Transformations>();
-                StartCoroutine(transformations.Execute(
-                    MR, gctWheel, 
-                    transformations.MoveWheelBack,
-                    transformations.WheelToSnake,
-                    transformations.SnakeToWalker));*/
     }
 
     // Update is called once per frame
@@ -132,7 +124,8 @@ public class EntryPoint : MonoBehaviour
         {
             StartCoroutine(transformations.Execute(
                 transformations.MakeSnake,
-                transformations.SnakeToWalker
+                transformations.SnakeToWalker,
+                transformations.WalkerToSnake
                 //transformations.WheelToSnake,
                 //transformations.SnakeToWalker
                 /*transformations.WalkerToSnake*/));
