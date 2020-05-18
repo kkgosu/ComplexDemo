@@ -109,7 +109,7 @@ public class Transformations : MonoBehaviour
         snakeToWheel = true;
 
         int counter = 2;
-
+        MR.modules[total - 1].drivers["q1"].Set(-10);
         while (!isClose)
         {
             if (counter < total / 5)
@@ -120,8 +120,8 @@ public class Transformations : MonoBehaviour
             }
 
             MR.modules[total - counter].drivers["q1"].Set(0);
-            MR.modules[total - counter - 1].drivers["q1"].Set(90);
-            MR.modules[total - counter - 2].drivers["q1"].Set(90);
+            MR.modules[total - counter - 1].drivers["q1"].Set(87);
+            MR.modules[total - counter - 2].drivers["q1"].Set(87);
             yield return WaitWhileDriversAreBusy();
 
             counter++;
@@ -732,7 +732,7 @@ public class Transformations : MonoBehaviour
     {
         if (snakeToWheel)
         {
-            if (GetDistance(MR.modules[0].position, MR.modules[MR.modules.Count - 1].position) < 0.277)
+            if (GetDistance(MR.modules[0].position, MR.modules[MR.modules.Count - 1].position) < 0.29)
             {
                 MR.modules[0].surfaces["bottom"].Connect(MR.modules[MR.modules.Count - 1].surfaces["top"]);
                 isClose = true;
