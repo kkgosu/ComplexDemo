@@ -9,15 +9,15 @@ public class WheelMovement : Movement
     override public IEnumerator MoveBackward(ModularRobot modularRobot)
     {
         isMoving = true;
-        GaitControlTable controlTable = modularRobot.gameObject.GetComponent<GaitControlTable>();
-        if (controlTable == null)
-        {
-            controlTable = modularRobot.gameObject.AddComponent<GaitControlTable>();
-        }
         while (isMoving)
         {
-            controlTable.ReadFromFile(modularRobot, CreateGCT(PreviousStep(modularRobot.angles), 2));
-            yield return StartCoroutine(Move(controlTable));
+            float first = MR.modules[0].drivers["q1"].qValue;
+            for (int i = 1; i < MR.modules.Count; i++)
+            {
+                MR.modules[i - 1].drivers["q1"].Set(MR.modules[i].drivers["q1"].qValue, 2);
+            }
+            MR.modules[MR.modules.Count - 1].drivers["q1"].Set(first, 2);
+            yield return WaitWhileDriversAreBusy();
         }
         isMoving = false;
     }
