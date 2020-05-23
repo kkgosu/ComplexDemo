@@ -9,6 +9,8 @@ using UnityEngine;
 /// </summary>
 public abstract class Movement : MonoBehaviour, IMovement
 {
+    private ModularRobot MR;
+
     public bool isMoving = false;
 
     private static readonly string[] snakeStepOne = "max / 2 (3), min / 2 (3), min / 2 (3), max / 2 (3), max /2 (3), min / 2 (3)".Split(',');
@@ -198,6 +200,7 @@ public abstract class Movement : MonoBehaviour, IMovement
             }
         }
     }
+
     protected IEnumerator Move(GaitControlTable controlTable)
     {
         controlTable.BeginTillEnd();
@@ -209,7 +212,7 @@ public abstract class Movement : MonoBehaviour, IMovement
 
     void Start()
     {
-        
+        MR = GetComponent<ModularRobot>();
     }
 
     // Update is called once per frame

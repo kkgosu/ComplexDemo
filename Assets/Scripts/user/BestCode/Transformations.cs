@@ -92,7 +92,8 @@ public class Transformations : MonoBehaviour
     public IEnumerator SnakeToWheel()
     {
         yield return Execute(
-            SnakeToWheel1
+            SnakeToWheel1,
+            SnakeToWheel2
             );
     }
 
@@ -135,62 +136,30 @@ public class Transformations : MonoBehaviour
         yield return WaitWhileDriversAreBusy();
     }
 
-    private IEnumerator WalkerToSnake5Angles()
+    private IEnumerator SnakeToWheel2()
     {
-        print("WalkerToSnake5Angles");
-        GaitControlTable controlTable = MR.gameObject.GetComponent<GaitControlTable>();
-        RenameModulesForSnake();
-        MR.angles = new float[MR.angles.Length];
-        
-        for (int i = 0; i < MR.modules.Count; i++)
+        int total = MR.modules.Count;
+        int flat = total / 4;
+
+        int halfFlat1 = flat / 2;
+        int halfFlat2 = flat - halfFlat1;
+
+        MR.modules[total / 2 - halfFlat1].drivers["q1"].Set(15);
+        MR.modules[total / 2 - halfFlat1 - 1].drivers["q1"].Set(60);
+        MR.modules[total / 2 - halfFlat1 + 1].drivers["q1"].Set(15);
+        MR.modules[total / 2 + halfFlat2 - 1].drivers["q1"].Set(15);
+        MR.modules[total / 2 + halfFlat2 + 1].drivers["q1"].Set(60);
+        MR.modules[total / 2 + halfFlat2].drivers["q1"].Set(15);
+
+        for (int i = total / 2 - halfFlat1 + 2; i < total / 2 + halfFlat2 - 2; i++)
         {
-                MR.modules[i].drivers["q1"].Set(0);
+            MR.modules[i].drivers["q1"].Set(0);
         }
 
-        
-
-        for (int i = 0; i < MR.modules.Count; i++)
-        {
-            if (MR.modules[i].drivers["q2"].qValue != 0)
-            {
-                MR.modules[i].drivers["q2"].Set(0);
-            }
-        }
 
         yield return WaitWhileDriversAreBusy();
-
-        MR.modules[1].drivers["q2"].Set(90);
-        MR.modules[9].drivers["q2"].Set(90);
-        MR.modules[10].drivers["q2"].Set(-90);
-        MR.modules[11].drivers["q2"].Set(-90);
-        MR.modules[12].drivers["q2"].Set(90);
-        MR.modules[MR.modules.Count - 1].drivers["q2"].Set(90);
-
-        yield return WaitWhileDriversAreBusy();
-
-        for (int i = 0; i < MR.modules.Count - 1; i++)
-        {
-            while (IfAnyDriverIsBusy())
-            {
-                yield return new WaitForEndOfFrame();
-            }
-            float diff = MR.modules[i].drivers["q2"].qValue + MR.modules[i + 1].drivers["q2"].qValue;
-
-            print("Diff: " + diff + ", when modules " + i + "=" + MR.modules[i].drivers["q2"].qValue + ", modules " + (i + 1 + "=" + MR.modules[i + 1].drivers["q2"].qValue));
-
-            if (diff == 0)
-            {
-                if (i % 2 == 0)
-                {
-                    MR.modules[i].drivers["q2"].Set(-90);
-                }
-                else
-                {
-                    MR.modules[i].drivers["q2"].Set(90);
-                }
-            }
-        }
     }
+
     private IEnumerator WaitWhileDriversAreBusy()
     {
         while (IfAnyDriverIsBusy())

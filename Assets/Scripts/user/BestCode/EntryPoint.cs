@@ -21,7 +21,8 @@ public class EntryPoint : MonoBehaviour
     {
         var Rob = new GameObject();
         MR = Rob.AddComponent<ModularRobot>();
-        
+        MR.gameObject.AddComponent<Movement>();
+
         createXML = MR.gameObject.AddComponent<CreateXML>();
         createCFG = MR.gameObject.AddComponent<CreateCFG>();
         wheelMovement = MR.gameObject.AddComponent<WheelMovement>();
@@ -123,9 +124,9 @@ public class EntryPoint : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.T))
         {
             StartCoroutine(transformations.Execute(
-                transformations.MakeSnake,
-                transformations.SnakeToWalker,
-                transformations.WalkerToSnake,
+                //transformations.MakeSnake,
+                //transformations.SnakeToWalker,
+                //transformations.WalkerToSnake,
                 transformations.SnakeToWheel
                 //transformations.WheelToSnake,
                 //transformations.SnakeToWalker
