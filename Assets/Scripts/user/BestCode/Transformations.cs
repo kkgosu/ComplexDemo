@@ -31,6 +31,7 @@ public class Transformations : MonoBehaviour
             if (i % 2 == 0)
             {
                 MR.modules[i].drivers["q2"].Set(90);
+                yield return new WaitForSeconds(0.5f);
             } else
             {
                 MR.modules[i].drivers["q2"].Set(-90);
@@ -93,7 +94,7 @@ public class Transformations : MonoBehaviour
     {
         yield return Execute(
             SnakeToWheel1,
-            SnakeToWheel2
+            SnakeToWheel2Fix
             );
     }
 
@@ -156,6 +157,22 @@ public class Transformations : MonoBehaviour
             MR.modules[i].drivers["q1"].Set(0);
         }
 
+
+        yield return WaitWhileDriversAreBusy();
+    }
+
+    private IEnumerator SnakeToWheel2Fix()
+    {
+        int total = MR.modules.Count;
+        MR.modules[0 + total / 7].drivers["q1"].Set(49);
+        MR.modules[1 + total / 7].drivers["q1"].Set(49);
+        MR.modules[total - total / 7].drivers["q1"].Set(49);
+        MR.modules[total - 1 - total / 7].drivers["q1"].Set(49);
+
+        MR.modules[- 1 + total / 3].drivers["q1"].Set(41);
+        MR.modules[total / 3].drivers["q1"].Set(41);
+        MR.modules[2 + total - total / 3].drivers["q1"].Set(41);
+        MR.modules[1 + total - 1 - total / 3].drivers["q1"].Set(41);
 
         yield return WaitWhileDriversAreBusy();
     }
