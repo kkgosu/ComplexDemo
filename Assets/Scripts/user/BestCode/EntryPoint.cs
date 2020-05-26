@@ -20,6 +20,7 @@ public class EntryPoint : MonoBehaviour
     void Start()
     {
         var Rob = new GameObject();
+        print(Rob.transform.localScale.x);
         MR = Rob.AddComponent<ModularRobot>();
         MR.gameObject.AddComponent<Movement>();
 
@@ -52,7 +53,7 @@ public class EntryPoint : MonoBehaviour
 
         array = createCFG.CreateSnake(numOfModules);
         string path = createXML
-            .CreateHeader("test123", new Vector3(0, 1, 0), Quaternion.Euler(0, 0, -90))
+            .CreateHeader("test123", new Vector3(-50, 5, -27), Quaternion.Euler(0, 90, -90))
             .AddModules(numOfModules, createXML.CreateModules(array))
             .AddConnections(createXML.CreateSimpleConnections(numOfModules, false))
             .Create("Znake2");
