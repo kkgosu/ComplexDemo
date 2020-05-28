@@ -33,27 +33,11 @@ public class EntryPoint : MonoBehaviour
         waveController_5 = MR.gameObject.AddComponent<WaveController_5>();
         transformations = MR.gameObject.AddComponent<Transformations>();
 
-/*         snakeMovement = MR.gameObject.AddComponent<SnakeMovement>();
-         */
         int numOfModules = 21;
-
-        /*        array = createCFG.CreatePerfectWheel(numOfModules);
-                string path = createXML
-                    .CreateHeader("test123", new Vector3(0, 1, 0), Quaternion.Euler(0, 0, -90))
-                    .AddModules(numOfModules, createXML.CreateModules(array))
-                    .AddConnections(createXML.CreateSimpleConnections(numOfModules, true))
-                    .Create("Znake2");*/
-
-/*        array = createCFG.CreateWalker(numOfModules);
-        string path = createXML
-            .CreateHeader("test123", new Vector3(0, 1, 0), Quaternion.Euler(0, -180, 90))
-            .AddModules(numOfModules, createXML.CreateModules(array))
-            .AddConnections(createXML.CreateConnectionsForWalker(numOfModules))
-            .Create("Znake2");*/
 
         array = createCFG.CreateSnake(numOfModules);
         string path = createXML
-            .CreateHeader("test123", new Vector3(-14, 5, -10), Quaternion.Euler(0, 90, -90))
+            .CreateHeader("test123", new Vector3(-14, 5, -10), Quaternion.Euler(0, 0, -90))
             .AddModules(numOfModules, createXML.CreateModules(array))
             .AddConnections(createXML.CreateSimpleConnections(numOfModules, false))
             .Create("Znake2");
@@ -126,9 +110,9 @@ public class EntryPoint : MonoBehaviour
         {
             StartCoroutine(transformations.Execute(
                 //transformations.MakeSnake
-                transformations.SnakeToWalker
+                //transformations.SnakeToWalker
                 //transformations.WalkerToSnake,
-                //transformations.SnakeToWheel
+                transformations.SnakeToWheel
                 //transformations.WheelToSnake,
                 //transformations.SnakeToWalker
                 /*transformations.WalkerToSnake*/));

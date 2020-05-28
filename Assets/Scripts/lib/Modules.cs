@@ -10,7 +10,7 @@ public static class Modules {
     private static Module GetModuleFromPrefab (string path) {
 		GameObject prefab = (GameObject) Resources.Load (path);
 		Module module = prefab.GetComponent <Module> ();
-		//module.transform.localScale = Vector3.one * 1 / 2.5f;
+		//module.transform.localScale = Vector3.one * 3f;
 		if (module == null) {
 			Debug.LogError (string.Format ("Selected prefab ({0}) doesn't contain Module component.", path));
 			return null;
