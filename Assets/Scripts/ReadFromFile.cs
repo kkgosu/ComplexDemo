@@ -16,14 +16,11 @@ public class ReadFromFile : MonoBehaviour
     public Quaternion[] rotationsZ = new Quaternion[100];
     public GameObject[] objects;
 
-    public float itemXSpread = 10;
-    public float itemYSpread = 0;
-    public float itemZSpread = 10;
+    float xOffset = 0;
+    float zOffset = 0;
+    float scale = 30f;
 
-    int xOffset = 0;
-    int zOffset = 0;
-    int scale = 10;
-
+    float fixScale = 0.1f;
 
     public void ParseFile(string file)
     {
@@ -40,19 +37,19 @@ public class ReadFromFile : MonoBehaviour
             {
                 if (!prefab.Equals("0"))
                 {
-                    Vector3 randPosition = new Vector3(xOffset + scale / 2, 0, zOffset + scale / 2) +
+                    Vector3 randPosition = new Vector3((xOffset + scale / 2) * fixScale, 0, (zOffset + scale / 2)*fixScale) +
                         transform.position;
                     GameObject clone = Instantiate(prefabMap[prefab], randPosition, Quaternion.identity);
 
                     if (prefab.Equals("6")) {
-                        clone.transform.localScale = new Vector3(scales[counter] * 2, scales[counter], scales[counter]);
+                        clone.transform.localScale = new Vector3(scales[counter] * 2 * fixScale, scales[counter] * fixScale, scales[counter] * fixScale);
                     } else
                     {
-                        clone.transform.localScale = new Vector3(scales[counter], scales[counter], scales[counter]);
+                        clone.transform.localScale = new Vector3(scales[counter] * fixScale, scales[counter] * fixScale, scales[counter] * fixScale);
                     }
                     
                     clone.transform.localRotation *= rotationsX[counter] * rotationsY[counter] * rotationsZ[counter];
-                    clone.transform.localPosition = new Vector3(clone.transform.localPosition.x, clone.transform.localPosition.y + 2f, clone.transform.localPosition.z);
+                    clone.transform.localPosition = new Vector3(clone.transform.localPosition.x, clone.transform.localPosition.y + 0f, clone.transform.localPosition.z);
                 }
                 zOffset += scale;
                 counter++;
