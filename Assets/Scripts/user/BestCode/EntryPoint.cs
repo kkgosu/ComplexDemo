@@ -37,7 +37,7 @@ public class EntryPoint : MonoBehaviour
 
         array = createCFG.CreateSnake(numOfModules);
         string path = createXML
-            .CreateHeader("test123", new Vector3(-14, 5, -10), Quaternion.Euler(0, 0, -90))
+            .CreateHeader("test123", new Vector3(-14, 5, -16), Quaternion.Euler(0, -90, -90))
             .AddModules(numOfModules, createXML.CreateModules(array))
             .AddConnections(createXML.CreateSimpleConnections(numOfModules, false))
             .Create("Znake2");
@@ -49,6 +49,26 @@ public class EntryPoint : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Keypad1))
+        {
+            walkerMovement.isMoving = false;
+            StartCoroutine(walkerMovement.StepOver1());
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad2))
+        {
+            walkerMovement.isMoving = false;
+            StartCoroutine(walkerMovement.StepOver2());
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad3))
+        {
+            walkerMovement.isMoving = false;
+            StartCoroutine(walkerMovement.StepOver3());
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad4))
+        {
+            walkerMovement.isMoving = false;
+            StartCoroutine(walkerMovement.StepOver4());
+        }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             StartCoroutine(transformations.MakeSnake());
@@ -110,67 +130,12 @@ public class EntryPoint : MonoBehaviour
         {
             StartCoroutine(transformations.Execute(
                 //transformations.MakeSnake
-                //transformations.SnakeToWalker
+                transformations.SnakeToWalker
                 //transformations.WalkerToSnake,
-                transformations.SnakeToWheel
+                //transformations.SnakeToWheel
                 //transformations.WheelToSnake,
                 //transformations.SnakeToWalker
                 /*transformations.WalkerToSnake*/));
-        }
-    }
-
-    public void WalkerToWheel()
-    {
-        StartCoroutine(TransformWalkerToWheel());
-    }
-
-    IEnumerator TransformWalkerToWheel()
-    {
-
-        gctWheel.ReadFromFile(MR, "SnakeToWalker_5_rev.txt");
-        gctWheel.BeginTillEnd();
-        while (gctWheel.inProgress || !gctWheel.isReady)
-        {
-            print("REVERSE PLAY: STW 4");
-            print("Smikanie noG_G");
-            yield return new WaitForEndOfFrame();
-        }
-
-        gctWheel.ReadFromFile(MR, "SnakeToWalker_4_rev.txt");
-        gctWheel.BeginTillEnd();
-        while (gctWheel.inProgress || !gctWheel.isReady)
-        {
-            print("REVERSE PLAY: STW 3");
-            print("Smikanie noG_G");
-            yield return new WaitForEndOfFrame();
-        }
-
-         gctWheel.ReadFromFile(MR, "SnakeToWalker_2.txt");
-         gctWheel.BeginTillEnd();
-         while (gctWheel.inProgress || !gctWheel.isReady)
-         {
-             print("REVERSE PLAY: STW 2");
-             yield return new WaitForEndOfFrame();
-         }
-
-         yield return new WaitForSeconds(1f);
-         MR.modules[412].surfaces["top"].Disconnect();
-         MR.modules[413].surfaces["bottom"].Disconnect();
-         MR.modules[417].surfaces["top"].Connect(MR.modules[418].surfaces["bottom"]);
-         MR.modules[47].surfaces["top"].Connect(MR.modules[48].surfaces["bottom"]);
-
-         gctWheel.ReadFromFile(MR, "SnakeToWalker_1_rev.txt");
-         gctWheel.BeginTillEnd();
-         while (gctWheel.inProgress || !gctWheel.isReady)
-         {
-             yield return new WaitForEndOfFrame();
-         }
-
-        gctWheel.ReadFromFile(MR, "SnakeToWalker_1_2_rev.txt");
-        gctWheel.BeginTillEnd();
-        while (gctWheel.inProgress || !gctWheel.isReady)
-        {
-            yield return new WaitForEndOfFrame();
         }
     }
 }

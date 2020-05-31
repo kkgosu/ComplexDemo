@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WalkerMovement : Movement
 {
+    private ModularRobot MR;
     private static float stepAngle = 21f;
     private static float alphaBig = 70f;
     private static float alphaSmall = 90 - alphaBig;
@@ -38,6 +39,77 @@ public class WalkerMovement : Movement
     override public IEnumerator RotateToTheRight(ModularRobot modularRobot)
     {
         return DefaultRotation(modularRobot, -30);
+    }
+
+    public IEnumerator StepOver1()
+    {
+        MR.modules[5].drivers["q1"].Set(-80);
+        yield return WaitWhileDriversAreBusy();
+        MR.modules[1].drivers["q1"].Set(55);
+        yield return WaitWhileDriversAreBusy();
+        MR.modules[5].drivers["q1"].Set(20);
+        yield return WaitWhileDriversAreBusy();
+        MR.modules[1].drivers["q1"].Set(0);
+    }
+
+    public IEnumerator StepOver2()
+    {
+        MR.modules[6].drivers["q1"].Set(-80);
+        yield return WaitWhileDriversAreBusy();
+        MR.modules[2].drivers["q1"].Set(55);
+        yield return WaitWhileDriversAreBusy();
+        MR.modules[6].drivers["q1"].Set(20);
+        yield return WaitWhileDriversAreBusy();
+        MR.modules[2].drivers["q1"].Set(0);
+        yield return WaitWhileDriversAreBusy();
+    }
+
+    public IEnumerator StepOver3()
+    {
+        MR.modules[7].drivers["q1"].Set(-80);
+        yield return WaitWhileDriversAreBusy();
+        MR.modules[3].drivers["q1"].Set(-55);
+        yield return WaitWhileDriversAreBusy();
+        MR.modules[7].drivers["q1"].Set(20);
+        yield return WaitWhileDriversAreBusy();
+        MR.modules[3].drivers["q1"].Set(0);
+        yield return WaitWhileDriversAreBusy();
+    }
+    public IEnumerator StepOver4()
+    {
+        MR.modules[8].drivers["q1"].Set(-80);
+        yield return WaitWhileDriversAreBusy();
+        MR.modules[4].drivers["q1"].Set(-55);
+        yield return WaitWhileDriversAreBusy();
+        MR.modules[8].drivers["q1"].Set(20);
+        yield return WaitWhileDriversAreBusy();
+        MR.modules[4].drivers["q1"].Set(0);
+        yield return WaitWhileDriversAreBusy();
+    }
+
+
+    private IEnumerator WaitWhileDriversAreBusy()
+    {
+        while (IfAnyDriverIsBusy())
+        {
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    private bool IfAnyDriverIsBusy()
+    {
+        bool flag = false;
+        foreach (Module module in MR.modules.Values)
+        {
+            foreach (Driver driver in module.drivers.Values)
+            {
+                if (driver.busy)
+                {
+                    flag = true;
+                }
+            }
+        }
+        return flag;
     }
 
     private IEnumerator DefaultStep(ModularRobot modularRobot, int offset)
@@ -220,7 +292,7 @@ public class WalkerMovement : Movement
     // Start is called before the first frame update
     void Start()
     {
-        
+        MR = GetComponent<ModularRobot>();
     }
 
     // Update is called once per frame
