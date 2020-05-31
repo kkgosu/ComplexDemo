@@ -240,7 +240,7 @@ public class SnakeMovement : MonoBehaviour
                 {
                     ClimbOnWheel(GameObject.Find("Robot wheel24").GetComponent<ModularRobot>());
                 }*/
-        if (Input.GetKeyDown(KeyCode.X))
+/*        if (Input.GetKeyDown(KeyCode.X))
         {
             side.Move(1);
         }
@@ -251,6 +251,6 @@ public class SnakeMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.C))
         {
             fold.Rotate(90);
-        }
+        }*/
     }
 }
