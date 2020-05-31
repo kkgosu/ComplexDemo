@@ -5,10 +5,21 @@ using UnityEngine;
 
 public class EntryPoint : MonoBehaviour
 {
+    enum State
+    {
+        WHEEL, WALKER, SNAKE
+    }
+
+    enum Direction
+    {
+        FORWARD, BACKWARD, LEFT, RIGHT, ROTATE_RIGHT, ROTATE_LEFT
+    }
+
     ModularRobot MR;
     GaitControlTable gctWheel;
     private WheelMovement wheelMovement;
     private WaveController_5 waveController_5;
+    private SnakeFold fold;
     private WalkerMovement walkerMovement;
     private SnakeMovementNew snakeMovementNew;
     private SnakeMovement snakeMovement;
@@ -16,6 +27,9 @@ public class EntryPoint : MonoBehaviour
     private CreateXML createXML;
     private CreateCFG createCFG;
     private float[] array;
+
+    private State currentState;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,6 +58,78 @@ public class EntryPoint : MonoBehaviour
 
         MR.angles = array;
         MR.Load(path);
+
+        currentState = State.SNAKE;
+    }
+
+    private void HandleMovement(IEnumerator walkerMove, IEnumerator wheelMove, Direction direction)
+    {
+        switch (currentState)
+        {
+            case State.SNAKE:
+                {
+                    switch (direction)
+                    {
+                        case Direction.FORWARD:
+                            {
+                                StopAllMovement();
+                                StartCoroutine(transformations.MakeSnake());
+                                waveController_5.Go(10, 1.5, 1.5, true);
+                                break;
+                            }
+                        case Direction.BACKWARD:
+                            {
+                                StopAllMovement();
+                                StartCoroutine(transformations.MakeSnake());
+                                waveController_5.Go(10, 1.5, 1.5, false);
+                                break;
+                            }
+                        case Direction.ROTATE_RIGHT:
+                            {
+                                fold = GetComponent<SnakeFold>();
+                                if (fold == null)
+                                {
+                                    fold = gameObject.AddComponent<SnakeFold>();
+                                }
+                                StopAllMovement();
+                                fold.Rotate(30);
+                                break;
+                            }
+                        case Direction.ROTATE_LEFT:
+                            {
+                                fold = GetComponent<SnakeFold>();
+                                if (fold == null)
+                                {
+                                    fold = gameObject.AddComponent<SnakeFold>();
+                                }
+                                StopAllMovement();
+                                fold.Rotate(-30);
+                                break;
+                            }
+                    }
+
+                    break;
+                }
+            case State.WALKER:
+                {
+                    StopAllMovement();
+                    StartCoroutine(walkerMove);
+                    break;
+                }
+            case State.WHEEL:
+                {
+                    StopAllMovement();
+                    StartCoroutine(wheelMove);
+                    break;
+                }
+        }
+    }
+
+    private void StopAllMovement()
+    {
+        waveController_5.Stop();
+        walkerMovement.isMoving = false;
+        wheelMovement.isMoving = false;
     }
 
     // Update is called once per frame
@@ -69,11 +155,6 @@ public class EntryPoint : MonoBehaviour
             walkerMovement.isMoving = false;
             StartCoroutine(walkerMovement.StepOver4());
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            StartCoroutine(transformations.MakeSnake());
-            waveController_5.Go(10, 1.5, 1.5, true);
-        }
         if (Input.GetKeyUp(KeyCode.Space))
         {
             wheelMovement.isMoving = false;
@@ -83,59 +164,52 @@ public class EntryPoint : MonoBehaviour
         }
         if (Input.GetKeyUp(KeyCode.Q))
         {
-            wheelMovement.isMoving = false;
-            StartCoroutine(wheelMovement.MoveForward(MR));
+            HandleMovement(walkerMovement.RotateToTheLeft(MR), wheelMovement.MoveForward(MR), Direction.ROTATE_LEFT);
+        }
+        if (Input.GetKeyUp(KeyCode.E))
+        {
+            HandleMovement(walkerMovement.RotateToTheRight(MR), wheelMovement.MoveForward(MR), Direction.ROTATE_RIGHT);
         }
         if (Input.GetKeyUp(KeyCode.W))
         {
-            wheelMovement.isMoving = false;
-            StartCoroutine(wheelMovement.MoveBackward(MR));
+            HandleMovement(walkerMovement.MoveForward(MR), wheelMovement.MoveForward(MR), Direction.FORWARD);
         }
         if (Input.GetKeyUp(KeyCode.A))
         {
-            walkerMovement.isMoving = false;
-            StartCoroutine(walkerMovement.MoveForward(MR));
+            HandleMovement(walkerMovement.MoveLeft(MR), wheelMovement.MoveLeft(MR), Direction.LEFT);
         }
         if (Input.GetKeyUp(KeyCode.S))
         {
-            walkerMovement.isMoving = false;
-            StartCoroutine(walkerMovement.MoveBackward(MR));
+            HandleMovement(walkerMovement.MoveBackward(MR), wheelMovement.MoveBackward(MR), Direction.BACKWARD);
         }
         if (Input.GetKeyUp(KeyCode.D))
         {
-            walkerMovement.isMoving = false;
-            StartCoroutine(walkerMovement.MoveRight(MR));
+            HandleMovement(walkerMovement.MoveRight(MR), wheelMovement.MoveRight(MR), Direction.RIGHT);
         }
-        if (Input.GetKeyUp(KeyCode.F))
+        if (Input.GetKeyUp(KeyCode.Z))
         {
-            walkerMovement.isMoving = false;
-            StartCoroutine(walkerMovement.MoveLeft(MR));
+            StartCoroutine(transformations.SnakeToWalker());
+            currentState = State.WALKER;
         }
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyUp(KeyCode.X))
         {
-            walkerMovement.isMoving = false;
-            StartCoroutine(walkerMovement.RotateToTheLeft(MR));
+            StartCoroutine(transformations.Execute(transformations.WalkerToSnake, transformations.MakeSnake));
+            currentState = State.SNAKE;
         }
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyUp(KeyCode.C))
         {
-            walkerMovement.isMoving = false;
-            StartCoroutine(walkerMovement.RotateToTheRight(MR));
+            StartCoroutine(transformations.SnakeToWheel());
+            currentState = State.WHEEL;
         }
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyUp(KeyCode.V))
         {
-            snakeMovementNew.isMoving = false;
-            StartCoroutine(snakeMovementNew.MoveBackward(MR));
+            StartCoroutine(transformations.Execute(transformations.WheelToSnake, transformations.MakeSnake));
+            currentState = State.SNAKE;
         }
-        if (Input.GetKeyUp(KeyCode.T))
+        if (Input.GetKeyUp(KeyCode.M))
         {
-            StartCoroutine(transformations.Execute(
-                //transformations.MakeSnake
-                transformations.SnakeToWalker
-                //transformations.WalkerToSnake,
-                //transformations.SnakeToWheel
-                //transformations.WheelToSnake,
-                //transformations.SnakeToWalker
-                /*transformations.WalkerToSnake*/));
+            StartCoroutine(transformations.MakeSnake());
+            currentState = State.SNAKE;
         }
     }
 }

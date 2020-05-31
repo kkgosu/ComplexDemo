@@ -69,6 +69,7 @@ public class Transformations : MonoBehaviour
 
     public IEnumerator SnakeToWalker()
     {
+        yield return ResetAngles();
         centralModule = GetCentralModule();
         print("Central Module: " + centralModule);
 
@@ -92,6 +93,8 @@ public class Transformations : MonoBehaviour
 
     public IEnumerator SnakeToWheel()
     {
+        yield return ResetAngles();
+        yield return new WaitForSeconds(2f);
         yield return Execute(
             SnakeToWheel1,
             SnakeToWheel2Fix
@@ -133,30 +136,6 @@ public class Transformations : MonoBehaviour
         {
             MR.modules[i].drivers["q1"].Set(angle);
         }
-
-        yield return WaitWhileDriversAreBusy();
-    }
-
-    private IEnumerator SnakeToWheel2()
-    {
-        int total = MR.modules.Count;
-        int flat = total / 4;
-
-        int halfFlat1 = flat / 2;
-        int halfFlat2 = flat - halfFlat1;
-
-        MR.modules[total / 2 - halfFlat1].drivers["q1"].Set(15);
-        MR.modules[total / 2 - halfFlat1 - 1].drivers["q1"].Set(60);
-        MR.modules[total / 2 - halfFlat1 + 1].drivers["q1"].Set(15);
-        MR.modules[total / 2 + halfFlat2 - 1].drivers["q1"].Set(15);
-        MR.modules[total / 2 + halfFlat2 + 1].drivers["q1"].Set(60);
-        MR.modules[total / 2 + halfFlat2].drivers["q1"].Set(15);
-
-        for (int i = total / 2 - halfFlat1 + 2; i < total / 2 + halfFlat2 - 2; i++)
-        {
-            MR.modules[i].drivers["q1"].Set(0);
-        }
-
 
         yield return WaitWhileDriversAreBusy();
     }
@@ -335,7 +314,17 @@ public class Transformations : MonoBehaviour
         return dist;
     }
 
+    private IEnumerator ResetAngles()
+    {
+        for (int i = MR.modules.Count - 1; i >= 0; i--)
+        {
+            MR.modules[i].drivers["q2"].Set(0);
+            yield return new WaitForSeconds(0.5f);
 
+        }
+
+        yield return WaitWhileDriversAreBusy();
+    }
 
     private float[] WheelToSnakeAngles(float[] angles)
     {
