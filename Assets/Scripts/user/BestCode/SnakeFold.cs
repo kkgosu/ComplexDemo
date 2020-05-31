@@ -19,9 +19,11 @@ public class SnakeFold : MonoBehaviour
     float MaxFold;
     float angleToFold;
 
+    private ModularRobot MR;
+
     public void AddModulesFromRobot()
     {
-        foreach (Module m in GetComponent<ModularRobot>().modules.Values)
+        foreach (Module m in MR.modules.Values)
         {
             modules.Add(m.drivers["q1"]);
         }
@@ -41,7 +43,7 @@ public class SnakeFold : MonoBehaviour
     {
         if (DriversAreReady() && turn)
         {
-            a *= SideOnGroundHorizontal;
+            a *= -SideOnGroundHorizontal;
             switch (step)
             {
                 case 1:
@@ -148,13 +150,14 @@ public class SnakeFold : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        MR = GetComponent<ModularRobot>();
         AddModulesFromRobot();
         FirstModuleOnGround = 2;
-        ConfigurationOfRobot = 1;
+        ConfigurationOfRobot = 3;
         SideOnGroundHorizontal = 1;
         SideOnGroundVertical = 1;
-        crutch = 0;
-        level = 20;
+        crutch = 1;
+        level = 40;
         MaxFold = 30;
         middle = (int)(modules.Count / 2);
         if (modules.Count % 2 != 0)

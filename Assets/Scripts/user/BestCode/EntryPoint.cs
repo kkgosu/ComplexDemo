@@ -16,13 +16,10 @@ public class EntryPoint : MonoBehaviour
     }
 
     ModularRobot MR;
-    GaitControlTable gctWheel;
     private WheelMovement wheelMovement;
     private WaveController_5 waveController_5;
     private SnakeFold fold;
     private WalkerMovement walkerMovement;
-    private SnakeMovementNew snakeMovementNew;
-    private SnakeMovement snakeMovement;
     private Transformations transformations;
     private CreateXML createXML;
     private CreateCFG createCFG;
@@ -37,14 +34,14 @@ public class EntryPoint : MonoBehaviour
         print(Rob.transform.localScale.x);
         MR = Rob.AddComponent<ModularRobot>();
         MR.gameObject.AddComponent<Movement>();
+        MR.gameObject.AddComponent<GaitControlTable>();
 
         createXML = MR.gameObject.AddComponent<CreateXML>();
         createCFG = MR.gameObject.AddComponent<CreateCFG>();
         wheelMovement = MR.gameObject.AddComponent<WheelMovement>();
         walkerMovement = MR.gameObject.AddComponent<WalkerMovement>();
-        snakeMovementNew = MR.gameObject.AddComponent<SnakeMovementNew>();
-        gctWheel = MR.gameObject.AddComponent<GaitControlTable>();
         waveController_5 = MR.gameObject.AddComponent<WaveController_5>();
+        fold = MR.gameObject.AddComponent<SnakeFold>();
         transformations = MR.gameObject.AddComponent<Transformations>();
 
         int numOfModules = 21;
@@ -86,24 +83,14 @@ public class EntryPoint : MonoBehaviour
                             }
                         case Direction.ROTATE_RIGHT:
                             {
-                                fold = GetComponent<SnakeFold>();
-                                if (fold == null)
-                                {
-                                    fold = gameObject.AddComponent<SnakeFold>();
-                                }
                                 StopAllMovement();
-                                fold.Rotate(30);
+                                fold.Rotate(90);
                                 break;
                             }
                         case Direction.ROTATE_LEFT:
                             {
-                                fold = GetComponent<SnakeFold>();
-                                if (fold == null)
-                                {
-                                    fold = gameObject.AddComponent<SnakeFold>();
-                                }
                                 StopAllMovement();
-                                fold.Rotate(-30);
+                                fold.Rotate(-90);
                                 break;
                             }
                     }
