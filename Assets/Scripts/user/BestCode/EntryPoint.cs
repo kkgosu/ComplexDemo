@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -61,8 +62,9 @@ public class EntryPoint : MonoBehaviour
         currentState = State.SNAKE;
     }
 
-    private void HandleMovement(IEnumerator walkerMove, IEnumerator wheelMove, Direction direction)
+    private void HandleMovement(Func<ModularRobot, IEnumerator> walkerMove, Func<ModularRobot, IEnumerator> wheelMove, Direction direction)
     {
+        print(currentState);
         switch (currentState)
         {
             case State.SNAKE:
@@ -102,13 +104,13 @@ public class EntryPoint : MonoBehaviour
             case State.WALKER:
                 {
                     StopAllMovement();
-                    StartCoroutine(walkerMove);
+                    StartCoroutine(walkerMove(MR));
                     break;
                 }
             case State.WHEEL:
                 {
                     StopAllMovement();
-                    StartCoroutine(wheelMove);
+                    StartCoroutine(wheelMove(MR));
                     break;
                 }
         }
@@ -153,27 +155,27 @@ public class EntryPoint : MonoBehaviour
         }
         if (Input.GetKeyUp(KeyCode.Q))
         {
-            HandleMovement(walkerMovement.RotateToTheLeft(MR), wheelMovement.MoveForward(MR), Direction.ROTATE_LEFT);
+            HandleMovement(walkerMovement.RotateToTheLeft, wheelMovement.MoveForward, Direction.ROTATE_LEFT);
         }
         if (Input.GetKeyUp(KeyCode.E))
         {
-            HandleMovement(walkerMovement.RotateToTheRight(MR), wheelMovement.MoveForward(MR), Direction.ROTATE_RIGHT);
+            HandleMovement(walkerMovement.RotateToTheRight, wheelMovement.MoveForward, Direction.ROTATE_RIGHT);
         }
         if (Input.GetKeyUp(KeyCode.W))
         {
-            HandleMovement(walkerMovement.MoveForward(MR), wheelMovement.MoveForward(MR), Direction.FORWARD);
+            HandleMovement(walkerMovement.MoveForward, wheelMovement.MoveForward, Direction.FORWARD);
         }
         if (Input.GetKeyUp(KeyCode.A))
         {
-            HandleMovement(walkerMovement.MoveLeft(MR), wheelMovement.MoveLeft(MR), Direction.LEFT);
+            HandleMovement(walkerMovement.MoveLeft, wheelMovement.MoveLeft, Direction.LEFT);
         }
         if (Input.GetKeyUp(KeyCode.S))
         {
-            HandleMovement(walkerMovement.MoveBackward(MR), wheelMovement.MoveBackward(MR), Direction.BACKWARD);
+            HandleMovement(walkerMovement.MoveBackward, wheelMovement.MoveBackward, Direction.BACKWARD);
         }
         if (Input.GetKeyUp(KeyCode.D))
         {
-            HandleMovement(walkerMovement.MoveRight(MR), wheelMovement.MoveRight(MR), Direction.RIGHT);
+            HandleMovement(walkerMovement.MoveRight, wheelMovement.MoveRight, Direction.RIGHT);
         }
         if (Input.GetKeyUp(KeyCode.Z))
         {
@@ -202,7 +204,11 @@ public class EntryPoint : MonoBehaviour
         }
         if (Input.GetKeyUp(KeyCode.P))
         {
-            rRT.init();
+            rRT.init(new int[] { 1, 5, 9, 13 });
+            Vector3 points = MR.modules[13].position;
+            rRT.finalPoint = new Vector3(points.x + 0.04f, points.y + 0.04f, points.z + 0.04f);
+            rRT.finalNapr = new Vector3(points.x + 0.1f, points.y + 0.04f, points.z + 0.04f);
+
             rRT.button_test2();
         }
     }

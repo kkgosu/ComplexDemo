@@ -1,12 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEditor;
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Linq;
-using UnityEngine.UI;
-using System.Threading;
 
 public class RRT_main1 : MonoBehaviour
 {
@@ -18,8 +13,8 @@ public class RRT_main1 : MonoBehaviour
     public GameObject CubeTatgetHard;
     public GameObject CubeLine;
     float LenghtModule = 0.27669f;
-    Vector3 finalPoint = new Vector3(0.9f, 0.26f, -0.75f); //конечная точка(задаём её)
-    Vector3 finalNapr = new Vector3(0.6f, 0.26f, -0.75f);//направляющая точка(задаём её)
+    public Vector3 finalPoint = new Vector3(0.9f, 0.26f, -0.75f); //конечная точка(задаём её)
+    public Vector3 finalNapr = new Vector3(0.6f, 0.26f, -0.75f);//направляющая точка(задаём её)
     Vector3 SecondFinalPoint = new Vector3(0, 0, 0);// расчитывается в findNaprPoint
     Vector3 barrierPoint = new Vector3(0.4f, 0.9f, -0.1f);//центр препятствия
     static public int numbMod=8;//кол-во мод которые будет исп
@@ -204,6 +199,7 @@ public class RRT_main1 : MonoBehaviour
             for (int i = 0; i < modulesId.Length; i++)
             {
                 modules.Add(MR.modules[i]);
+                localRotations.Add(makeRotQuat(MR.modules[i], 0));
             }
         } else
         {
@@ -231,7 +227,7 @@ public class RRT_main1 : MonoBehaviour
             localRotations.Add(makeRotQuat(modules[7], tiltQuat));
         }
 
-        Debug.Log("!1!1 " + Vector3.Distance(SecondFinalPoint, CubeTatgetHard.transform.position));
+        //Debug.Log("!1!1 " + Vector3.Distance(SecondFinalPoint, CubeTatgetHard.transform.position));
 
         SecondFinalPoint = findNaprPoint(finalPoint, finalNapr);//расчёт нужного положения пердпоследнего модуля
         for (int i = 0; i < modules.Count; i++)//отключаю силу притяжения, мб так делать не надо
@@ -240,16 +236,20 @@ public class RRT_main1 : MonoBehaviour
             GameObject.Find("Module " + i + "/Turning Segment/Static Segment").gameObject.GetComponent<Rigidbody>().useGravity = false;
             GameObject.Find("Module " + i + "/Turning Segment/Rotation Segment").gameObject.GetComponent<Rigidbody>().useGravity = false;
         }
-        SphereFinalPoint.transform.position = finalPoint;
-        SphereFinalNapr.transform.position = finalNapr;
-        SphereBarrier.transform.position = barrierPoint;
+        print(finalPoint.x);
+        print(finalPoint.y);
+        print(finalPoint.z);
+
+        //SphereFinalPoint.transform.position = finalPoint;
+        //SphereFinalNapr.transform.position = finalNapr;
+        //SphereBarrier.transform.position = barrierPoint;
     }
 
     // Start is called before the first frame update
     void Start()
     {
 
-        init();
+        //init();
         //CubeLine.transform.position = finalPoint;
 
 
@@ -561,13 +561,15 @@ public class RRT_main1 : MonoBehaviour
             currPos = quatGen2(currentConfCOPY);
             for (int w = 1; w < modules.Count; w++)
             {
-                barrierPoint = CubeTatgetHard.gameObject.GetComponent<Collider>().ClosestPoint(currPos[w]); //Ближайшая точка на коллайдере препятствия. Если менять препятствие то делать это тут.
+                //barrierPoint = CubeTatgetHard.gameObject.GetComponent<Collider>().ClosestPoint(currPos[w]); //Ближайшая точка на коллайдере препятствия. Если менять препятствие то делать это тут.
                 Vector3 lastMod = new Vector3(0, 0, 0);
-                lastMod.x = (float)Math.Pow((currPos[w].x - barrierPoint.x), 2);
-                lastMod.y = (float)Math.Pow((currPos[w].y - barrierPoint.y), 2);
-                lastMod.z = (float)Math.Pow((currPos[w].z - barrierPoint.z), 2);
+                lastMod.x = (float)Math.Pow((currPos[w].x - 0), 2);
+                lastMod.y = (float)Math.Pow((currPos[w].y - 0), 2);
+                lastMod.z = (float)Math.Pow((currPos[w].z - 0), 2);
                 float rassogl = (float)Math.Sqrt(lastMod.x + lastMod.y + lastMod.z);
-                rassogl = rassogl - (0.165f);//Вот тут можно сденлать нормально. В данной версии модуль апроксимируется шаром. Размер примерно подогнан,но будет задевать с углов.
+                rassogl = rassogl - (0.165f);//Вот тут можно сденлать нормально. 
+                                            //В данной версии модуль апроксимируется шаром. 
+                                            //Размер примерно подогнан,но будет задевать с углов.
                 if (rassogl < 0)
                 {
                     q = false;
