@@ -23,6 +23,7 @@ public class EntryPoint : MonoBehaviour
     private Transformations transformations;
     private CreateXML createXML;
     private CreateCFG createCFG;
+    private RRT_main1 rRT;
     private float[] array;
 
     private State currentState;
@@ -43,6 +44,7 @@ public class EntryPoint : MonoBehaviour
         waveController_5 = MR.gameObject.AddComponent<WaveController_5>();
         fold = MR.gameObject.AddComponent<SnakeFold>();
         transformations = MR.gameObject.AddComponent<Transformations>();
+        rRT = MR.gameObject.AddComponent<RRT_main1>();
 
         int numOfModules = 21;
 
@@ -197,6 +199,11 @@ public class EntryPoint : MonoBehaviour
         {
             StartCoroutine(transformations.MakeSnake());
             currentState = State.SNAKE;
+        }
+        if (Input.GetKeyUp(KeyCode.P))
+        {
+            rRT.init();
+            rRT.button_test2();
         }
     }
 }
