@@ -49,7 +49,7 @@ public class SnakeClimbToWheel : MonoBehaviour
         this.wheel = wheel;
         modToGo = 0;
         double dist = 10000;
-        for (int i = 1; i <= wheel.modules.Count; i++)
+        for (int i = 0; i < wheel.modules.Count; i++)
         {
             if (wheel.modules[i].drivers["q1"].qValue != 0)
             {
@@ -84,6 +84,9 @@ public class SnakeClimbToWheel : MonoBehaviour
             angleBefor -= 180;
             angleBefor = angleBefor * Mathf.PI / 180;
             Vector3 posBefor = new Vector3((float)(wheel.modules[modToGo].position.x + 0.38 * 1.8 * Math.Cos(angleBefor)), 0, (float)(wheel.modules[modToGo].position.z + 0.38 * 1.8 * Math.Sin(angleBefor)));
+            print("posBeforeX: " + posBefor.x);
+            print("posBeforeY: " + posBefor.y);
+            print("posBeforeZ: " + posBefor.z);
             Point = posBefor;
             switch (step)
             {
@@ -230,7 +233,7 @@ public class SnakeClimbToWheel : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            //ClimbOnWheel(GameObject.Find("Robot wheel24").GetComponent<ModularRobot>());
+            ClimbOnWheel(GameObject.Find("Modular Robot test123").GetComponent<ModularRobot>());
         }
         if (Input.GetKeyDown(KeyCode.Q))
         {

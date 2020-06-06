@@ -208,7 +208,6 @@ public class SnakeMovement : MonoBehaviour
     void Start()
     {
         robot = gameObject.AddComponent<ModularRobot>();
-        gameObject.AddComponent<lineRobAdmin>();
         gameObject.AddComponent<SnakeClimbToWheel>();
         robot = GetComponent<ModularRobot>();
         goTo = GetComponent<SnakeGoToPoint>();
@@ -236,21 +235,5 @@ public class SnakeMovement : MonoBehaviour
         {
             position = robot.position;
         }
-        /*        if (Input.GetKeyDown(KeyCode.Z))
-                {
-                    ClimbOnWheel(GameObject.Find("Robot wheel24").GetComponent<ModularRobot>());
-                }*/
-/*        if (Input.GetKeyDown(KeyCode.X))
-        {
-            side.Move(1);
-        }
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            Go();
-        }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            fold.Rotate(90);
-        }*/
     }
 }

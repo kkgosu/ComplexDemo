@@ -17,7 +17,7 @@ public class RRT_main1 : MonoBehaviour
     public Vector3 finalNapr = new Vector3(0.6f, 0.26f, -0.75f);//направляющая точка(задаём её)
     Vector3 SecondFinalPoint = new Vector3(0, 0, 0);// расчитывается в findNaprPoint
     Vector3 barrierPoint = new Vector3(0.4f, 0.9f, -0.1f);//центр препятствия
-    static public int numbMod=8;//кол-во мод которые будет исп
+    static public int numbMod=5;//кол-во модулей которые будет исп
 
 
     public List<Module> modules = new List<Module>();
@@ -25,7 +25,7 @@ public class RRT_main1 : MonoBehaviour
 
     public List<NodeTree> Tree = new List<NodeTree>();
     public List<NodeTree> BestNodeList = new List<NodeTree>();
-    public List<connectoinNode> ConForTree = new List<connectoinNode>();
+    public List<ConnectoinNode> ConForTree = new List<ConnectoinNode>();
     public class NodeTree//узлы дерева
     {
         public float[] NodeAngels = new float[(numbMod-1)*2];
@@ -41,13 +41,13 @@ public class RRT_main1 : MonoBehaviour
         }
 
     }
-    public class connectoinNode//соединения узлов
+    public class ConnectoinNode//соединения узлов
     {
         public int id1;
         public int id2;
         public float costMot;
 
-        public connectoinNode(int id_1, int id_2, float ad)
+        public ConnectoinNode(int id_1, int id_2, float ad)
         {
             id1 = id_1;
             id2 = id_2;
@@ -191,6 +191,12 @@ public class RRT_main1 : MonoBehaviour
         Vector3 vec_start_rotation = new Vector3(0, 0, 0);
         float tiltQuat = 0;
         Joint fixedJoint = GameObject.Find("Module 0/Base").gameObject.AddComponent<FixedJoint>();
+        GameObject fp = GameObject.Find("Mushroom1").gameObject;
+        SphereFinalPoint = fp;
+        GameObject fn = GameObject.Find("Rock1").gameObject;
+        SphereFinalNapr = fn;
+        finalPoint = new Vector3(fp.transform.position.x + 1f, fp.transform.position.y + 1f, fp.transform.position.z + 1f);
+        finalNapr = new Vector3(fp.transform.position.x + 0.5f, fp.transform.position.y + 0.5f, fp.transform.position.z + 0.5f);
         localRot a = new localRot(Quaternion.Euler(vec_start_rotation), 1);
         localRotations.Add(a);//список локальных ориентаций
         if (modulesId != null)
@@ -201,9 +207,10 @@ public class RRT_main1 : MonoBehaviour
                 modules.Add(MR.modules[i]);
                 localRotations.Add(makeRotQuat(MR.modules[i], 0));
             }
-        } else
+        }
+        else
         {
-            modules.Add(Modules.Create(Modules.M3R2, new Vector3(0, 0, 0), Quaternion.Euler(vec_start_rotation), new float[] { 0 }, parent: transform, ID: 0));
+            modules.Add(Modules.Create(Modules.M3R2, new Vector3(fp.transform.position.x - 1f, fp.transform.position.y - 1f, fp.transform.position.z - 1f), Quaternion.Euler(vec_start_rotation), new float[] { 0 }, parent: transform, ID: 0));
             tiltQuat = 90;
             modules.Add(modules[0].surfaces["top"].Add(Modules.M3R2, Modules.M3R2.surfaces["bottom"], new float[] { 0 }, tilt: tiltQuat, parent: transform, ID: 1));
             localRotations.Add(makeRotQuat(modules[1], tiltQuat)); //дополняем список после создания нового модуля
@@ -226,7 +233,6 @@ public class RRT_main1 : MonoBehaviour
             modules.Add(modules[6].surfaces["top"].Add(Modules.M3R2, Modules.M3R2.surfaces["bottom"], new float[] { 0 }, tilt: tiltQuat, parent: transform, ID: 7));
             localRotations.Add(makeRotQuat(modules[7], tiltQuat));
         }
-
         //Debug.Log("!1!1 " + Vector3.Distance(SecondFinalPoint, CubeTatgetHard.transform.position));
 
         SecondFinalPoint = findNaprPoint(finalPoint, finalNapr);//расчёт нужного положения пердпоследнего модуля
@@ -236,9 +242,9 @@ public class RRT_main1 : MonoBehaviour
             GameObject.Find("Module " + i + "/Turning Segment/Static Segment").gameObject.GetComponent<Rigidbody>().useGravity = false;
             GameObject.Find("Module " + i + "/Turning Segment/Rotation Segment").gameObject.GetComponent<Rigidbody>().useGravity = false;
         }
-        print(finalPoint.x);
-        print(finalPoint.y);
-        print(finalPoint.z);
+        print("rrt class final x: " + finalPoint.x);
+        print("rrt class final y: " + finalPoint.y);
+        print("rrt class final z: " + finalPoint.z);
 
         //SphereFinalPoint.transform.position = finalPoint;
         //SphereFinalNapr.transform.position = finalNapr;
@@ -366,7 +372,7 @@ public class RRT_main1 : MonoBehaviour
                 //Если прошли проверку, то создаём новый узел и включаем его в список
                 NodeTree NewNode = new NodeTree(angls, fittnesFin(angls), fittnesSecondFin(angls), Tree.Count);
                 float q45 = raschCost((BestNodeList[randBestNode1].NodeAngels), angls);
-                connectoinNode NewCon = new connectoinNode(BestNodeList[randBestNode1].id, NewNode.id, q45);//добавить стоимость
+                ConnectoinNode NewCon = new ConnectoinNode(BestNodeList[randBestNode1].id, NewNode.id, q45);//добавить стоимость
                 Tree.Add(NewNode);
                 ConForTree.Add(NewCon);
                 //BestNodeList.OrderBy(NodeTree => NodeTree.fit).ThenBy(NodeTree => NodeTree.fit2).ToList();
@@ -423,8 +429,9 @@ public class RRT_main1 : MonoBehaviour
                     {
                         mot1(Tree[seq[l]].NodeAngels);
                     }*/
+                    ModularRobot MR = GetComponent<ModularRobot>();
 
-                    var gct = gameObject.AddComponent<GaitControlTable>(); //Двигаемся по полученной последовательности конфигураций
+                        var gct = gameObject.AddComponent<GaitControlTable>(); //Двигаемся по полученной последовательности конфигураций
                     var drvs = new List<Driver>();
                     foreach (Module m in modules)
                     {
@@ -433,7 +440,7 @@ public class RRT_main1 : MonoBehaviour
                     }
                     gct.SetHeader(drvs.ToArray());
                     foreach (int index in seq2.Reverse())
-                        gct.AddLine(string.Join(",", Tree[index].NodeAngels.Select(f => f.ToString("0.00")).ToArray()));
+                        gct.AddLine(string.Join(",", Tree[index].NodeAngels.Select(f => f.ToString("0.00").Replace(",", ".")).ToArray()));
                     gct.Begin();
 
                     //mot1(NewNode.NodeAngels);

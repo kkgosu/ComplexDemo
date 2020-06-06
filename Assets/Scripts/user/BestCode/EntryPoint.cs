@@ -27,6 +27,9 @@ public class EntryPoint : MonoBehaviour
     private RRT_main1 rRT;
     private float[] array;
 
+    ModularRobot wheel;
+    public Vector3 position;
+
     private State currentState;
 
     // Start is called before the first frame update
@@ -44,6 +47,7 @@ public class EntryPoint : MonoBehaviour
         walkerMovement = MR.gameObject.AddComponent<WalkerMovement>();
         waveController_5 = MR.gameObject.AddComponent<WaveController_5>();
         fold = MR.gameObject.AddComponent<SnakeFold>();
+
         transformations = MR.gameObject.AddComponent<Transformations>();
         rRT = MR.gameObject.AddComponent<RRT_main1>();
 
@@ -52,12 +56,18 @@ public class EntryPoint : MonoBehaviour
         array = createCFG.CreateSnake(numOfModules);
         string path = createXML
             .CreateHeader("test123", new Vector3(-14, 5, -16), Quaternion.Euler(0, -90, -90))
+            //.CreateHeader("test123", new Vector3(0, 0, 0), Quaternion.Euler(0, -90, -90))
             .AddModules(numOfModules, createXML.CreateModules(array))
             .AddConnections(createXML.CreateSimpleConnections(numOfModules, false))
             .Create("Znake2");
 
         MR.angles = array;
         MR.Load(path);
+
+/*        wheel = gameObject.AddComponent<ModularRobot>();
+        wheel.Load(Application.dataPath + "/Resources/Configurations/Turning Snake13.xml");
+        wheel.gameObject.AddComponent<LineRobAdmin>();*/
+
 
         currentState = State.SNAKE;
     }
@@ -204,11 +214,17 @@ public class EntryPoint : MonoBehaviour
         }
         if (Input.GetKeyUp(KeyCode.P))
         {
-            rRT.init(new int[] { 1, 5, 9, 13 });
-            Vector3 points = MR.modules[13].position;
-            rRT.finalPoint = new Vector3(points.x + 0.04f, points.y + 0.04f, points.z + 0.04f);
-            rRT.finalNapr = new Vector3(points.x + 0.1f, points.y + 0.04f, points.z + 0.04f);
-
+            /*            rRT.init(new int[] { 1, 2, 3, 4, 5 });
+                        Vector3 points = MR.modules[13].position;
+                        rRT.finalPoint = new Vector3(points.x + 0.04f, points.y + 0.04f, points.z + 0.04f);
+                        rRT.finalNapr = new Vector3(points.x + 0.1f, points.y + 0.04f, points.z + 0.04f);
+                        print("entry rrt x: " + rRT.finalPoint.x);
+                        print("entry rrt y: " + rRT.finalPoint.y);
+                        print("entry rrt z: " + rRT.finalPoint.z);*/
+            rRT.init();
+        }
+        if (Input.GetKeyUp(KeyCode.O))
+        {
             rRT.button_test2();
         }
     }

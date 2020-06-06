@@ -19,11 +19,9 @@ public class SnakeFold : MonoBehaviour
     float MaxFold;
     float angleToFold;
 
-    private ModularRobot MR;
-
     public void AddModulesFromRobot()
     {
-        foreach (Module m in MR.modules.Values)
+        foreach (Module m in GetComponent<ModularRobot>().modules.Values)
         {
             modules.Add(m.drivers["q1"]);
         }
@@ -43,7 +41,7 @@ public class SnakeFold : MonoBehaviour
     {
         if (DriversAreReady() && turn)
         {
-            a *= -SideOnGroundHorizontal;
+            a *= SideOnGroundHorizontal;
             switch (step)
             {
                 case 1:
@@ -68,12 +66,12 @@ public class SnakeFold : MonoBehaviour
                     float x = 1 + 2 * Mathf.Cos((float)(b / 57.29577951)) + Mathf.Cos((float)((b - a) / 57.29577951));
                     float a1 = (float)(Mathf.Acos(x / (4)) * 57.29577951);
 
-                   /* modules[middle - 4 - crutch * ConfigurationOfRobot].speed *= 0.5f;
-                    modules[middle + 4 + crutch * ConfigurationOfRobot].speed *= 0.5f;
-                    modules[middle - 1 - crutch * ConfigurationOfRobot].speed *= a1 / Math.Abs(a);
-                    modules[middle + 1 + crutch * ConfigurationOfRobot].speed *= a1 / Math.Abs(a);
-                    modules[middle - 5 - crutch * ConfigurationOfRobot].speed *= a1 / Math.Abs(a);
-                    modules[middle + 5 + crutch * ConfigurationOfRobot].speed *= a1 / Math.Abs(a);*/
+                    /* modules[middle - 4 - crutch * ConfigurationOfRobot].speed *= 0.5f;
+                     modules[middle + 4 + crutch * ConfigurationOfRobot].speed *= 0.5f;
+                     modules[middle - 1 - crutch * ConfigurationOfRobot].speed *= a1 / Math.Abs(a);
+                     modules[middle + 1 + crutch * ConfigurationOfRobot].speed *= a1 / Math.Abs(a);
+                     modules[middle - 5 - crutch * ConfigurationOfRobot].speed *= a1 / Math.Abs(a);
+                     modules[middle + 5 + crutch * ConfigurationOfRobot].speed *= a1 / Math.Abs(a);*/
 
                     modules[middle - 2 - crutch * ConfigurationOfRobot].Set(0);
                     modules[middle + 2 + crutch * ConfigurationOfRobot].Set(0);
@@ -106,12 +104,12 @@ public class SnakeFold : MonoBehaviour
                     //modules[middle].Set(10 * SideOnGroundVertical);
                     break;
                 case 6:
-                   /* modules[middle - 4 - crutch * ConfigurationOfRobot].speed = modules[middle - 2 - crutch * ConfigurationOfRobot].speed;
-                    modules[middle + 4 - crutch * ConfigurationOfRobot].speed = modules[middle - 2 - crutch * ConfigurationOfRobot].speed;
-                    modules[middle - 1 - crutch * ConfigurationOfRobot].speed = modules[middle - 2 - crutch * ConfigurationOfRobot].speed;
-                    modules[middle + 1 + crutch * ConfigurationOfRobot].speed = modules[middle - 2 - crutch * ConfigurationOfRobot].speed;
-                    modules[middle - 5 - crutch * ConfigurationOfRobot].speed = modules[middle - 2 - crutch * ConfigurationOfRobot].speed;
-                    modules[middle + 5 + crutch * ConfigurationOfRobot].speed = modules[middle - 2 - crutch * ConfigurationOfRobot].speed;*/
+                    /* modules[middle - 4 - crutch * ConfigurationOfRobot].speed = modules[middle - 2 - crutch * ConfigurationOfRobot].speed;
+                     modules[middle + 4 - crutch * ConfigurationOfRobot].speed = modules[middle - 2 - crutch * ConfigurationOfRobot].speed;
+                     modules[middle - 1 - crutch * ConfigurationOfRobot].speed = modules[middle - 2 - crutch * ConfigurationOfRobot].speed;
+                     modules[middle + 1 + crutch * ConfigurationOfRobot].speed = modules[middle - 2 - crutch * ConfigurationOfRobot].speed;
+                     modules[middle - 5 - crutch * ConfigurationOfRobot].speed = modules[middle - 2 - crutch * ConfigurationOfRobot].speed;
+                     modules[middle + 5 + crutch * ConfigurationOfRobot].speed = modules[middle - 2 - crutch * ConfigurationOfRobot].speed;*/
 
                     modules[middle - 1 - crutch * ConfigurationOfRobot].Set(level * SideOnGroundVertical);
                     modules[middle + 1 + crutch * ConfigurationOfRobot].Set(level * SideOnGroundVertical);
@@ -150,21 +148,20 @@ public class SnakeFold : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        MR = GetComponent<ModularRobot>();
         AddModulesFromRobot();
         FirstModuleOnGround = 2;
-        ConfigurationOfRobot = 3;
+        ConfigurationOfRobot = 1;
         SideOnGroundHorizontal = 1;
         SideOnGroundVertical = 1;
-        crutch = 1;
-        level = 40;
+        crutch = 0;
+        level = 20;
         MaxFold = 30;
         middle = (int)(modules.Count / 2);
         if (modules.Count % 2 != 0)
         {
             //middle++;
         }
-        if ((middle - FirstModuleOnGround) % (ConfigurationOfRobot +1) != 0)
+        if ((middle - FirstModuleOnGround) % (ConfigurationOfRobot + 1) != 0)
         {
             crutch = 1;
         }
