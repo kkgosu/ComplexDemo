@@ -55,7 +55,7 @@ public class EntryPoint : MonoBehaviour
 
         array = createCFG.CreateSnake(numOfModules);
         string path = createXML
-            .CreateHeader("test123", new Vector3(-14, 5, -16), Quaternion.Euler(0, -90, -90))
+            //.CreateHeader("test123", new Vector3(-8, 5, -13), Quaternion.Euler(0, -68, -90)) //second point
             //.CreateHeader("test123", new Vector3(0, 0, 0), Quaternion.Euler(0, -90, -90))
             .AddModules(numOfModules, createXML.CreateModules(array))
             .AddConnections(createXML.CreateSimpleConnections(numOfModules, false))
@@ -211,6 +211,11 @@ public class EntryPoint : MonoBehaviour
         {
             StartCoroutine(transformations.MakeSnake());
             currentState = State.SNAKE;
+        }
+        if (Input.GetKeyUp(KeyCode.N))
+        {
+            StartCoroutine(transformations.TightWheel());
+            currentState = State.WHEEL;
         }
         if (Input.GetKeyUp(KeyCode.P))
         {

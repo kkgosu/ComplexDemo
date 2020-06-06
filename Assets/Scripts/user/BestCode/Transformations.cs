@@ -102,7 +102,7 @@ public class Transformations : MonoBehaviour
         int total = MR.modules.Count;
         float angle = 360f / total;
 
-        for (int i = 0; i < total; i++)
+        for (int i = total - 1; i >= total; i--)
         {
             MR.modules[i].drivers["q2"].Set(0);
         }
@@ -148,6 +148,18 @@ public class Transformations : MonoBehaviour
         MR.modules[total / 3].drivers["q1"].Set(41);
         MR.modules[2 + total - total / 3].drivers["q1"].Set(41);
         MR.modules[1 + total - 1 - total / 3].drivers["q1"].Set(41);
+
+        yield return WaitWhileDriversAreBusy();
+    }
+
+    public IEnumerator TightWheel()
+    {
+        int total = MR.modules.Count;
+        MR.modules[6].drivers["q1"].Set(80);
+        MR.modules[5].drivers["q1"].Set(80);
+
+        MR.modules[17].drivers["q1"].Set(80);
+        MR.modules[16].drivers["q1"].Set(80);
 
         yield return WaitWhileDriversAreBusy();
     }
@@ -313,9 +325,9 @@ public class Transformations : MonoBehaviour
     private IEnumerator ResetAngles()
     {
         for (int i = MR.modules.Count - 1; i >= 0; i--)
-        {
+        { 
             MR.modules[i].drivers["q2"].Set(0);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.6f);
         }
         yield return WaitWhileDriversAreBusy();
     }

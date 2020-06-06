@@ -150,12 +150,12 @@ public class SnakeFold : MonoBehaviour
     {
         AddModulesFromRobot();
         FirstModuleOnGround = 2;
-        ConfigurationOfRobot = 1;
+        ConfigurationOfRobot = 2;
         SideOnGroundHorizontal = 1;
         SideOnGroundVertical = 1;
-        crutch = 0;
+        crutch = 1;
         level = 20;
-        MaxFold = 30;
+        MaxFold = 40;
         middle = (int)(modules.Count / 2);
         if (modules.Count % 2 != 0)
         {
