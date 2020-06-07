@@ -57,7 +57,7 @@ public class ModularRobot : MonoBehaviour {
 		string[] pos = root.GetAttribute ("position").Split (new char[] { ',' });
 		Vector3 position = Vector3.zero;
 		if (pos.Length == 3) // проверка количества компонент вектора
-			position = new Vector3 (float.Parse (pos [0]), float.Parse (pos [1]), float.Parse (pos [2]));
+			position = new Vector3 (float.Parse (pos [0].Replace(".", ",")), float.Parse (pos [1].Replace(".", ",")), float.Parse (pos [2].Replace(".", ",")));
 		return position;
 	}
 

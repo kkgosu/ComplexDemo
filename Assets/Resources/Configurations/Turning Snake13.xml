@@ -1,4 +1,4 @@
-<robot name="snake13" moduleType="M3R2" refDistId="4" position="-11, 5, -17" rotation="90,0,90">
+<robot name="snake13" moduleType="M3R2" refDistId="4" position="-6, 5, -15" rotation="90,0,90">
 	<modules>
 		<module id="1" />
 		<module id="2" />

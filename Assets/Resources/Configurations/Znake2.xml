@@ -1,3 +1,4 @@
+<robot name="test123" moduleType="M3R2" position="-8,5,-13" rotation="0,292,270">
 	<modules>
 		<module id="0" q1="0"/>
 		<module id="1" q1="0"/>

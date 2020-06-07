@@ -55,7 +55,9 @@ public class EntryPoint : MonoBehaviour
 
         array = createCFG.CreateSnake(numOfModules);
         string path = createXML
-            //.CreateHeader("test123", new Vector3(-8, 5, -13), Quaternion.Euler(0, -68, -90)) //second point
+            //.CreateHeader("test123", new Vector3(-14, 5, -16), Quaternion.Euler(0, -90, -90)) //first point
+            .CreateHeader("test123", new Vector3(-8, 5, -13), Quaternion.Euler(0, -68, -90)) //second point
+            //.CreateHeader("test123", new Vector3(-2.4f, 2, 0), Quaternion.Euler(0, -68, -90)) //third point
             //.CreateHeader("test123", new Vector3(0, 0, 0), Quaternion.Euler(0, -90, -90))
             .AddModules(numOfModules, createXML.CreateModules(array))
             .AddConnections(createXML.CreateSimpleConnections(numOfModules, false))
@@ -64,9 +66,9 @@ public class EntryPoint : MonoBehaviour
         MR.angles = array;
         MR.Load(path);
 
-/*        wheel = gameObject.AddComponent<ModularRobot>();
+        wheel = gameObject.AddComponent<ModularRobot>();
         wheel.Load(Application.dataPath + "/Resources/Configurations/Turning Snake13.xml");
-        wheel.gameObject.AddComponent<LineRobAdmin>();*/
+        wheel.gameObject.AddComponent<LineRobAdmin>();
 
 
         currentState = State.SNAKE;

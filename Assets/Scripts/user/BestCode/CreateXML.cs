@@ -32,7 +32,7 @@ public class CreateXML : MonoBehaviour
         builer
             .Append(robotName + "\" ")
             .Append("moduleType=\"M3R2\" ")
-            .Append("position=\"" + position.x + "," + position.y + "," + position.z + "\" ")
+            .Append("position=\"" + (position.x).ToString().Replace(",", ".") + "," + (position.y).ToString().Replace(",", ".") + "," + (position.z).ToString().Replace(",", ".") + "\" ")
             .Append("rotation=\"" + rotation.eulerAngles.x + "," + rotation.eulerAngles.y + "," + rotation.eulerAngles.z + "\">")
             .Append("\n");
         header = builer.ToString();

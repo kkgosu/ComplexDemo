@@ -7,7 +7,7 @@ public class Transformations : MonoBehaviour
 {
     private ModularRobot MR;
     private int midModule;
-    private int centralModule;
+    private int centralModule = 10;
 
     List<int> rightModules = new List<int>();
     List<int> leftModules = new List<int>();
@@ -76,7 +76,7 @@ public class Transformations : MonoBehaviour
     public IEnumerator SnakeToWalker()
     {
         yield return ResetAngles();
-        centralModule = GetCentralModule();
+        //centralModule = GetCentralModule();
         print("Central Module: " + centralModule);
 
         yield return Execute(
@@ -349,14 +349,14 @@ public class Transformations : MonoBehaviour
             leftPart = total / 3 + 1;
         }
         //получаем список "правых" и "левых" модулей
-        int connectedModule = centralModule;
+        int connectedModule = 10;
         while (MR.modules[connectedModule].surfaces["bottom"].connectedSurface != null)
         {
             connectedModule = MR.modules[connectedModule].surfaces["bottom"].connectedSurface.module.id;
             rightModules.Add(connectedModule);
         }
 
-        connectedModule = centralModule;
+        connectedModule = 10;
         while (MR.modules[connectedModule].surfaces["top"].connectedSurface != null)
         {
             connectedModule = MR.modules[connectedModule].surfaces["top"].connectedSurface.module.id;
@@ -416,9 +416,9 @@ public class Transformations : MonoBehaviour
                 MR.modules[modules[i]].drivers["q1"].Set(angleLeft);
         }
         yield return WaitWhileDriversAreBusy();
-        MR.modules[modules[modules.Count - 1]].drivers["q1"].Set(90 - 360f / (4.6f * 2));
+        MR.modules[modules[modules.Count - 1]].drivers["q1"].Set(90 - 360f / (4.7f * 2));
         MR.modules[modules[1]].drivers["q1"].Set(90);
-        MR.modules[modules[2]].drivers["q1"].Set(MR.modules[modules[2]].drivers["q1"].qValue += 20);
+        MR.modules[modules[2]].drivers["q1"].Set(MR.modules[modules[2]].drivers["q1"].qValue += 30);
         yield return WaitWhileDriversAreBusy();
         yield return new WaitForSeconds(1f);
 
