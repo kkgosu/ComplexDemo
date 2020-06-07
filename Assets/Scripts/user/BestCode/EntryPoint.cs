@@ -40,7 +40,6 @@ public class EntryPoint : MonoBehaviour
         MR = Rob.AddComponent<ModularRobot>();
         MR.gameObject.AddComponent<Movement>();
         MR.gameObject.AddComponent<GaitControlTable>();
-        MR.gameObject.AddComponent<CamWheel>();
 
         createXML = MR.gameObject.AddComponent<CreateXML>();
         createCFG = MR.gameObject.AddComponent<CreateCFG>();
@@ -236,6 +235,10 @@ public class EntryPoint : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.O))
         {
             rRT.button_test2();
+        }
+        if (Input.GetKeyUp(KeyCode.K))
+        {
+            MR.gameObject.AddComponent<CamWheel>();
         }
     }
 }

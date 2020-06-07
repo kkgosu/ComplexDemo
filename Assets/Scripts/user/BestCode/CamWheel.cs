@@ -23,9 +23,9 @@ public class CamWheel : MonoBehaviour
         MR = GameObject.Find("Modular Robot test123").GetComponent<ModularRobot>();
         //  TestWheelRobot();
         //OneWheelRobot();
-        //CreateCamera();
+        CreateCamera();
         //TwoWheelRobot();
-        CameraTwo();
+        //CameraTwo();
 
     }
     void TestWheelRobot()
@@ -74,22 +74,66 @@ public class CamWheel : MonoBehaviour
         MR1 = Rob1.AddComponent<ModularRobot>();
         MR1.Load(Application.dataPath + "/Resources/Configurations/2legs_1.xml");
 
+        MR1.modules[25].surfaces["bottom"].Connect(MR.modules[2].surfaces["left"]);
+        MR1.modules[20].surfaces["bottom"].Connect(MR.modules[2].surfaces["right"]);
+    }
 
-        MR1.modules[25].surfaces["bottom"].Connect(MR.modules[412].surfaces["left"]);
-        MR1.modules[20].surfaces["bottom"].Connect(MR.modules[412].surfaces["right"]);
+    private int lastModule = 0;
 
+    IEnumerator MoveLegs()
+    {
+        int moduleToConnect = GetNextModule();
+        print("GetNextModule: " + moduleToConnect);
+        MR1.modules[25].surfaces["bottom"].Disconnect();
+        MR1.modules[22].drivers["q2"].Set(45);
+        MR1.modules[25].drivers["q2"].Set(45);
+        yield return WaitWhileDriversAreBusy();
+        MR1.modules[25].surfaces["bottom"].Connect(MR.modules[moduleToConnect].surfaces["left"]);
 
-        //GameObject.Find("Module 21" + "Base").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationX;
-        //GameObject.Find("Module 26" + "Base").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationX;
-        /*GameObject.Find("Module 21" + "Base").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationX;
-       GameObject.Find("Module 26" + "Base").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationX;*/
-        // GameObject.Find("Module 0" + "Base").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX ;
-        // GameObject.Find("Module 21" + "Base").GetComponent<Rigidbody>().constraints =  RigidbodyConstraints.FreezePositionX ;
-        // GameObject.Find("Module 26" + "Base").GetComponent<Rigidbody>().constraints =  RigidbodyConstraints.FreezePositionX ;
-
+        MR1.modules[22].drivers["q2"].Set(0);
+        MR1.modules[25].drivers["q2"].Set(0);
+        MR1.modules[20].surfaces["bottom"].Disconnect();
+        MR1.modules[27].drivers["q2"].Set(45);
+        MR1.modules[20].drivers["q2"].Set(45);
+        yield return WaitWhileDriversAreBusy();
 
 
     }
+
+    private int GetNextModule()
+    {
+        lastModule += 2;
+        if (lastModule >= MR.modules.Count)
+        {
+            lastModule -= MR.modules.Count;
+        }
+        return lastModule;
+    }
+
+    private IEnumerator WaitWhileDriversAreBusy()
+    {
+        while (IfAnyDriverIsBusy())
+        {
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    private bool IfAnyDriverIsBusy()
+    {
+        bool flag = false;
+        foreach (Module module in MR.modules.Values)
+        {
+            foreach (Driver driver in module.drivers.Values)
+            {
+                if (driver.busy)
+                {
+                    flag = true;
+                }
+            }
+        }
+        return flag;
+    }
+
     void CameraTwo()
     {
         var Rob1 = new GameObject();
@@ -293,11 +337,14 @@ public class CamWheel : MonoBehaviour
         print("Count: " + MR.modules.Count);
         MR1.modules[20].surfaces["bottom"].Connect(MR.modules[20].surfaces["left"]);
         MR1.modules[25].surfaces["bottom"].Connect(MR.modules[20].surfaces["right"]);
-/*        gct02.Begin();
-        while (gct02.inProgress && !gct02.isReady)
-            yield return new WaitForEndOfFrame();
-        yield return new WaitForSeconds(1f);
-        gct03.Begin();*/
+
+        foreach(Module module in GameObject.Find("Modular Robot 2legs").GetComponent<ModularRobot>().modules.Values)
+        {
+            foreach (Rigidbody rb in MR1.GetComponentsInChildren<Rigidbody>())
+            {
+                rb.AddForce(Vector3.up * 0.1f);
+            }
+        }
     }
     IEnumerator DemoUP()
     {
@@ -322,9 +369,10 @@ public class CamWheel : MonoBehaviour
         }
         if (Input.GetKeyUp(KeyCode.UpArrow))
         {
-            var gct = gameObject.AddComponent<GaitControlTable>();
+            StartCoroutine(MoveLegs());
+/*            var gct = gameObject.AddComponent<GaitControlTable>();
             gct.ReadFromFile(MR, "WheelUp.txt");
-            gct.BeginTillEnd();
+            gct.BeginTillEnd();*/
             //MR.modules[1].surfaces["bottom"].Connect(MR.modules[10].surfaces["top"]);
         }
         if (Input.GetKeyUp(KeyCode.DownArrow))
