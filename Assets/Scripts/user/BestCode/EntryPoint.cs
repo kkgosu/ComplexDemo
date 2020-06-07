@@ -53,7 +53,7 @@ public class EntryPoint : MonoBehaviour
 
         int numOfModules = 21;
 
-        array = createCFG.CreateSnake(numOfModules);
+        array = createCFG.CreateWalker(numOfModules);
         string path = createXML
             //.CreateHeader("test123", new Vector3(-14, 5, -16), Quaternion.Euler(0, -90, -90)) //first point
             //.CreateHeader("test123", new Vector3(-8, 5, -13), Quaternion.Euler(0, -68, -90)) //second point; 2legs_1.xml pos: -6.9, 4.5, -10.5
@@ -62,10 +62,11 @@ public class EntryPoint : MonoBehaviour
             //.CreateHeader("test123", new Vector3(9.2f, 2.5f, 5f), Quaternion.Euler(0, -45, -90)) //foruth point 1
             //.CreateHeader("test123", new Vector3(12.3f, 3, 10.7f), Quaternion.Euler(0, 0, -90)) //foruth point 2; 2legs_1.xml position="14.6, 4.3, 10.68" rotation="-90,0,0"
             //.CreateHeader("test123", new Vector3(28, 6, 11.2f), Quaternion.Euler(0, 0, -90)) //fifth point; 2legs_1.xml position="30.2, 6.1, 11.1" rotation="-90,0,0"
-            .CreateHeader("test123", new Vector3(46.6f, 8f, 12.4f), Quaternion.Euler(0, 115, -90))
+            //.CreateHeader("test123", new Vector3(46.6f, 8f, 12.4f), Quaternion.Euler(0, 115, -90))
+            .CreateHeader("test123", new Vector3(44.8f, 8f, 13.4f), Quaternion.Euler(0, -105, 90)) //walker
             //.CreateHeader("test123", new Vector3(0, 0, 0), Quaternion.Euler(0, -90, -90))
             .AddModules(numOfModules, createXML.CreateModules(array))
-            .AddConnections(createXML.CreateSimpleConnections(numOfModules, false))
+            .AddConnections(createXML.CreateConnectionsForWalker(numOfModules))
             .Create("Znake2");
 
         MR.angles = array;
@@ -151,7 +152,7 @@ public class EntryPoint : MonoBehaviour
 
         MR.modules[8].drivers["q1"].Set(-80);
         yield return transformations.WaitWhileDriversAreBusy();
-        MR.modules[4].drivers["q1"].Set(-75);
+        MR.modules[4].drivers["q1"].Set(-50);
         yield return transformations.WaitWhileDriversAreBusy();
 
         MR.modules[12].drivers["q1"].Set(60);
@@ -167,8 +168,8 @@ public class EntryPoint : MonoBehaviour
         //backward
         MR.modules[4].drivers["q1"].Set(0);
         MR.modules[12].drivers["q1"].Set(-60);
-        MR.modules[16].drivers["q1"].Set(-60);
-        MR.modules[20].drivers["q1"].Set(-45);
+        MR.modules[16].drivers["q1"].Set(-50);
+        MR.modules[20].drivers["q1"].Set(-65);
         yield return transformations.WaitWhileDriversAreBusy();
         yield return new WaitForSeconds(1f);
 
