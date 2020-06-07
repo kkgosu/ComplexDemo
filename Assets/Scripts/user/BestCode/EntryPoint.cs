@@ -56,7 +56,8 @@ public class EntryPoint : MonoBehaviour
         array = createCFG.CreateSnake(numOfModules);
         string path = createXML
             //.CreateHeader("test123", new Vector3(-14, 5, -16), Quaternion.Euler(0, -90, -90)) //first point
-            .CreateHeader("test123", new Vector3(-8, 5, -13), Quaternion.Euler(0, -68, -90)) //second point
+            //.CreateHeader("test123", new Vector3(-8, 5, -13), Quaternion.Euler(0, -68, -90)) //second point; 2legs_1.xml pos: -6.9, 4.5, -10.5
+            .CreateHeader("test123", new Vector3(-6.6f, 3, -9), Quaternion.Euler(0, -68, -90)) //before tunnel
             //.CreateHeader("test123", new Vector3(-2.4f, 2, 0), Quaternion.Euler(0, -68, -90)) //third point
             //.CreateHeader("test123", new Vector3(0, 0, 0), Quaternion.Euler(0, -90, -90))
             .AddModules(numOfModules, createXML.CreateModules(array))
@@ -140,6 +141,7 @@ public class EntryPoint : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        print(MR.modules[2].position);
         if (Input.GetKeyDown(KeyCode.Keypad1))
         {
             walkerMovement.isMoving = false;

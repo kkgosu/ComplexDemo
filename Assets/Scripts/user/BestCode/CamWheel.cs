@@ -82,21 +82,29 @@ public class CamWheel : MonoBehaviour
 
     IEnumerator MoveLegs()
     {
+        MR1.modules[22].drivers["q1"].Set(80);
+        MR1.modules[27].drivers["q1"].Set(80);
+
         int moduleToConnect = GetNextModule();
+
         print("GetNextModule: " + moduleToConnect);
         MR1.modules[25].surfaces["bottom"].Disconnect();
-        MR1.modules[22].drivers["q2"].Set(45);
-        MR1.modules[25].drivers["q2"].Set(45);
+        MR1.modules[22].drivers["q2"].Set(-90);
+        MR1.modules[25].drivers["q2"].Set(-90);
         yield return WaitWhileDriversAreBusy();
         MR1.modules[25].surfaces["bottom"].Connect(MR.modules[moduleToConnect].surfaces["left"]);
 
         MR1.modules[22].drivers["q2"].Set(0);
         MR1.modules[25].drivers["q2"].Set(0);
-        MR1.modules[20].surfaces["bottom"].Disconnect();
-        MR1.modules[27].drivers["q2"].Set(45);
-        MR1.modules[20].drivers["q2"].Set(45);
-        yield return WaitWhileDriversAreBusy();
 
+        MR1.modules[20].surfaces["bottom"].Disconnect();
+        MR1.modules[27].drivers["q2"].Set(90);
+        MR1.modules[20].drivers["q2"].Set(90);
+        yield return WaitWhileDriversAreBusy();
+        MR1.modules[20].surfaces["bottom"].Connect(MR.modules[moduleToConnect].surfaces["right"]);
+
+        MR1.modules[27].drivers["q2"].Set(0);
+        MR1.modules[20].drivers["q2"].Set(0);
 
     }
 
@@ -121,7 +129,7 @@ public class CamWheel : MonoBehaviour
     private bool IfAnyDriverIsBusy()
     {
         bool flag = false;
-        foreach (Module module in MR.modules.Values)
+        foreach (Module module in MR1.modules.Values)
         {
             foreach (Driver driver in module.drivers.Values)
             {
@@ -338,13 +346,13 @@ public class CamWheel : MonoBehaviour
         MR1.modules[20].surfaces["bottom"].Connect(MR.modules[20].surfaces["left"]);
         MR1.modules[25].surfaces["bottom"].Connect(MR.modules[20].surfaces["right"]);
 
-        foreach(Module module in GameObject.Find("Modular Robot 2legs").GetComponent<ModularRobot>().modules.Values)
+/*        foreach(Module module in GameObject.Find("Modular Robot 2legs").GetComponent<ModularRobot>().modules.Values)
         {
             foreach (Rigidbody rb in MR1.GetComponentsInChildren<Rigidbody>())
             {
-                rb.AddForce(Vector3.up * 0.1f);
+                rb.AddForce(Vector3.down * 0.1f);
             }
-        }
+        }*/
     }
     IEnumerator DemoUP()
     {
