@@ -1,4 +1,4 @@
-<robot name="2Legs" moduleType="M3R2" position="-6.9, 4.5, -10.5" rotation="-90,-68,0">
+<robot name="2Legs" moduleType="M3R2" position="30.2, 6.1, 11.1" rotation="-90,0,0">
 <modules>
 <module id="0" q1="0" type ="M3RCAM"/>
 <module id="21" q1="0"/>

@@ -164,7 +164,7 @@ public class Transformations : MonoBehaviour
         yield return WaitWhileDriversAreBusy();
     }
 
-    private IEnumerator WaitWhileDriversAreBusy()
+    public IEnumerator WaitWhileDriversAreBusy()
     {
         while (IfAnyDriverIsBusy())
         {

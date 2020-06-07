@@ -82,8 +82,8 @@ public class CamWheel : MonoBehaviour
 
     IEnumerator MoveLegs()
     {
-        MR1.modules[22].drivers["q1"].Set(80);
-        MR1.modules[27].drivers["q1"].Set(80);
+        MR1.modules[22].drivers["q1"].Set(85);
+        MR1.modules[27].drivers["q1"].Set(85);
 
         int moduleToConnect = GetNextModule();
 
@@ -106,6 +106,12 @@ public class CamWheel : MonoBehaviour
         MR1.modules[27].drivers["q2"].Set(0);
         MR1.modules[20].drivers["q2"].Set(0);
 
+    }
+
+    void DS()
+    {
+        MR1.modules[20].surfaces["bottom"].Disconnect();
+        MR1.modules[25].surfaces["bottom"].Disconnect();
     }
 
     private int GetNextModule()
@@ -385,161 +391,162 @@ public class CamWheel : MonoBehaviour
         }
         if (Input.GetKeyUp(KeyCode.DownArrow))
         {
-            //MR.modules[1].surfaces["bottom"].Disconnect();
+            DS();
+/*            //MR.modules[1].surfaces["bottom"].Disconnect();
             var gct = gameObject.AddComponent<GaitControlTable>();
             gct.ReadFromFile(MR, "DemoWheelDown.txt");
-            gct.BeginTillEnd();
+            gct.BeginTillEnd();*/
         }
-/*        if (Input.GetKeyUp(KeyCode.C))
-        {
+        /*        if (Input.GetKeyUp(KeyCode.C))
+                {
 
-            var gct = gameObject.AddComponent<GaitControlTable>();
-            gct.ReadFromFile(MR, "Test1.txt");
-            gct.BeginTillEnd();
-        }
-        if (Input.GetKeyUp(KeyCode.V))
-        {
+                    var gct = gameObject.AddComponent<GaitControlTable>();
+                    gct.ReadFromFile(MR, "Test1.txt");
+                    gct.BeginTillEnd();
+                }
+                if (Input.GetKeyUp(KeyCode.V))
+                {
 
-            var gct = gameObject.AddComponent<GaitControlTable>();
-            gct.ReadFromFile(MR, "Test2.txt");
-            gct.BeginTillEnd();
-        }
-
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            Demo1Init();
-
-        }
-        if (Input.GetKeyUp(KeyCode.KeypadEnter))
-        {
-
-            //demo2();
-
-        }
-
-        if (Input.GetKeyUp(KeyCode.Keypad1))
-        {
-
-            var gct = gameObject.AddComponent<GaitControlTable>();
-
-            MR1.modules[20].surfaces["bottom"].Disconnect();
-
-            gct.ReadFromFile(MR, "Test_wheel22_1_GCT.txt");
-            var gct1 = gameObject.AddComponent<GaitControlTable>();
-            gct1.ReadFromFile(MR1, "Legs_1_GCT.txt");
-            gct1.BeginTillEnd();
-            gct.BeginTillEnd();
+                    var gct = gameObject.AddComponent<GaitControlTable>();
+                    gct.ReadFromFile(MR, "Test2.txt");
+                    gct.BeginTillEnd();
+                }
 
 
+                if (Input.GetKeyUp(KeyCode.Space))
+                {
+                    Demo1Init();
 
+                }
+                if (Input.GetKeyUp(KeyCode.KeypadEnter))
+                {
 
-        }
-        if (Input.GetKeyUp(KeyCode.Keypad2))
-        {
-            var gct = gameObject.AddComponent<GaitControlTable>();
-            var gct1 = gameObject.AddComponent<GaitControlTable>();
-            MR1.modules[20].surfaces["bottom"].Connect(MR.modules[410].surfaces["right"]);
-            MR1.modules[25].surfaces["bottom"].Disconnect();
+                    //demo2();
 
-            gct.ReadFromFile(MR, "Test_wheel22_2_GCT.txt");
+                }
 
-            gct1.ReadFromFile(MR1, "Legs_2_GCT.txt");
-            gct1.BeginTillEnd();
-            gct.BeginTillEnd();
-        }
-        if (Input.GetKeyUp(KeyCode.Keypad3))
-        {
-            var gct = gameObject.AddComponent<GaitControlTable>();
-            var gct1 = gameObject.AddComponent<GaitControlTable>();
-            MR1.modules[25].surfaces["bottom"].Connect(MR.modules[410].surfaces["left"]);
+                if (Input.GetKeyUp(KeyCode.Keypad1))
+                {
 
-            gct.ReadFromFile(MR, "Test_wheel22_3_GCT.txt");
-            // gct1.ReadFromFile(MR1, "Legs_3_GCT.txt");
-            //gct1.BeginTillEnd();
-            gct.BeginTillEnd();
-        }
-        if (Input.GetKeyUp(KeyCode.Keypad4))
-        {
+                    var gct = gameObject.AddComponent<GaitControlTable>();
 
-            var gct = gameObject.AddComponent<GaitControlTable>();
-            var gct1 = gameObject.AddComponent<GaitControlTable>();
-            //MR1.modules[25].surfaces["bottom"].Connect(MR.modules[410].surfaces["left"]);
+                    MR1.modules[20].surfaces["bottom"].Disconnect();
 
-            gct.ReadFromFile(MR, "Test_wheel22_4_GCT.txt");
-            // gct1.ReadFromFile(MR1, "Legs_3_GCT.txt");
-            // gct1.BeginTillEnd();
-            gct.BeginTillEnd();
-
-        }
-        if (Input.GetKeyUp(KeyCode.Keypad5))
-        {
-            var gct = gameObject.AddComponent<GaitControlTable>();
-            var gct1 = gameObject.AddComponent<GaitControlTable>();
-
-            MR1.modules[20].surfaces["bottom"].Disconnect();
-            gct.ReadFromFile(MR, "Test_wheel22_5_GCT.txt");
-            gct1.ReadFromFile(MR1, "Legs_3_GCT.txt");
-            gct1.BeginTillEnd();
-            gct.BeginTillEnd();
-        }
-        if (Input.GetKeyUp(KeyCode.Keypad6))
-        {
-            var gct = gameObject.AddComponent<GaitControlTable>();
-            var gct1 = gameObject.AddComponent<GaitControlTable>();
-            MR1.modules[20].surfaces["bottom"].Connect(MR.modules[48].surfaces["right"]);
-            MR1.modules[25].surfaces["bottom"].Disconnect();
-            gct.ReadFromFile(MR, "Test_wheel22_6_GCT.txt");
-            gct1.ReadFromFile(MR1, "Legs_4_GCT.txt");
-            gct1.BeginTillEnd();
-            gct.BeginTillEnd();
-
-        }
-        if (Input.GetKeyUp(KeyCode.Keypad7))
-        {
-            var gct = gameObject.AddComponent<GaitControlTable>();
-            var gct1 = gameObject.AddComponent<GaitControlTable>();
-            MR1.modules[25].surfaces["bottom"].Connect(MR.modules[48].surfaces["left"]);
-            MR1.modules[20].surfaces["bottom"].Disconnect();
-            gct.ReadFromFile(MR, "Test_wheel22_7_GCT.txt");
-            gct1.ReadFromFile(MR1, "Legs_5_GCT.txt");
-            gct1.BeginTillEnd();
-            gct.BeginTillEnd();
-
-        }
-        if (Input.GetKeyUp(KeyCode.Keypad8))
-        {
+                    gct.ReadFromFile(MR, "Test_wheel22_1_GCT.txt");
+                    var gct1 = gameObject.AddComponent<GaitControlTable>();
+                    gct1.ReadFromFile(MR1, "Legs_1_GCT.txt");
+                    gct1.BeginTillEnd();
+                    gct.BeginTillEnd();
 
 
 
-            var gct = gameObject.AddComponent<GaitControlTable>();
-            var gct1 = gameObject.AddComponent<GaitControlTable>();
-            MR1.modules[20].surfaces["bottom"].Connect(MR.modules[46].surfaces["right"]);
-            MR1.modules[25].surfaces["bottom"].Disconnect();
-            gct.ReadFromFile(MR, "Test_wheel22_8_GCT.txt");
 
-            gct1.ReadFromFile(MR1, "Legs_6_GCT.txt");
-            gct1.BeginTillEnd();
-            gct.BeginTillEnd();
+                }
+                if (Input.GetKeyUp(KeyCode.Keypad2))
+                {
+                    var gct = gameObject.AddComponent<GaitControlTable>();
+                    var gct1 = gameObject.AddComponent<GaitControlTable>();
+                    MR1.modules[20].surfaces["bottom"].Connect(MR.modules[410].surfaces["right"]);
+                    MR1.modules[25].surfaces["bottom"].Disconnect();
 
-        }
+                    gct.ReadFromFile(MR, "Test_wheel22_2_GCT.txt");
 
-        if (Input.GetKeyUp(KeyCode.Keypad9))
-        {
-            Destroy(GameObject.Find("Module 20" + "Base").GetComponent<FixedJoint>());
-            GameObject.Find("Module 6" + "Base").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY;
-            GameObject.Find("Module 36" + "Base").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY;
-            var gct = gameObject.AddComponent<GaitControlTable>();
-            var gct1 = gameObject.AddComponent<GaitControlTable>();
-            var gct2 = gameObject.AddComponent<GaitControlTable>();
-            gct.ReadFromFile(MR, "Test_wheel_1_GCT.txt");
-            gct2.ReadFromFile(MR2, "Test_wheel2_1_GCT.txt");
-            gct1.ReadFromFile(MR1, "Legs_1_GCT.txt");
-            gct1.BeginTillEnd();
-            gct2.BeginTillEnd();
-            gct.BeginTillEnd();
+                    gct1.ReadFromFile(MR1, "Legs_2_GCT.txt");
+                    gct1.BeginTillEnd();
+                    gct.BeginTillEnd();
+                }
+                if (Input.GetKeyUp(KeyCode.Keypad3))
+                {
+                    var gct = gameObject.AddComponent<GaitControlTable>();
+                    var gct1 = gameObject.AddComponent<GaitControlTable>();
+                    MR1.modules[25].surfaces["bottom"].Connect(MR.modules[410].surfaces["left"]);
+
+                    gct.ReadFromFile(MR, "Test_wheel22_3_GCT.txt");
+                    // gct1.ReadFromFile(MR1, "Legs_3_GCT.txt");
+                    //gct1.BeginTillEnd();
+                    gct.BeginTillEnd();
+                }
+                if (Input.GetKeyUp(KeyCode.Keypad4))
+                {
+
+                    var gct = gameObject.AddComponent<GaitControlTable>();
+                    var gct1 = gameObject.AddComponent<GaitControlTable>();
+                    //MR1.modules[25].surfaces["bottom"].Connect(MR.modules[410].surfaces["left"]);
+
+                    gct.ReadFromFile(MR, "Test_wheel22_4_GCT.txt");
+                    // gct1.ReadFromFile(MR1, "Legs_3_GCT.txt");
+                    // gct1.BeginTillEnd();
+                    gct.BeginTillEnd();
+
+                }
+                if (Input.GetKeyUp(KeyCode.Keypad5))
+                {
+                    var gct = gameObject.AddComponent<GaitControlTable>();
+                    var gct1 = gameObject.AddComponent<GaitControlTable>();
+
+                    MR1.modules[20].surfaces["bottom"].Disconnect();
+                    gct.ReadFromFile(MR, "Test_wheel22_5_GCT.txt");
+                    gct1.ReadFromFile(MR1, "Legs_3_GCT.txt");
+                    gct1.BeginTillEnd();
+                    gct.BeginTillEnd();
+                }
+                if (Input.GetKeyUp(KeyCode.Keypad6))
+                {
+                    var gct = gameObject.AddComponent<GaitControlTable>();
+                    var gct1 = gameObject.AddComponent<GaitControlTable>();
+                    MR1.modules[20].surfaces["bottom"].Connect(MR.modules[48].surfaces["right"]);
+                    MR1.modules[25].surfaces["bottom"].Disconnect();
+                    gct.ReadFromFile(MR, "Test_wheel22_6_GCT.txt");
+                    gct1.ReadFromFile(MR1, "Legs_4_GCT.txt");
+                    gct1.BeginTillEnd();
+                    gct.BeginTillEnd();
+
+                }
+                if (Input.GetKeyUp(KeyCode.Keypad7))
+                {
+                    var gct = gameObject.AddComponent<GaitControlTable>();
+                    var gct1 = gameObject.AddComponent<GaitControlTable>();
+                    MR1.modules[25].surfaces["bottom"].Connect(MR.modules[48].surfaces["left"]);
+                    MR1.modules[20].surfaces["bottom"].Disconnect();
+                    gct.ReadFromFile(MR, "Test_wheel22_7_GCT.txt");
+                    gct1.ReadFromFile(MR1, "Legs_5_GCT.txt");
+                    gct1.BeginTillEnd();
+                    gct.BeginTillEnd();
+
+                }
+                if (Input.GetKeyUp(KeyCode.Keypad8))
+                {
 
 
-        }*/
+
+                    var gct = gameObject.AddComponent<GaitControlTable>();
+                    var gct1 = gameObject.AddComponent<GaitControlTable>();
+                    MR1.modules[20].surfaces["bottom"].Connect(MR.modules[46].surfaces["right"]);
+                    MR1.modules[25].surfaces["bottom"].Disconnect();
+                    gct.ReadFromFile(MR, "Test_wheel22_8_GCT.txt");
+
+                    gct1.ReadFromFile(MR1, "Legs_6_GCT.txt");
+                    gct1.BeginTillEnd();
+                    gct.BeginTillEnd();
+
+                }
+
+                if (Input.GetKeyUp(KeyCode.Keypad9))
+                {
+                    Destroy(GameObject.Find("Module 20" + "Base").GetComponent<FixedJoint>());
+                    GameObject.Find("Module 6" + "Base").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY;
+                    GameObject.Find("Module 36" + "Base").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY;
+                    var gct = gameObject.AddComponent<GaitControlTable>();
+                    var gct1 = gameObject.AddComponent<GaitControlTable>();
+                    var gct2 = gameObject.AddComponent<GaitControlTable>();
+                    gct.ReadFromFile(MR, "Test_wheel_1_GCT.txt");
+                    gct2.ReadFromFile(MR2, "Test_wheel2_1_GCT.txt");
+                    gct1.ReadFromFile(MR1, "Legs_1_GCT.txt");
+                    gct1.BeginTillEnd();
+                    gct2.BeginTillEnd();
+                    gct.BeginTillEnd();
+
+
+                }*/
     }
 }

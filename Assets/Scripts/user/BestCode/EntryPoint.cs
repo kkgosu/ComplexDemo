@@ -57,8 +57,12 @@ public class EntryPoint : MonoBehaviour
         string path = createXML
             //.CreateHeader("test123", new Vector3(-14, 5, -16), Quaternion.Euler(0, -90, -90)) //first point
             //.CreateHeader("test123", new Vector3(-8, 5, -13), Quaternion.Euler(0, -68, -90)) //second point; 2legs_1.xml pos: -6.9, 4.5, -10.5
-            .CreateHeader("test123", new Vector3(-6.6f, 3, -9), Quaternion.Euler(0, -68, -90)) //before tunnel
-            //.CreateHeader("test123", new Vector3(-2.4f, 2, 0), Quaternion.Euler(0, -68, -90)) //third point
+            //.CreateHeader("test123", new Vector3(-6.6f, 3, -9), Quaternion.Euler(0, -68, -90)) //before tunnel
+            //.CreateHeader("test123", new Vector3(-3f, 2, 0), Quaternion.Euler(0, -68, -90)) //third point; 2legs_1.xml pos: -5.65, 4.2, -6.5 rotation="0,-62,90"
+            //.CreateHeader("test123", new Vector3(9.2f, 2.5f, 5f), Quaternion.Euler(0, -45, -90)) //foruth point 1
+            //.CreateHeader("test123", new Vector3(12.3f, 3, 10.7f), Quaternion.Euler(0, 0, -90)) //foruth point 2; 2legs_1.xml position="14.6, 4.3, 10.68" rotation="-90,0,0"
+            //.CreateHeader("test123", new Vector3(28, 6, 11.2f), Quaternion.Euler(0, 0, -90)) //fifth point; 2legs_1.xml position="30.2, 6.1, 11.1" rotation="-90,0,0"
+            .CreateHeader("test123", new Vector3(46.6f, 8f, 12.4f), Quaternion.Euler(0, 115, -90))
             //.CreateHeader("test123", new Vector3(0, 0, 0), Quaternion.Euler(0, -90, -90))
             .AddModules(numOfModules, createXML.CreateModules(array))
             .AddConnections(createXML.CreateSimpleConnections(numOfModules, false))
@@ -97,7 +101,7 @@ public class EntryPoint : MonoBehaviour
                             {
                                 StopAllMovement();
                                 StartCoroutine(transformations.MakeSnake());
-                                waveController_5.Go(10, 1.5, 1.5, false);
+                                waveController_5.Go(10, 0.5, 0.5, false);
                                 break;
                             }
                         case Direction.ROTATE_RIGHT:
@@ -138,9 +142,47 @@ public class EntryPoint : MonoBehaviour
         wheelMovement.isMoving = false;
     }
 
+
+    private IEnumerator Manipulator()
+    {
+        MR.modules[1].drivers["q1"].Set(55);
+        MR.modules[2].drivers["q1"].Set(0);
+        MR.modules[3].drivers["q1"].Set(-55);
+
+        MR.modules[8].drivers["q1"].Set(-80);
+        yield return transformations.WaitWhileDriversAreBusy();
+        MR.modules[4].drivers["q1"].Set(-75);
+        yield return transformations.WaitWhileDriversAreBusy();
+
+        MR.modules[12].drivers["q1"].Set(60);
+        MR.modules[16].drivers["q1"].Set(60);
+        MR.modules[20].drivers["q1"].Set(45);
+        yield return transformations.WaitWhileDriversAreBusy();
+
+        ConfigurableJoint joint;
+        GameObject car = GameObject.Find("Car 2");
+        car.gameObject.GetComponent<FixedJoint>().connectedBody = MR.modules[20].surfaces["bottom"].anchor.GetComponent<Rigidbody>();
+        yield return new WaitForSeconds(2f);
+
+        //backward
+        MR.modules[4].drivers["q1"].Set(0);
+        MR.modules[12].drivers["q1"].Set(-60);
+        MR.modules[16].drivers["q1"].Set(-60);
+        MR.modules[20].drivers["q1"].Set(-45);
+        yield return transformations.WaitWhileDriversAreBusy();
+        yield return new WaitForSeconds(1f);
+
+        car.gameObject.GetComponent<FixedJoint>().connectedBody = null;
+        car.gameObject.GetComponent<FixedJoint>().connectedBody = MR.modules[0].surfaces["bottom"].anchor.GetComponent<Rigidbody>();
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Keypad5))
+        {
+            StartCoroutine(Manipulator());
+        }
         print(MR.modules[2].position);
         if (Input.GetKeyDown(KeyCode.Keypad1))
         {
