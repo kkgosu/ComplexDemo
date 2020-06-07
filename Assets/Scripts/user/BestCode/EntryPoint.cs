@@ -40,6 +40,7 @@ public class EntryPoint : MonoBehaviour
         MR = Rob.AddComponent<ModularRobot>();
         MR.gameObject.AddComponent<Movement>();
         MR.gameObject.AddComponent<GaitControlTable>();
+        MR.gameObject.AddComponent<CamWheel>();
 
         createXML = MR.gameObject.AddComponent<CreateXML>();
         createCFG = MR.gameObject.AddComponent<CreateCFG>();
@@ -66,9 +67,11 @@ public class EntryPoint : MonoBehaviour
         MR.angles = array;
         MR.Load(path);
 
-        wheel = gameObject.AddComponent<ModularRobot>();
-        wheel.Load(Application.dataPath + "/Resources/Configurations/Turning Snake13.xml");
-        wheel.gameObject.AddComponent<LineRobAdmin>();
+        /*        wheel = gameObject.AddComponent<ModularRobot>();
+                wheel.Load(Application.dataPath + "/Resources/Configurations/Turning Snake13.xml");
+                wheel.gameObject.AddComponent<LineRobAdmin>();*/
+
+
 
 
         currentState = State.SNAKE;

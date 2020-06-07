@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!-- New XML document created with EditiX XML Editor (http://www.editix.com) at Tue Nov 13 00:24:10 MSK 2018 -->
-<robot name="2Legs" moduleType="M3R2" position="3.258,0,2.159" rotation="0,179.6,90">
+<robot name="2Legs" moduleType="M3R2" position="-8, 5, -14" rotation="0,-68,90">
 <modules>
 <module id="0" q1="0" />
 <module id="21" q1="0"/>
